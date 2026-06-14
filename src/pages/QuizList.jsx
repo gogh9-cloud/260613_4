@@ -284,7 +284,7 @@ const QuizList = ({ user }) => {
           <div>
             <div className="login-title" style={{ fontSize: '20px', textAlign: 'left', margin: 0, display: 'flex', alignItems: 'center' }}>
               <img src={BUB_IMG_SRC} alt="icon" style={{ width: '32px', height: '32px', marginRight: '12px', imageRendering: 'pixelated' }} />
-              BUBBLE QUIZ
+              BUBBLE BOBBLE QUIZ ADVENTURE
             </div>
             <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>{user?.email}</div>
           </div>
