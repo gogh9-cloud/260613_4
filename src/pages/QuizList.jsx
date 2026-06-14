@@ -53,6 +53,8 @@ const QuizList = ({ user }) => {
   const [editBankData, setEditBankData] = useState({ id: '', title: '', isPublic: true });
   const [expandedBank, setExpandedBank] = useState(null);
   const [bankQuestions, setBankQuestions] = useState({});
+  const [editingQuestion, setEditingQuestion] = useState(null);
+  const [editQForm, setEditQForm] = useState({ question_text: '', options: '', answers: '', image_url: '' });
 
   const isAdmin = ADMIN_EMAILS.includes(user?.email);
 
@@ -275,8 +277,95 @@ const QuizList = ({ user }) => {
     }
   };
 
+  const copyBank = async (bank) => {
+    if (!window.confirm(`"${bank.title}" 문제 은행을 내 문제로 가져오시겠습니까?`)) return;
+    
+    const { data: originalQuestions, error: fetchErr } = await supabase
+      .from('bank_questions')
+      .select('*')
+      .eq('bank_id', bank.id);
+      
+    if (fetchErr) {
+      alert('문제 목록을 불러오지 못했습니다.');
+      return;
+    }
+
+    const { data: newBank, error: bankErr } = await supabase
+      .from('question_banks')
+      .insert([{
+        title: `${bank.title} (복사본)`,
+        subject: bank.subject,
+        is_public: false,
+        uploaded_by: user.id,
+        uploader_email: user.email,
+        question_count: bank.question_count
+      }])
+      .select()
+      .single();
+      
+    if (bankErr) {
+      alert('문제 은행 복사에 실패했습니다.');
+      return;
+    }
+
+    if (originalQuestions && originalQuestions.length > 0) {
+      const newQuestions = originalQuestions.map(q => ({
+        bank_id: newBank.id,
+        question_num: q.question_num,
+        question_text: q.question_text,
+        options: q.options,
+        answers: q.answers,
+        image_url: q.image_url
+      }));
+      
+      const { error: qErr } = await supabase.from('bank_questions').insert(newQuestions);
+      if (qErr) {
+        alert('문항 복사에 실패했습니다.');
+        return;
+      }
+    }
+    
+    alert('내 문제로 성공적으로 가져왔습니다!');
+    setBanks(prev => [newBank, ...prev]);
+    setActiveTab('banks');
+  };
+
+  const startEditQuestion = (q) => {
+    setEditingQuestion(q.id);
+    setEditQForm({
+      question_text: q.question_text || '',
+      options: (q.options || []).join(', '),
+      answers: (q.answers || []).join(', '),
+      image_url: q.image_url || ''
+    });
+  };
+
+  const saveQuestion = async (qId, bankId) => {
+    const opts = editQForm.options.split(',').map(s => s.trim()).filter(Boolean);
+    const ans = editQForm.answers.split(',').map(s => s.trim()).filter(Boolean);
+    
+    const { error } = await supabase.from('bank_questions').update({
+      question_text: editQForm.question_text,
+      options: opts,
+      answers: ans,
+      image_url: editQForm.image_url
+    }).eq('id', qId);
+    
+    if (error) {
+      alert('수정 실패: ' + error.message);
+      return;
+    }
+    
+    setBankQuestions(prev => ({
+      ...prev,
+      [bankId]: prev[bankId].map(q => q.id === qId ? { ...q, question_text: editQForm.question_text, options: opts, answers: ans, image_url: editQForm.image_url } : q)
+    }));
+    setEditingQuestion(null);
+  };
+
   // 과거 데이터(uploaded_by가 없는 데이터)는 관리자에게만 보이도록 처리
   const myBanks = banks.filter(b => b.uploaded_by === user.id || (!b.uploaded_by && isAdmin));
+  const publicBanks = banks.filter(b => b.is_public === true && b.uploaded_by !== user.id);
 
   return (
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
@@ -352,6 +441,13 @@ const QuizList = ({ user }) => {
             내 문제 관리
             {activeTab === 'banks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
           </button>
+          <button
+            onClick={() => setActiveTab('publicBanks')}
+            style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'publicBanks' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'publicBanks' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
+          >
+            전체 문제 보기
+            {activeTab === 'publicBanks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
+          </button>
         </div>
 
         {/* 탭 내용 */}
@@ -399,7 +495,7 @@ const QuizList = ({ user }) => {
               ))}
             </div>
           )
-        ) : (
+        ) : activeTab === 'banks' ? (
           /* 내 문제 관리 탭 */
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {myBanks.length === 0 ? (
@@ -450,6 +546,95 @@ const QuizList = ({ user }) => {
                           {bankQuestions[bank.id].map((q, i) => (
                             <div key={q.id} style={{ display: 'flex', gap: '16px', padding: '16px', background: 'var(--surface-2)', borderRadius: 'var(--r-sm)' }}>
                               <div style={{ fontWeight: 'bold', color: 'var(--primary)', width: '30px', flexShrink: 0 }}>Q{i+1}</div>
+                              {editingQuestion === q.id ? (
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                  <input type="text" value={editQForm.question_text} onChange={e => setEditQForm({...editQForm, question_text: e.target.value})} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--ink-subtle)', background: 'var(--canvas)', color: 'var(--ink)' }} placeholder="문제 내용" />
+                                  <input type="text" value={editQForm.options} onChange={e => setEditQForm({...editQForm, options: e.target.value})} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--ink-subtle)', background: 'var(--canvas)', color: 'var(--ink)' }} placeholder="선택지 (쉼표 구분)" />
+                                  <input type="text" value={editQForm.answers} onChange={e => setEditQForm({...editQForm, answers: e.target.value})} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--ink-subtle)', background: 'var(--canvas)', color: 'var(--ink)' }} placeholder="정답 (쉼표 구분)" />
+                                  <input type="text" value={editQForm.image_url} onChange={e => setEditQForm({...editQForm, image_url: e.target.value})} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--ink-subtle)', background: 'var(--canvas)', color: 'var(--ink)' }} placeholder="이미지 URL (선택사항)" />
+                                  <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                                    <button onClick={() => saveQuestion(q.id, bank.id)} className="btn-teal" style={{ padding: '6px 12px', fontSize: '13px', margin: 0, flex: 0 }}>저장</button>
+                                    <button onClick={() => setEditingQuestion(null)} className="btn-sub" style={{ padding: '6px 12px', fontSize: '13px', margin: 0, flex: 0 }}>취소</button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ color: 'var(--ink)', marginBottom: '8px', lineHeight: '1.4' }}>{q.question_text}</div>
+                                  {q.options && q.options.length > 0 && (
+                                    <div style={{ color: 'var(--ink-muted)', fontSize: '13px', marginBottom: '8px' }}>
+                                      선택지: {q.options.join(', ')}
+                                    </div>
+                                  )}
+                                  <div style={{ color: 'var(--semantic-warning)', fontSize: '13px', fontWeight: 'bold' }}>
+                                    정답: {q.answers?.join(', ')}
+                                  </div>
+                                  {q.image_url && (
+                                    <div style={{ fontSize: '13px', color: 'var(--ink-muted)' }}>이미지 URL: {q.image_url}</div>
+                                  )}
+                                </div>
+                              )}
+                              {editingQuestion !== q.id && (
+                                <button onClick={() => startEditQuestion(q)} style={{ background: 'none', border: 'none', color: 'var(--ink-subtle)', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'flex-start' }} title="문제 수정">
+                                  <Edit size={16} />
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        ) : activeTab === 'publicBanks' ? (
+          /* 전체 문제 보기 탭 */
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {publicBanks.length === 0 ? (
+              <div style={{ textAlign: 'center', color: 'var(--ink)', padding: '60px 0', background: 'var(--surface-1)', borderRadius: 'var(--r-lg)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px' }}>
+                아직 공유된 문제 은행이 없습니다.
+              </div>
+            ) : (
+              publicBanks.map(bank => (
+                <div key={bank.id} style={{ background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-md)', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', cursor: 'pointer' }} onClick={() => toggleExpand(bank.id)}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: 0 }}>
+                      <div style={{ color: 'var(--primary)' }}>
+                        {expandedBank === bank.id ? <ChevronDown size={24} /> : <ChevronRight size={24} />}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          {bank.title}
+                          <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '12px', background: 'rgba(30,215,96,0.1)', color: 'var(--primary)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            <Globe size={12}/> 공유됨
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                          <span><BookOpen size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />총 {bank.question_count}문항</span>
+                          {bank.uploader_email && <span>게시자: {bank.uploader_email}</span>}
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                      <button onClick={(e) => { e.stopPropagation(); copyBank(bank); }} title="내 문제로 가져오기"
+                        className="btn-teal" style={{ padding: '12px 16px', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Download size={16} /> 가져오기
+                      </button>
+                    </div>
+                  </div>
+
+                  {expandedBank === bank.id && (
+                    <div style={{ padding: '24px', background: 'rgba(0,0,0,0.1)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                      {!bankQuestions[bank.id] ? (
+                        <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '20px' }}>문항을 불러오는 중...</div>
+                      ) : bankQuestions[bank.id].length === 0 ? (
+                        <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '20px' }}>등록된 문항이 없습니다.</div>
+                      ) : (
+                        <div style={{ display: 'grid', gap: '12px' }}>
+                          {bankQuestions[bank.id].map((q, i) => (
+                            <div key={q.id} style={{ display: 'flex', gap: '16px', padding: '16px', background: 'var(--surface-2)', borderRadius: 'var(--r-sm)' }}>
+                              <div style={{ fontWeight: 'bold', color: 'var(--primary)', width: '30px', flexShrink: 0 }}>Q{i+1}</div>
                               <div style={{ flex: 1 }}>
                                 <div style={{ color: 'var(--ink)', marginBottom: '8px', lineHeight: '1.4' }}>{q.question_text}</div>
                                 {q.options && q.options.length > 0 && (
@@ -460,6 +645,9 @@ const QuizList = ({ user }) => {
                                 <div style={{ color: 'var(--semantic-warning)', fontSize: '13px', fontWeight: 'bold' }}>
                                   정답: {q.answers?.join(', ')}
                                 </div>
+                                {q.image_url && (
+                                  <div style={{ fontSize: '13px', color: 'var(--ink-muted)' }}>이미지 URL: {q.image_url}</div>
+                                )}
                               </div>
                             </div>
                           ))}
@@ -471,7 +659,7 @@ const QuizList = ({ user }) => {
               ))
             )}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* 게임방 생성 모달 */}
