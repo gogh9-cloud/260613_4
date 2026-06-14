@@ -23,13 +23,26 @@ const Home = () => {
   }, [navigate]);
 
   const handleLogin = async () => {
+    console.log('Login button clicked!'); // 디버깅용 로그 추가
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    });
-    if (error) {
-      console.error('Error logging in:', error);
-      alert('로그인 중 오류가 발생했습니다.');
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (error) {
+        console.error('Error logging in:', error);
+        alert(`로그인 중 오류가 발생했습니다: ${error.message}`);
+        // 권한 관련 에러(401 등) 시 로컬 및 세션 스토리지 모두 초기화
+        localStorage.clear();
+        sessionStorage.clear();
+        await supabase.auth.signOut();
+      }
+    } catch (err) {
+      console.error('Login exception:', err);
+      alert(`로그인 중 예외가 발생했습니다: ${err.message}`);
     }
     setLoading(false);
   };
