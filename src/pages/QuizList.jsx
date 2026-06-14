@@ -598,8 +598,8 @@ const QuizList = ({ user }) => {
                                   <input type="text" value={editQForm.answers} onChange={e => setEditQForm({...editQForm, answers: e.target.value})} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--ink-subtle)', background: 'var(--canvas)', color: 'var(--ink)' }} placeholder="정답 (쉼표 구분)" />
                                   <input type="text" value={editQForm.image_url} onChange={e => setEditQForm({...editQForm, image_url: e.target.value})} style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--ink-subtle)', background: 'var(--canvas)', color: 'var(--ink)' }} placeholder="이미지 URL (선택사항)" />
                                   <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-                                    <button onClick={() => saveQuestion(q.id, bank.id)} className="btn-teal" style={{ padding: '6px 12px', fontSize: '13px', margin: 0, flex: 0 }}>저장</button>
-                                    <button onClick={() => setEditingQuestion(null)} className="btn-sub" style={{ padding: '6px 12px', fontSize: '13px', margin: 0, flex: 0 }}>취소</button>
+                                    <button onClick={() => saveQuestion(q.id, bank.id)} className="btn-teal" style={{ padding: '6px 12px', fontSize: '13px', margin: 0, flexShrink: 0, whiteSpace: 'nowrap' }}>저장</button>
+                                    <button onClick={() => setEditingQuestion(null)} className="btn-sub" style={{ padding: '6px 12px', fontSize: '13px', margin: 0, flexShrink: 0, whiteSpace: 'nowrap' }}>취소</button>
                                   </div>
                                 </div>
                               ) : (
