@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import * as XLSX from 'xlsx';
 import { Upload, Trash2, LogOut, Eye, ChevronDown, ChevronRight, FileSpreadsheet, Lock, Globe, Download } from 'lucide-react';
+import { BUB_IMG_SRC } from '../lib/assets';
 
 // 구글 드라이브 링크를 직접 열람 가능한 URL로 변환
 function convertDriveUrl(url) {
@@ -211,7 +212,10 @@ const AdminPage = () => {
         {/* 헤더 */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-lg)', padding: '16px 24px' }}>
           <div>
-            <div className="login-title" style={{ fontSize: '20px', textAlign: 'left', margin: 0 }}>관리자 페이지</div>
+            <div className="login-title" style={{ fontSize: '20px', textAlign: 'left', margin: 0, display: 'flex', alignItems: 'center' }}>
+              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '32px', height: '32px', marginRight: '12px', imageRendering: 'pixelated' }} />
+              관리자 페이지
+            </div>
             <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>{user?.email}</div>
           </div>
           <div style={{ display: 'flex', gap: '16px' }}>

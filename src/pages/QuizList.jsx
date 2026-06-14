@@ -283,7 +283,7 @@ const QuizList = ({ user }) => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-lg)', padding: '16px 24px' }}>
           <div>
             <div className="login-title" style={{ fontSize: '20px', textAlign: 'left', margin: 0, display: 'flex', alignItems: 'center' }}>
-              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '24px', height: '24px', marginRight: '8px', imageRendering: 'pixelated', filter: 'grayscale(100%) opacity(0.8)' }} />
+              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '32px', height: '32px', marginRight: '12px', imageRendering: 'pixelated' }} />
               BUBBLE QUIZ
             </div>
             <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>{user?.email}</div>
@@ -359,7 +359,7 @@ const QuizList = ({ user }) => {
           ) : quizSets.length === 0 ? (
             <div style={{ textAlign: 'center', color: 'var(--ink)', padding: '60px 0', background: 'var(--surface-1)', borderRadius: 'var(--r-lg)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px' }}>
               <div style={{ marginBottom: '16px' }}>
-                <img src={BUB_IMG_SRC} alt="icon" style={{ width: '48px', height: '48px', imageRendering: 'pixelated', filter: 'grayscale(100%) opacity(0.5)' }} />
+                <img src={BUB_IMG_SRC} alt="icon" style={{ width: '48px', height: '48px', imageRendering: 'pixelated' }} />
               </div>
               아직 만든 게임방이 없습니다.<br />
               <span style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '8px', display: 'inline-block' }}>문제 은행에서 문제를 선택해 게임방을 만들어 보세요!</span>
