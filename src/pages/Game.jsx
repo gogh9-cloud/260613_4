@@ -184,7 +184,7 @@ const Game = () => {
 
   if (gameState === 'login') {
     return (
-      <div className="screen login-screen" id="scr-login">
+      <div key="login-view" className="screen login-screen" id="scr-login">
         <div className="login-card">
           <div className="login-icon">🫧</div>
           <div className="login-title">BUBBLE BOBBLE<br />QUIZ ADVENTURE</div>
@@ -214,7 +214,7 @@ const Game = () => {
   }
 
   return (
-    <div className="screen" id="scr-game" style={{ background: '#000' }}>
+    <div key="game-view" className="screen" id="scr-game" style={{ background: '#000' }}>
       <div id="game-container" className="game-wrap">
         {/* HUD */}
         <div id="hud" className="hud">
