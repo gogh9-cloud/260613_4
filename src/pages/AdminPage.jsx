@@ -368,30 +368,19 @@ const AdminPage = () => {
         <div className="c-overlay show" style={{ zIndex: 1000 }}>
           <div className="qz-card qz-body" style={{ width: '480px', transform: 'none' }}>
             <div style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--ink)', fontWeight: 'bold', marginBottom: '24px' }}>
-              문제 은행 등록
+              문제 등록
             </div>
-            <div style={{ marginBottom: '16px' }}>
-              <label className="f-label">문제 은행 이름</label>
+            <div style={{ marginBottom: '24px' }}>
+              <label className="f-label">주제(단원)</label>
               <div className="f-wrap">
                 <input
                   type="text"
-                  placeholder="예: 2학년 1학기 중간고사 대비"
                   value={uploadData.title}
                   onChange={e => setUploadData({ ...uploadData, title: e.target.value })}
                 />
               </div>
             </div>
-            <div style={{ marginBottom: '24px' }}>
-              <label className="f-label">과목 (선택사항)</label>
-              <div className="f-wrap">
-                <input
-                  type="text"
-                  placeholder="예: 국어, 수학"
-                  value={uploadData.subject}
-                  onChange={e => setUploadData({ ...uploadData, subject: e.target.value })}
-                />
-              </div>
-            </div>
+
             <div style={{ marginBottom: '32px' }}>
               <label className="f-label">공유 설정</label>
               <div style={{ display: 'flex', gap: '16px' }}>
