@@ -474,13 +474,12 @@ const QuizList = ({ user }) => {
 
       {/* 게임방 생성 모달 */}
       {showCreateModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(4px)' }}
-          onClick={e => e.target === e.currentTarget && setShowCreateModal(false)}>
-          <div style={{ background: 'var(--surface-1)', border: 'none', borderRadius: 'var(--r-lg)', boxShadow: 'rgba(0,0,0,0.5) 0px 8px 24px', padding: '32px', width: '480px', maxWidth: '95vw' }}>
-            <div className="login-title" style={{ fontSize: '32px', textAlign: 'left', marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+        <div className="c-overlay show" style={{ zIndex: 1000 }} onClick={e => e.target === e.currentTarget && setShowCreateModal(false)}>
+          <div className="qz-card qz-body" style={{ width: '480px', transform: 'none' }}>
+            <div style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--ink)', fontWeight: 'bold', marginBottom: '8px' }}>
               새 게임방 만들기
             </div>
-            <div className="login-sub" style={{ marginBottom: '32px', textAlign: 'left' }}>문제 은행을 선택하고 게임방 이름을 정하세요.</div>
+            <div style={{ fontSize: '14px', color: 'var(--ink-muted)', marginBottom: '24px' }}>문제 은행을 선택하고 게임방 이름을 정하세요.</div>
 
             <label className="f-label">게임방 이름</label>
             <div className="f-wrap" style={{ marginBottom: '24px' }}>
@@ -539,13 +538,11 @@ const QuizList = ({ user }) => {
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <button onClick={() => setShowCreateModal(false)}
-                className="btn-clear sec" style={{ flex: 1, margin: 0, padding: '12px', fontSize: '14px' }}>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button onClick={() => setShowCreateModal(false)} className="btn-sub" style={{ flex: 1 }}>
                 취소
               </button>
-              <button onClick={createRoom} disabled={creating || !selectedBankId || !newRoomTitle.trim()}
-                className="btn-teal" style={{ flex: 1, margin: 0, padding: '12px' }}>
+              <button onClick={createRoom} disabled={creating || !selectedBankId || !newRoomTitle.trim()} className="btn-teal" style={{ flex: 1, margin: 0 }}>
                 {creating ? '생성 중...' : '게임방 만들기'}
               </button>
             </div>
