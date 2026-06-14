@@ -274,7 +274,8 @@ const QuizList = ({ user }) => {
     }
   };
 
-  const myBanks = banks.filter(b => b.uploaded_by === user.id);
+  // 과거 데이터(uploaded_by가 없는 데이터)는 관리자에게만 보이도록 처리
+  const myBanks = banks.filter(b => b.uploaded_by === user.id || (!b.uploaded_by && isAdmin));
 
   return (
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
