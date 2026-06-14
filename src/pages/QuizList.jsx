@@ -90,7 +90,7 @@ const QuizList = ({ user }) => {
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
       <div style={{ width: '800px', maxWidth: '98vw', margin: '0 auto' }}>
         {/* 헤더 */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', padding: '16px 24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-lg)', padding: '16px 24px' }}>
           <div>
             <div className="login-title" style={{ fontSize: '20px', textAlign: 'left', margin: 0, display: 'flex', alignItems: 'center' }}>
               <img src={BUB_IMG_SRC} alt="icon" style={{ width: '24px', height: '24px', marginRight: '8px', imageRendering: 'pixelated', filter: 'grayscale(100%) opacity(0.8)' }} />
@@ -102,14 +102,14 @@ const QuizList = ({ user }) => {
             {isAdmin && (
               <button
                 onClick={() => navigate('/admin')}
-                style={{ padding: '8px 16px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                style={{ padding: '8px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
               >
                 <ShieldCheck size={16} /> 관리자
               </button>
             )}
             <button
               onClick={handleLogout}
-              style={{ padding: '8px 16px', background: 'var(--canvas)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+              style={{ padding: '8px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               <LogOut size={16} /> 로그아웃
             </button>
@@ -129,7 +129,7 @@ const QuizList = ({ user }) => {
         {loading ? (
           <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '40px' }}>로딩 중...</div>
         ) : quizSets.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--ink)', padding: '60px 0', background: 'var(--surface-1)', borderRadius: '0', border: '1px solid var(--hairline)' }}>
+          <div style={{ textAlign: 'center', color: 'var(--ink)', padding: '60px 0', background: 'var(--surface-1)', borderRadius: 'var(--r-lg)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px' }}>
             <div style={{ marginBottom: '16px' }}>
               <img src={BUB_IMG_SRC} alt="icon" style={{ width: '48px', height: '48px', imageRendering: 'pixelated', filter: 'grayscale(100%) opacity(0.5)' }} />
             </div>
@@ -139,7 +139,7 @@ const QuizList = ({ user }) => {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {quizSets.map(quiz => (
-              <div key={quiz.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', background: 'var(--canvas)', border: '1px solid var(--hairline)', borderRadius: '0', gap: '16px' }}>
+              <div key={quiz.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-md)', gap: '16px' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px' }}>{quiz.title}</div>
                   {quiz.question_banks && (
@@ -153,15 +153,15 @@ const QuizList = ({ user }) => {
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                   <button onClick={() => copyLink(quiz.link_code)} title="학생 링크 복사"
-                    style={{ padding: '12px 16px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    style={{ padding: '12px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Copy size={16} /> 링크 복사
                   </button>
                   <button onClick={() => navigate(`/dashboard/${quiz.id}/results`)} title="결과 보기"
-                    style={{ padding: '12px 16px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--primary)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    style={{ padding: '12px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--primary)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <BarChart2 size={16} /> 결과
                   </button>
                   <button onClick={() => deleteQuizSet(quiz.id)} title="삭제"
-                    style={{ padding: '12px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--semantic-error)', cursor: 'pointer' }}>
+                    style={{ padding: '12px', background: 'var(--surface-2)', border: 'none', borderRadius: '50%', color: 'var(--semantic-error)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -173,9 +173,9 @@ const QuizList = ({ user }) => {
 
       {/* 게임방 생성 모달 */}
       {showCreateModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(6px)' }}
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(4px)' }}
           onClick={e => e.target === e.currentTarget && setShowCreateModal(false)}>
-          <div style={{ background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', padding: '32px', width: '480px', maxWidth: '95vw' }}>
+          <div style={{ background: 'var(--surface-1)', border: 'none', borderRadius: 'var(--r-lg)', boxShadow: 'rgba(0,0,0,0.5) 0px 8px 24px', padding: '32px', width: '480px', maxWidth: '95vw' }}>
             <div className="login-title" style={{ fontSize: '32px', textAlign: 'left', marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
               새 게임방 만들기
             </div>
@@ -194,7 +194,7 @@ const QuizList = ({ user }) => {
 
             <label className="f-label">문제 은행 선택</label>
             {banks.length === 0 ? (
-              <div style={{ padding: '16px', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginBottom: '32px' }}>
+              <div style={{ padding: '16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-sm)', color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginBottom: '32px' }}>
                 등록된 문제 은행이 없습니다.<br />
                 <span style={{ color: 'var(--primary)', cursor: 'pointer', fontWeight: '600', marginTop: '8px', display: 'inline-block' }} onClick={() => { setShowCreateModal(false); navigate('/admin'); }}>
                   관리자 페이지에서 업로드하세요 →
@@ -210,9 +210,10 @@ const QuizList = ({ user }) => {
                     }}
                     style={{
                       padding: '16px',
-                      background: selectedBankId === bank.id ? 'var(--surface-2)' : 'var(--canvas)',
-                      border: `1px solid ${selectedBankId === bank.id ? 'var(--primary)' : 'var(--hairline)'}`,
-                      borderRadius: '0',
+                      background: selectedBankId === bank.id ? 'var(--surface-3)' : 'var(--surface-2)',
+                      border: 'none',
+                      boxShadow: selectedBankId === bank.id ? 'inset 4px 0 0 var(--primary)' : 'none',
+                      borderRadius: 'var(--r-sm)',
                       cursor: 'pointer',
                       transition: 'all 0.15s'
                     }}>

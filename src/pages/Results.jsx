@@ -60,8 +60,8 @@ const Results = ({ user }) => {
   const rankColors = ['#f5c842', '#8fa3c0', '#cd7f32'];
 
   return (
-    <div className="screen dashboard-screen" style={{ overflowY: 'auto', alignItems: 'flex-start', paddingTop: '24px', background: 'var(--surface-1)' }}>
-      <div className="login-card" style={{ width: '900px', maxWidth: '95vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', background: 'var(--canvas)', border: '1px solid var(--hairline)', borderRadius: '0' }}>
+    <div className="screen dashboard-screen" style={{ overflowY: 'auto', alignItems: 'flex-start', paddingTop: '24px', background: 'var(--canvas)' }}>
+      <div className="login-card" style={{ width: '900px', maxWidth: '95vw', maxHeight: '90vh', display: 'flex', flexDirection: 'column', background: 'var(--surface-1)', border: 'none', borderRadius: 'var(--r-lg)', boxShadow: 'rgba(0,0,0,0.5) 0px 8px 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <button onClick={() => navigate('/dashboard')} style={{ background: 'transparent', border: 'none', color: 'var(--ink-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <ArrowLeft size={20} /> 대시보드
@@ -73,9 +73,9 @@ const Results = ({ user }) => {
         </div>
 
         {students.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '64px 0', border: '1px solid var(--hairline)' }}>아직 참여한 학생이 없습니다.</div>
+          <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '64px 0', background: 'var(--surface-2)', borderRadius: 'var(--r-md)' }}>아직 참여한 학생이 없습니다.</div>
         ) : (
-          <div style={{ flex: 1, overflowY: 'auto', border: '1px solid var(--hairline)' }}>
+          <div style={{ flex: 1, overflowY: 'auto', borderRadius: 'var(--r-md)', background: 'var(--surface-1)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: 'var(--surface-2)' }}>
@@ -96,7 +96,7 @@ const Results = ({ user }) => {
                   }).join(', ');
 
                   return (
-                    <tr key={s.id} style={{ background: idx % 2 === 0 ? 'var(--canvas)' : 'var(--surface-1)', borderBottom: '1px solid var(--hairline)' }}>
+                    <tr key={s.id} style={{ background: idx % 2 === 0 ? 'var(--surface-2)' : 'var(--surface-1)', borderBottom: 'none' }}>
                       <td style={tdStyle}>{s.ban}</td>
                       <td style={tdStyle}>{s.num}</td>
                       <td style={{ ...tdStyle, fontWeight: '600', color: 'var(--ink)' }}>{s.name}</td>
@@ -111,7 +111,7 @@ const Results = ({ user }) => {
           </div>
         )}
 
-        <div style={{ marginTop: '24px', padding: '16px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', gap: '24px' }}>
+        <div style={{ marginTop: '24px', padding: '16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-md)', fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', gap: '24px' }}>
           <span>총 참여자: <strong style={{ color: 'var(--ink)' }}>{students.length}명</strong></span>
           {students.length > 0 && (
             <>
@@ -127,7 +127,7 @@ const Results = ({ user }) => {
 
 const thStyle = {
   padding: '12px 16px', textAlign: 'left', fontSize: '14px', 
-  fontWeight: '600', color: 'var(--ink)', borderBottom: '1px solid var(--hairline-strong)'
+  fontWeight: '600', color: 'var(--ink)', borderBottom: '1px solid var(--hairline)'
 };
 const tdStyle = {
   padding: '12px 16px', textAlign: 'left', fontSize: '14px', color: 'var(--ink-muted)'

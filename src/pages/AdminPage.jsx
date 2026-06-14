@@ -182,7 +182,7 @@ const AdminPage = () => {
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
       <div style={{ width: '900px', maxWidth: '98vw', margin: '0 auto' }}>
         {/* 헤더 */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', padding: '16px 24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-lg)', padding: '16px 24px' }}>
           <div>
             <div className="login-title" style={{ fontSize: '20px', textAlign: 'left', margin: 0 }}>관리자 페이지</div>
             <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>{user?.email}</div>
@@ -190,13 +190,13 @@ const AdminPage = () => {
           <div style={{ display: 'flex', gap: '16px' }}>
             <button
               onClick={() => navigate('/dashboard')}
-              style={{ padding: '8px 16px', background: 'var(--canvas)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px' }}
+              style={{ padding: '8px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px' }}
             >
               대시보드로
             </button>
             <button
               onClick={handleLogout}
-              style={{ padding: '8px 16px', background: 'var(--canvas)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+              style={{ padding: '8px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               <LogOut size={16} /> 로그아웃
             </button>
@@ -207,9 +207,9 @@ const AdminPage = () => {
         <div
           onClick={() => !uploading && fileRef.current.click()}
           style={{
-            background: 'var(--canvas)',
-            border: `1px dashed ${uploading ? 'var(--primary)' : 'var(--ink-muted)'}`,
-            borderRadius: '0',
+            background: 'var(--surface-1)',
+            border: `2px dashed ${uploading ? 'var(--primary)' : 'var(--hairline-strong)'}`,
+            borderRadius: 'var(--r-lg)',
             padding: '48px',
             textAlign: 'center',
             cursor: uploading ? 'not-allowed' : 'pointer',
@@ -232,7 +232,7 @@ const AdminPage = () => {
           </div>
           <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
             {['A01', '3.15 부정선거를 계기로...', '4.19혁명, 5.18민주화운동, ...', '(이미지링크)', '4.19 혁명'].map((t, i) => (
-              <span key={i} style={{ padding: '4px 12px', background: 'var(--surface-2)', borderRadius: '0', fontSize: '12px', color: 'var(--ink)' }}>{t}</span>
+              <span key={i} style={{ padding: '4px 12px', background: 'var(--surface-2)', borderRadius: 'var(--r-pill)', fontSize: '12px', color: 'var(--ink)' }}>{t}</span>
             ))}
           </div>
         </div>
@@ -243,16 +243,16 @@ const AdminPage = () => {
         </div>
 
         {banks.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '60px 0', background: 'var(--surface-1)', borderRadius: '0', border: '1px solid var(--hairline)' }}>
+          <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '60px 0', background: 'var(--surface-1)', border: 'none', borderRadius: 'var(--r-lg)', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px' }}>
             <div style={{ marginBottom: '16px', color: 'var(--ink-subtle)' }}><FileSpreadsheet size={48} style={{margin:'0 auto'}} /></div>
             아직 업로드된 문제 은행이 없습니다.
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {banks.map(bank => (
-              <div key={bank.id} style={{ background: 'var(--canvas)', border: '1px solid var(--hairline)', borderRadius: '0', overflow: 'hidden' }}>
+              <div key={bank.id} style={{ background: 'var(--surface-1)', border: 'none', borderRadius: 'var(--r-md)', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', overflow: 'hidden' }}>
                 {/* 은행 헤더 */}
-                <div style={{ display: 'flex', alignItems: 'center', padding: '16px 24px', gap: '16px', cursor: 'pointer', background: expandedBank === bank.id ? 'var(--surface-1)' : 'var(--canvas)' }}
+                <div style={{ display: 'flex', alignItems: 'center', padding: '16px 24px', gap: '16px', cursor: 'pointer', background: expandedBank === bank.id ? 'var(--surface-2)' : 'var(--surface-1)' }}
                   onClick={() => toggleExpand(bank.id)}>
                   {expandedBank === bank.id ? <ChevronDown size={20} color="var(--primary)" /> : <ChevronRight size={20} color="var(--ink-muted)" />}
                   <div style={{ flex: 1 }}>
@@ -280,7 +280,7 @@ const AdminPage = () => {
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '400px', overflowY: 'auto' }}>
                         {bankQuestions[bank.id].map((q, idx) => (
-                          <div key={q.id} style={{ background: 'var(--canvas)', padding: '16px', borderRadius: '0', border: '1px solid var(--hairline)', fontSize: '14px' }}>
+                          <div key={q.id} style={{ background: 'var(--surface-2)', padding: '16px', borderRadius: 'var(--r-sm)', border: 'none', fontSize: '14px' }}>
                             <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                               <span style={{ fontFamily: 'var(--fp)', fontSize: '12px', color: 'var(--primary)', flexShrink: 0, marginTop: '2px', fontWeight: '600' }}>{q.question_num || idx + 1}</span>
                               <div style={{ flex: 1 }}>
@@ -288,7 +288,7 @@ const AdminPage = () => {
                                 {q.image_url && (
                                   <div style={{ marginTop: '12px' }}>
                                     <img src={q.image_url} alt="문제 이미지"
-                                      style={{ maxHeight: '120px', maxWidth: '200px', objectFit: 'contain', borderRadius: '0', border: '1px solid var(--hairline)' }}
+                                      style={{ maxHeight: '120px', maxWidth: '200px', objectFit: 'contain', borderRadius: 'var(--r-sm)', border: 'none' }}
                                       onError={e => { e.target.style.display = 'none'; }}
                                     />
                                   </div>
@@ -296,7 +296,7 @@ const AdminPage = () => {
                                 {q.options && q.options.length > 0 && (
                                   <div style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                     {q.options.map((opt, i) => (
-                                      <span key={i} style={{ padding: '4px 12px', background: 'var(--surface-2)', borderRadius: '0', fontSize: '12px', color: 'var(--ink)' }}>
+                                      <span key={i} style={{ padding: '4px 12px', background: 'var(--surface-3)', borderRadius: 'var(--r-pill)', fontSize: '12px', color: 'var(--ink)' }}>
                                         {i + 1}. {opt}
                                       </span>
                                     ))}
@@ -304,7 +304,7 @@ const AdminPage = () => {
                                 )}
                               </div>
                               <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                                <span style={{ padding: '4px 12px', background: 'var(--surface-1)', borderRadius: '0', fontSize: '12px', color: 'var(--semantic-success)', fontWeight: '600', borderLeft: '3px solid var(--semantic-success)' }}>
+                                <span style={{ padding: '4px 12px', background: 'var(--surface-3)', borderRadius: 'var(--r-pill)', fontSize: '12px', color: 'var(--semantic-success)', fontWeight: '600' }}>
                                   {Array.isArray(q.answers) ? q.answers.join(', ') : q.answers}
                                 </span>
                               </div>
