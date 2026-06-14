@@ -1,8 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { BUB_IMG_SRC } from '../lib/assets';
-import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, ShieldCheck, Lock, Globe } from 'lucide-react';
+import * as XLSX from 'xlsx';
+import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, ShieldCheck, Lock, Globe, Upload, Download } from 'lucide-react';
+
+function convertDriveUrl(url) {
+  if (!url || !url.trim()) return '';
+  const raw = url.trim();
+  if (raw.includes('drive.google.com/thumbnail')) return raw;
+  let m = raw.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+  m = raw.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+  m = raw.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+  return raw;
+}
+
+function parseOptions(cell) {
+  if (!cell && cell !== 0) return [];
+  const str = String(cell).trim();
+  if (!str) return [];
+  return str.split(',').map(s => s.trim()).filter(Boolean);
+}
+
+function parseAnswers(cell) {
+  if (!cell && cell !== 0) return [];
+  const str = String(cell).trim();
+  if (!str) return [];
+  return str.split(',').map(s => s.trim()).filter(Boolean);
+}
 
 const ADMIN_EMAILS = ['gogh9@susaek.sen.es.kr'];
 
@@ -14,6 +42,10 @@ const QuizList = ({ user }) => {
   const [newRoomTitle, setNewRoomTitle] = useState('');
   const [selectedBankId, setSelectedBankId] = useState('');
   const [creating, setCreating] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadData, setUploadData] = useState({ title: '', subject: '', isPublic: true, validRows: [] });
+  const fileRef = useRef();
   const navigate = useNavigate();
 
   const isAdmin = ADMIN_EMAILS.includes(user?.email);
@@ -86,6 +118,102 @@ const QuizList = ({ user }) => {
     alert('공유 링크가 복사되었습니다!\n' + url);
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    e.target.value = '';
+
+    setUploading(true);
+    try {
+      const data = await file.arrayBuffer();
+      const wb = XLSX.read(data, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+      const firstRow = rows[0];
+      const hasHeader = firstRow && (
+        String(firstRow[0] || '').includes('문항') || 
+        String(firstRow[0] || '').toLowerCase().includes('num') ||
+        String(firstRow[0] || '').toLowerCase().includes('no')
+      );
+      const dataRows = hasHeader ? rows.slice(1) : rows;
+
+      const validRows = dataRows.filter(r => r && r[1] && String(r[1]).trim());
+
+      if (validRows.length === 0) {
+        alert('유효한 문제가 없습니다. 엑셀 형식을 확인하세요.\n(A:문항번호 B:문항 C:선택지 D:이미지 E:정답)');
+        setUploading(false);
+        return;
+      }
+
+      setUploadData({ title: '', subject: '', isPublic: true, validRows });
+      setShowUploadModal(true);
+    } catch (err) {
+      console.error(err);
+      alert('파일 읽기 중 오류가 발생했습니다.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const confirmUpload = async () => {
+    if (!uploadData.title.trim()) {
+      alert('문제 은행 이름을 입력해주세요.');
+      return;
+    }
+
+    setUploading(true);
+    setShowUploadModal(false);
+    try {
+      const { data: bank, error: bankErr } = await supabase
+        .from('question_banks')
+        .insert([{
+          title: uploadData.title,
+          subject: uploadData.subject,
+          is_public: uploadData.isPublic,
+          uploaded_by: user.id,
+          question_count: uploadData.validRows.length
+        }])
+        .select()
+        .single();
+
+      if (bankErr) throw bankErr;
+
+      const questions = uploadData.validRows.map(r => ({
+        bank_id: bank.id,
+        question_num: r[0] ? String(r[0]).trim() : '',
+        question_text: String(r[1] || '').trim(),
+        options: parseOptions(r[2]),
+        answers: parseAnswers(r[4]),
+        image_url: convertDriveUrl(r[3])
+      }));
+
+      const { error: qErr } = await supabase.from('bank_questions').insert(questions);
+      if (qErr) throw qErr;
+
+      alert(`✅ "${uploadData.title}" 업로드 완료!\n총 ${uploadData.validRows.length}개 문제가 저장되었습니다.`);
+      setBanks(prev => [bank, ...prev]);
+    } catch (err) {
+      console.error(err);
+      alert('업로드 중 오류가 발생했습니다: ' + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const downloadTemplate = () => {
+    const ws = XLSX.utils.aoa_to_sheet([
+      ['문항번호', '문항', '선택지', '이미지링크(선택)', '정답'],
+      [1, '다음 중 한국의 수도는 어디인가요?', '서울, 부산, 인천, 제주', '', '서울'],
+      [2, '태양계에서 가장 큰 행성은 무엇인가요?', '지구, 화성, 목성, 금성', '', '목성'],
+      [3, '단답형 예시: 1+1은 무엇인가요? (선택지를 비워두면 단답형이 됩니다)', '', '', '2'],
+      [4, '이 동물의 이름은 무엇인가요?', '고양이, 강아지, 사자, 호랑이', 'https://drive.google.com/uc?id=1exampleId_replace_this', '고양이']
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Template');
+    XLSX.writeFile(wb, '문제은행_템플릿.xlsx');
+  };
+
   return (
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
       <div style={{ width: '800px', maxWidth: '98vw', margin: '0 auto' }}>
@@ -116,14 +244,33 @@ const QuizList = ({ user }) => {
           </div>
         </div>
 
-        {/* 새 게임방 만들기 버튼 */}
-        <button
-          className="btn-teal"
-          onClick={() => setShowCreateModal(true)}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '20px' }}
-        >
-          <Plus size={18} /> 새 게임방 만들기
-        </button>
+        {/* 상단 액션 버튼들 */}
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' }}>
+          <button
+            className="btn-teal"
+            onClick={() => setShowCreateModal(true)}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flex: 1, margin: 0 }}
+          >
+            <Plus size={18} /> 새 게임방 만들기
+          </button>
+          
+          <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" style={{ display: 'none' }} onChange={handleFileUpload} />
+          
+          <button
+            onClick={() => !uploading && fileRef.current.click()}
+            disabled={uploading}
+            style={{ padding: '12px 24px', background: 'var(--surface-2)', border: '1px solid var(--primary)', borderRadius: 'var(--r-pill)', color: 'var(--primary)', cursor: uploading ? 'not-allowed' : 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}
+          >
+            {uploading ? '⏳ 업로드 중...' : <><Upload size={18} /> 문제 은행 업로드</>}
+          </button>
+
+          <button
+            onClick={downloadTemplate}
+            style={{ padding: '12px 24px', background: 'var(--surface-2)', border: '1px solid var(--ink-muted)', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}
+          >
+            <Download size={18} /> 템플릿 다운로드
+          </button>
+        </div>
 
         {/* 게임방 목록 */}
         {loading ? (
@@ -246,6 +393,78 @@ const QuizList = ({ user }) => {
               <button onClick={createRoom} disabled={creating || !selectedBankId || !newRoomTitle.trim()}
                 className="btn-teal" style={{ flex: 1, margin: 0, padding: '12px' }}>
                 {creating ? '생성 중...' : '게임방 만들기'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* 업로드 설정 모달 */}
+      {showUploadModal && (
+        <div className="c-overlay show" style={{ zIndex: 1000 }}>
+          <div className="qz-card qz-body" style={{ width: '480px', transform: 'none' }}>
+            <div style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--ink)', fontWeight: 'bold', marginBottom: '24px' }}>
+              문제 은행 등록
+            </div>
+            <div style={{ marginBottom: '16px' }}>
+              <label className="f-label">문제 은행 이름</label>
+              <div className="f-wrap">
+                <input
+                  type="text"
+                  placeholder="예: 2학년 1학기 중간고사 대비"
+                  value={uploadData.title}
+                  onChange={e => setUploadData({ ...uploadData, title: e.target.value })}
+                />
+              </div>
+            </div>
+            <div style={{ marginBottom: '24px' }}>
+              <label className="f-label">과목 (선택사항)</label>
+              <div className="f-wrap">
+                <input
+                  type="text"
+                  placeholder="예: 국어, 수학"
+                  value={uploadData.subject}
+                  onChange={e => setUploadData({ ...uploadData, subject: e.target.value })}
+                />
+              </div>
+            </div>
+            <div style={{ marginBottom: '32px' }}>
+              <label className="f-label">공유 설정</label>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--ink)' }}>
+                  <input
+                    type="radio"
+                    checked={uploadData.isPublic === true}
+                    onChange={() => setUploadData({ ...uploadData, isPublic: true })}
+                    style={{ accentColor: 'var(--primary)' }}
+                  />
+                  <Globe size={16} /> 전체 공개 (공유)
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--ink)' }}>
+                  <input
+                    type="radio"
+                    checked={uploadData.isPublic === false}
+                    onChange={() => setUploadData({ ...uploadData, isPublic: false })}
+                    style={{ accentColor: 'var(--primary)' }}
+                  />
+                  <Lock size={16} /> 나만 보기 (비공개)
+                </label>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                className="btn-sub"
+                onClick={() => setShowUploadModal(false)}
+                style={{ flex: 1 }}
+              >
+                취소
+              </button>
+              <button
+                className="btn-teal"
+                onClick={confirmUpload}
+                style={{ flex: 1, margin: 0 }}
+                disabled={uploading}
+              >
+                {uploading ? '저장 중...' : '업로드 완료'}
               </button>
             </div>
           </div>
