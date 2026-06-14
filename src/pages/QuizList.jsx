@@ -459,7 +459,7 @@ const QuizList = ({ user }) => {
             disabled={uploading}
             style={{ padding: '12px 24px', background: 'var(--surface-2)', border: '1px solid var(--primary)', borderRadius: 'var(--r-pill)', color: 'var(--primary)', cursor: uploading ? 'not-allowed' : 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}
           >
-            {uploading ? '⏳ 업로드 중...' : <><Upload size={18} /> 문제 은행 업로드</>}
+            {uploading ? '⏳ 업로드 중...' : <><Upload size={18} /> 문제 업로드</>}
           </button>
 
           <button
