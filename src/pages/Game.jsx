@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { initGameEngine } from '../lib/gameEngine';
+import { BUB_IMG_SRC } from '../lib/assets';
 
 const Game = () => {
   const [searchParams] = useSearchParams();
@@ -186,7 +187,9 @@ const Game = () => {
     return (
       <div key="login-view" className="screen login-screen" id="scr-login">
         <div className="login-card">
-          <div className="login-icon">🫧</div>
+          <div className="login-icon">
+            <img src={BUB_IMG_SRC} alt="Player" style={{ width: '36px', height: '42px', objectFit: 'contain', imageRendering: 'pixelated' }} />
+          </div>
           <div className="login-title">BUBBLE BOBBLE<br />QUIZ ADVENTURE</div>
           <div className="login-sub">방 코드: {room} {quizSet ? `(${quizSet.title})` : ''}</div>
           
