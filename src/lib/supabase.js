@@ -5,7 +5,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-k
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: window.sessionStorage, // 창을 닫으면 세션이 삭제되도록 설정
+    storage: window.localStorage, // OAuth 리다이렉트(PKCE) 오류 방지를 위해 localStorage 사용 필수
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true
