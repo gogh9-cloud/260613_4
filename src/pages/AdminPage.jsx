@@ -54,23 +54,15 @@ const AdminPage = () => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { navigate('/'); return; }
       setUser(user);
-      fetchBanks(user);
+      fetchBanks();
     });
   }, []);
 
-const ADMIN_EMAILS = ['gogh9@susaek.sen.es.kr'];
-
-  const fetchBanks = async (currentUser) => {
-    const isAdmin = ADMIN_EMAILS.includes(currentUser.email);
-    let query = supabase
+  const fetchBanks = async () => {
+    const { data } = await supabase
       .from('question_banks')
-      .select('*');
-      
-    if (!isAdmin) {
-      query = query.eq('uploaded_by', currentUser.id);
-    }
-      
-    const { data } = await query.order('created_at', { ascending: false });
+      .select('*')
+      .order('created_at', { ascending: false });
     setBanks(data || []);
     setLoading(false);
   };

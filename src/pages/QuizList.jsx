@@ -31,15 +31,10 @@ const QuizList = ({ user }) => {
   };
 
   const fetchBanks = async () => {
-    let query = supabase
+    const { data } = await supabase
       .from('question_banks')
-      .select('id, title, subject, question_count');
-    
-    if (!isAdmin) {
-      query = query.eq('uploaded_by', user.id);
-    }
-    
-    const { data } = await query.order('created_at', { ascending: false });
+      .select('id, title, subject, question_count')
+      .order('created_at', { ascending: false });
     setBanks(data || []);
   };
 
