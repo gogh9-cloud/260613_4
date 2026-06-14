@@ -363,6 +363,58 @@ const QuizList = ({ user }) => {
     setEditingQuestion(null);
   };
 
+  const deleteQuestion = async (qId, bankId) => {
+    if (!window.confirm('이 문제를 삭제하시겠습니까?')) return;
+    const { error } = await supabase.from('bank_questions').delete().eq('id', qId);
+    if (error) {
+      alert('문제 삭제 실패: ' + error.message);
+      return;
+    }
+    setBankQuestions(prev => ({
+      ...prev,
+      [bankId]: prev[bankId].filter(q => q.id !== qId)
+    }));
+    const bank = banks.find(b => b.id === bankId);
+    if (bank) {
+      const newCount = Math.max(0, bank.question_count - 1);
+      await supabase.from('question_banks').update({ question_count: newCount }).eq('id', bankId);
+      setBanks(prev => prev.map(b => b.id === bankId ? { ...b, question_count: newCount } : b));
+    }
+  };
+
+  const addQuestion = async (bankId) => {
+    const newQuestion = {
+      bank_id: bankId,
+      question_num: '',
+      question_text: '새로운 문제',
+      options: ['선택지 1', '선택지 2'],
+      answers: ['정답'],
+      image_url: ''
+    };
+    const { data, error } = await supabase.from('bank_questions').insert([newQuestion]).select().single();
+    if (error) {
+      alert('문제 추가 실패: ' + error.message);
+      return;
+    }
+    setBankQuestions(prev => ({
+      ...prev,
+      [bankId]: [...(prev[bankId] || []), data]
+    }));
+    const bank = banks.find(b => b.id === bankId);
+    if (bank) {
+      const newCount = bank.question_count + 1;
+      await supabase.from('question_banks').update({ question_count: newCount }).eq('id', bankId);
+      setBanks(prev => prev.map(b => b.id === bankId ? { ...b, question_count: newCount } : b));
+    }
+    setEditingQuestion(data.id);
+    setEditQForm({
+      question_text: data.question_text,
+      options: data.options.join(', '),
+      answers: data.answers.join(', '),
+      image_url: data.image_url
+    });
+  };
+
   // 과거 데이터(uploaded_by가 없는 데이터)는 관리자에게만 보이도록 처리
   const myBanks = banks.filter(b => b.uploaded_by === user.id || (!b.uploaded_by && isAdmin));
   const publicBanks = banks.filter(b => b.is_public === true && b.uploaded_by !== user.id);
@@ -574,12 +626,20 @@ const QuizList = ({ user }) => {
                                 </div>
                               )}
                               {editingQuestion !== q.id && (
-                                <button onClick={() => startEditQuestion(q)} style={{ background: 'none', border: 'none', color: 'var(--ink-subtle)', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'flex-start' }} title="문제 수정">
-                                  <Edit size={16} />
-                                </button>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                  <button onClick={() => startEditQuestion(q)} style={{ background: 'none', border: 'none', color: 'var(--ink-subtle)', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'flex-start' }} title="문제 수정">
+                                    <Edit size={16} />
+                                  </button>
+                                  <button onClick={() => deleteQuestion(q.id, bank.id)} style={{ background: 'none', border: 'none', color: 'var(--semantic-error)', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'flex-start' }} title="문제 삭제">
+                                    <Trash2 size={16} />
+                                  </button>
+                                </div>
                               )}
                             </div>
                           ))}
+                          <button onClick={() => addQuestion(bank.id)} className="btn-sub" style={{ marginTop: '16px', padding: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%' }}>
+                            <Plus size={16} /> 새로운 문제 추가하기
+                          </button>
                         </div>
                       )}
                     </div>
@@ -612,7 +672,7 @@ const QuizList = ({ user }) => {
                         </div>
                         <div style={{ fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '16px' }}>
                           <span><BookOpen size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />총 {bank.question_count}문항</span>
-                          {bank.uploader_email && <span>게시자: {bank.uploader_email}</span>}
+                          <span>게시자: {bank.uploader_email || '관리자'}</span>
                         </div>
                       </div>
                     </div>
