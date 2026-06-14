@@ -7,7 +7,7 @@ import { BUB_IMG_SRC } from '../lib/assets';
 const Game = () => {
   const [searchParams] = useSearchParams();
   const room = searchParams.get('room');
-  
+
   const [quizSet, setQuizSet] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [playerInfo, setPlayerInfo] = useState({ ban: '', num: '', name: '' });
@@ -15,7 +15,7 @@ const Game = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [scale, setScale] = useState(1);
-  
+
   const canvasRef = useRef(null);
   const engineRef = useRef(null);
 
@@ -31,7 +31,7 @@ const Game = () => {
       .select('*, question_banks(id, title)')
       .eq('link_code', room)
       .single();
-    
+
     if (error || !qSet) {
       setErrorMsg('유효하지 않은 링크입니다.');
       return;
@@ -63,7 +63,7 @@ const Game = () => {
       setErrorMsg('모든 정보를 입력해주세요.');
       return;
     }
-    
+
     setLoading(true);
     // 학생 정보 조회
     let { data: student, error: fetchError } = await supabase
@@ -89,7 +89,7 @@ const Game = () => {
         .insert([{ quiz_set_id: quizSet.id, ban: parseInt(ban), num: parseInt(num), name }])
         .select()
         .single();
-      
+
       if (insertError) {
         setLoading(false);
         console.error(insertError);
@@ -134,17 +134,17 @@ const Game = () => {
         onSaveStageScore: async ({ ban, num, name, stageName, stageScore, solved }) => {
           const newStageScores = { ...player.stageScores, [stageName]: Math.max(stageScore, player.stageScores[stageName] || 0) };
           const newTotal = Object.values(newStageScores).reduce((a, b) => a + b, 0);
-          
+
           await supabase.from('students').update({
             total_score: newTotal,
             stage_scores: newStageScores
           }).eq('id', player.id);
-          
+
           return { score: newTotal, stageScores: newStageScores };
         },
         onSubmitAnswer: async ({ questionNum, answer, isCorrect }) => {
           const qObj = questions.find(q => q.question_num === questionNum);
-          if(qObj) {
+          if (qObj) {
             await supabase.from('student_logs').insert([{
               student_id: player.id,
               question_id: qObj.id,
@@ -166,7 +166,7 @@ const Game = () => {
       };
 
       engineRef.current = initGameEngine(canvasRef.current, callbacks, { player, quizPool });
-      
+
       // Start the game loop after a brief delay to ensure DOM is ready
       setTimeout(() => {
         engineRef.current.start();
@@ -188,12 +188,12 @@ const Game = () => {
       }
       const availableWidth = window.innerWidth;
       const availableHeight = window.innerHeight;
-      
+
       // Base game dimensions: width 800px, height ~580px
       // Adding a small margin of 20px
       const scaleX = availableWidth / 820;
       const scaleY = availableHeight / 600;
-      
+
       const newScale = Math.min(scaleX, scaleY);
       setScale(newScale > 0 ? newScale : 1);
     };
@@ -216,26 +216,26 @@ const Game = () => {
           </div>
           <div className="login-title">BUBBLE BOBBLE<br />QUIZ ADVENTURE</div>
           <div className="login-sub">방 코드: {room} {quizSet ? `(${quizSet.title})` : ''}</div>
-          
+
           {errorMsg && <div style={{ color: 'var(--red)', fontSize: '13px', textAlign: 'center', marginBottom: '10px' }}>{errorMsg}</div>}
-          
+
           <label className="f-label">반 · 번호 · 이름</label>
           <div style={{ display: 'flex', gap: '6px', marginBottom: '6px', alignItems: 'stretch' }}>
             <div className="f-wrap" style={{ width: '60px', marginBottom: 0, flexShrink: 0 }}>
-              <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="반" value={playerInfo.ban} onChange={e => setPlayerInfo({...playerInfo, ban: e.target.value.replace(/[^0-9]/g, '')})} style={{ textAlign: 'center', padding: '12px 4px' }} />
+              <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="반" value={playerInfo.ban} onChange={e => setPlayerInfo({ ...playerInfo, ban: e.target.value.replace(/[^0-9]/g, '') })} style={{ textAlign: 'center', padding: '12px 4px' }} />
             </div>
             <div className="f-wrap" style={{ width: '60px', marginBottom: 0, flexShrink: 0 }}>
-              <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="번호" value={playerInfo.num} onChange={e => setPlayerInfo({...playerInfo, num: e.target.value.replace(/[^0-9]/g, '')})} style={{ textAlign: 'center', padding: '12px 4px' }} />
+              <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="번호" value={playerInfo.num} onChange={e => setPlayerInfo({ ...playerInfo, num: e.target.value.replace(/[^0-9]/g, '') })} style={{ textAlign: 'center', padding: '12px 4px' }} />
             </div>
             <div className="f-wrap" style={{ flex: 1, marginBottom: 0 }}>
-              <input type="text" placeholder="이름" value={playerInfo.name} onChange={e => setPlayerInfo({...playerInfo, name: e.target.value})} maxLength="12" />
+              <input type="text" placeholder="이름" value={playerInfo.name} onChange={e => setPlayerInfo({ ...playerInfo, name: e.target.value })} maxLength="12" />
             </div>
           </div>
-          
+
           <button className="btn-teal" onClick={handleStart} disabled={loading || !quizSet}>
             {loading ? '접속 중...' : '게임 시작 ▶'}
           </button>
-          
+
           <div style={{ marginTop: '24px', fontSize: '10px', color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: '1.4', wordBreak: 'keep-all' }}>
             본 앱에 사용된 일부 캐릭터 이미지는 주식회사 타이토(TAITO Corporation)의 게임 '버블보블(Bubble Bobble)'의 자산이며, 교육적 목적으로만 사용되었습니다. 모든 권리는 원저작권자에게 있습니다. 교육적 목적 이외의 사용은 금지합니다.
           </div>
@@ -255,13 +255,13 @@ const Game = () => {
           <div className="hud-item"><span className="hud-icon">📚</span> <span className="hud-main" id="hv-sheet">{quizSet?.title}</span></div>
           <div className="hud-item"><span className="hud-icon">🗺️</span> <span className="hud-main blue" id="hv-lv">Lv1</span></div>
         </div>
-        
+
         {/* 캔버스 영역 */}
         <div id="cw-wrap" className="canvas-area">
           <canvas id="gc" width="800" height="480" tabIndex="0" ref={canvasRef}></canvas>
           <div id="float-layer"></div>
-          <div id="c-ov" className="c-overlay"><span className="ot">READY!</span><br/><span className="oh">화면을 클릭하여 시작</span></div>
-          
+          <div id="c-ov" className="c-overlay"><span className="ot">READY!</span><br /><span className="oh">화면을 클릭하여 시작</span></div>
+
           {/* 게임 클리어 오버레이 */}
           <div id="clear-ov" className="clear-overlay">
             <div id="clear-title" className="clear-title">STAGE CLEAR!</div>
@@ -279,7 +279,7 @@ const Game = () => {
           <div id="qz-box" className="qz-card qz-body">
             <button id="qz-x" className="qz-xbtn">✕</button>
             <div id="qz-top">
-              <div><span className="qnum" style={{fontFamily:'var(--fp)',fontSize:'14px',color:'var(--teal)'}}>Q</span><span id="qz-attempt" style={{marginLeft:'8px',fontSize:'12px',color:'var(--muted)'}}></span><span id="qz-pts" style={{marginLeft:'10px',color:'var(--gold)',fontWeight:'bold'}}></span></div>
+              <div><span className="qnum" style={{ fontFamily: 'var(--fp)', fontSize: '14px', color: 'var(--teal)' }}>Q</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '12px', color: 'var(--muted)' }}></span><span id="qz-pts" style={{ marginLeft: '10px', color: 'var(--gold)', fontWeight: 'bold' }}></span></div>
               <div id="qz-save" className="save-s"></div>
             </div>
             <div id="qz-q" className="qz-q"></div>
@@ -295,7 +295,7 @@ const Game = () => {
           [조작키] 좌우 방향키: 이동 / 위 방향키: 점프 / 스페이스바: 비눗방울 발사
         </div>
       </div>
-      
+
       {/* 셀렉트박스 (엔진 코드 호환을 위해 숨김) */}
       <select id="sel-sheet" style={{ display: 'none' }}>
         <option value={quizSet?.title}>{quizSet?.title}</option>
