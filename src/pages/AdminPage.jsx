@@ -180,7 +180,7 @@ const AdminPage = () => {
       ['문항번호', '문항', '선택지', '이미지링크(선택)', '정답'],
       [1, '다음 중 한국의 수도는 어디인가요?', '서울, 부산, 인천, 제주', '', '서울'],
       [2, '태양계에서 가장 큰 행성은 무엇인가요?', '지구, 화성, 목성, 금성', '', '목성'],
-      [3, '1+1은 무엇인가요?', '2,3,4,1', '', '2'],
+      [3, '단답형 예시: 1+1은 무엇인가요? (선택지를 비워두면 단답형이 됩니다)', '', '', '2'],
       [4, '이 동물의 이름은 무엇인가요?', '고양이, 강아지, 사자, 호랑이', 'https://drive.google.com/uc?id=1exampleId_replace_this', '고양이']
     ]);
     const wb = XLSX.utils.book_new();
@@ -256,11 +256,6 @@ const AdminPage = () => {
             <span style={{ color: 'var(--ink-subtle)', fontSize: '12px', marginTop: '8px', display: 'inline-block' }}>
               열 순서: A(문항번호) · B(문항) · C(선택지, 쉼표 구분) · D(이미지 링크) · E(정답)
             </span>
-          </div>
-          <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            {['A01', '3.15 부정선거를 계기로...', '4.19혁명, 5.18민주화운동, ...', '(이미지링크)', '4.19 혁명'].map((t, i) => (
-              <span key={i} style={{ padding: '4px 12px', background: 'var(--surface-2)', borderRadius: 'var(--r-pill)', fontSize: '12px', color: 'var(--ink)' }}>{t}</span>
-            ))}
           </div>
         </div>
 
