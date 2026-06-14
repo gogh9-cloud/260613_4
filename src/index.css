@@ -70,8 +70,8 @@ html, body {
   color: var(--primary);
 }
 
-.login-title { font-family: var(--ft); font-size: 32px; font-weight: 700; color: var(--ink); text-align: left; line-height: 1.25; margin-bottom: 8px; letter-spacing: -0.5px; }
-.login-sub { font-size: 16px; color: var(--ink-muted); text-align: left; margin-bottom: 24px; line-height: 1.5; font-weight: 400; }
+.login-title { font-family: var(--ft); font-size: 32px; font-weight: 700; color: var(--ink); text-align: center; line-height: 1.25; margin-bottom: 8px; letter-spacing: -0.5px; }
+.login-sub { font-size: 16px; color: var(--ink-muted); text-align: center; margin-bottom: 24px; line-height: 1.5; font-weight: 400; }
 .f-label { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 8px; display: block; }
 .f-wrap { position: relative; margin-bottom: 16px; }
 
