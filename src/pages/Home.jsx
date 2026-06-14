@@ -52,7 +52,7 @@ const Home = () => {
     <div className="screen login-screen">
       <div className="login-card">
         <div className="login-icon">
-          <img src={BUB_IMG_SRC} alt="Player" style={{ width: '36px', height: '42px', objectFit: 'contain', imageRendering: 'pixelated' }} />
+          <img src={BUB_IMG_SRC} alt="Player" style={{ width: '100%', height: '100%', objectFit: 'cover', imageRendering: 'pixelated' }} />
         </div>
         <div className="login-title">BUBBLE BOBBLE<br />QUIZ ADVENTURE</div>
         <div className="login-sub">교사용 대시보드 - 구글 계정으로 로그인하세요!</div>
