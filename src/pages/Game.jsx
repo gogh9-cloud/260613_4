@@ -195,10 +195,10 @@ const Game = () => {
           <label className="f-label">반 · 번호 · 이름</label>
           <div style={{ display: 'flex', gap: '6px', marginBottom: '6px', alignItems: 'stretch' }}>
             <div className="f-wrap" style={{ width: '60px', marginBottom: 0, flexShrink: 0 }}>
-              <input type="number" placeholder="반" value={playerInfo.ban} onChange={e => setPlayerInfo({...playerInfo, ban: e.target.value})} style={{ textAlign: 'center', padding: '12px 4px' }} />
+              <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="반" value={playerInfo.ban} onChange={e => setPlayerInfo({...playerInfo, ban: e.target.value.replace(/[^0-9]/g, '')})} style={{ textAlign: 'center', padding: '12px 4px' }} />
             </div>
             <div className="f-wrap" style={{ width: '60px', marginBottom: 0, flexShrink: 0 }}>
-              <input type="number" placeholder="번호" value={playerInfo.num} onChange={e => setPlayerInfo({...playerInfo, num: e.target.value})} style={{ textAlign: 'center', padding: '12px 4px' }} />
+              <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="번호" value={playerInfo.num} onChange={e => setPlayerInfo({...playerInfo, num: e.target.value.replace(/[^0-9]/g, '')})} style={{ textAlign: 'center', padding: '12px 4px' }} />
             </div>
             <div className="f-wrap" style={{ flex: 1, marginBottom: 0 }}>
               <input type="text" placeholder="이름" value={playerInfo.name} onChange={e => setPlayerInfo({...playerInfo, name: e.target.value})} maxLength="12" />
