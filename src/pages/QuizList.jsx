@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { BUB_IMG_SRC } from '../lib/assets';
 import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, ShieldCheck } from 'lucide-react';
 
 const ADMIN_EMAILS = ['gogh9@susaek.sen.es.kr'];
@@ -91,7 +92,10 @@ const QuizList = ({ user }) => {
         {/* 헤더 */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 'var(--r-xl)', padding: '16px 24px' }}>
           <div>
-            <div className="login-title" style={{ fontSize: '14px', textAlign: 'left', margin: 0 }}>🫧 BUBBLE QUIZ</div>
+            <div className="login-title" style={{ fontSize: '14px', textAlign: 'left', margin: 0, display: 'flex', alignItems: 'center' }}>
+              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '18px', height: '18px', marginRight: '6px', imageRendering: 'pixelated' }} />
+              BUBBLE QUIZ
+            </div>
             <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '2px' }}>{user?.email}</div>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -126,7 +130,9 @@ const QuizList = ({ user }) => {
           <div style={{ textAlign: 'center', color: 'var(--subdued)', padding: '40px' }}>로딩 중...</div>
         ) : quizSets.length === 0 ? (
           <div style={{ textAlign: 'center', color: 'var(--subdued)', padding: '60px 0', background: 'var(--surface)', borderRadius: 'var(--r-xl)', border: '1px solid var(--border)' }}>
-            <div style={{ fontSize: '32px', marginBottom: '12px' }}>🎮</div>
+            <div style={{ marginBottom: '12px' }}>
+              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '40px', height: '40px', imageRendering: 'pixelated' }} />
+            </div>
             아직 만든 게임방이 없습니다.<br />
             <span style={{ fontSize: '13px', color: 'var(--muted)' }}>문제 은행에서 문제를 선택해 게임방을 만들어 보세요!</span>
           </div>
@@ -170,7 +176,10 @@ const QuizList = ({ user }) => {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(6px)' }}
           onClick={e => e.target === e.currentTarget && setShowCreateModal(false)}>
           <div style={{ background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 'var(--r-xl)', padding: '32px', width: '480px', maxWidth: '95vw' }}>
-            <div className="login-title" style={{ fontSize: '13px', textAlign: 'center', marginBottom: '8px' }}>🎮 새 게임방 만들기</div>
+            <div className="login-title" style={{ fontSize: '13px', textAlign: 'center', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '20px', height: '20px', marginRight: '6px', imageRendering: 'pixelated' }} />
+              새 게임방 만들기
+            </div>
             <div className="login-sub" style={{ marginBottom: '24px' }}>문제 은행을 선택하고 게임방 이름을 정하세요.</div>
 
             <label className="f-label">게임방 이름</label>
@@ -196,7 +205,10 @@ const QuizList = ({ user }) => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px', maxHeight: '220px', overflowY: 'auto' }}>
                 {banks.map(bank => (
                   <div key={bank.id}
-                    onClick={() => setSelectedBankId(bank.id)}
+                    onClick={() => {
+                      setSelectedBankId(bank.id);
+                      setNewRoomTitle(bank.title);
+                    }}
                     style={{
                       padding: '12px 16px',
                       background: selectedBankId === bank.id ? 'rgba(45,212,191,0.12)' : 'var(--surface)',

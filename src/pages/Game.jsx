@@ -142,15 +142,19 @@ const Game = () => {
 
           return { score: newTotal, stageScores: newStageScores };
         },
-        onSubmitAnswer: async ({ questionNum, answer, isCorrect }) => {
-          const qObj = questions.find(q => String(q.question_num) === String(questionNum));
+        onSubmitAnswer: async ({ id, questionNum, answer, isCorrect }) => {
+          const qObj = questions.find(q => q.id === id);
           if (qObj) {
-            await supabase.from('student_logs').insert([{
+            const { error } = await supabase.from('student_logs').insert([{
               student_id: player.id,
               question_id: qObj.id,
               is_correct: isCorrect,
               submitted_answer: String(answer).slice(0, 300)
             }]);
+            if (error) {
+              console.error("Insert log error:", error);
+              alert("오답 기록 DB 오류: " + error.message);
+            }
           }
         },
         onBack: () => {

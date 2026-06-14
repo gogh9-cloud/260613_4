@@ -1121,6 +1121,7 @@ function finishQuiz(pts,ansStr){
 function logAnswer(isOk,ans){
   if(!curQuizData)return;
   if(!isOk && callbacks.onSubmitAnswer) callbacks.onSubmitAnswer({ban:player.ban,num:player.num,name:player.name,
+    id: curQuizData.id,
     questionNum:String(curQuizData.questionNum||'').slice(0,20),
     answer:String(ans).slice(0,300),isCorrect:false});
 }
