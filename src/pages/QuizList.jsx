@@ -432,14 +432,7 @@ const QuizList = ({ user }) => {
             <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>{user?.email}</div>
           </div>
           <div style={{ display: 'flex', gap: '16px' }}>
-            {isAdmin && (
-              <button
-                onClick={() => navigate('/admin')}
-                style={{ padding: '8px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                <ShieldCheck size={16} /> 관리자
-              </button>
-            )}
+
             <button
               onClick={handleLogout}
               style={{ padding: '8px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
@@ -746,8 +739,8 @@ const QuizList = ({ user }) => {
             {banks.length === 0 ? (
               <div style={{ padding: '16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-sm)', color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginBottom: '32px' }}>
                 등록된 문제 은행이 없습니다.<br />
-                <span style={{ color: 'var(--primary)', cursor: 'pointer', fontWeight: '600', marginTop: '8px', display: 'inline-block' }} onClick={() => { setShowCreateModal(false); navigate('/admin'); }}>
-                  관리자 페이지에서 업로드하세요 →
+                <span style={{ color: 'var(--primary)', cursor: 'pointer', fontWeight: '600', marginTop: '8px', display: 'inline-block' }} onClick={() => { setShowCreateModal(false); !uploading && fileRef.current.click(); }}>
+                  직접 업로드하세요 →
                 </span>
               </div>
             ) : (
