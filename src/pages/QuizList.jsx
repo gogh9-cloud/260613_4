@@ -90,28 +90,28 @@ const QuizList = ({ user }) => {
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
       <div style={{ width: '800px', maxWidth: '98vw', margin: '0 auto' }}>
         {/* 헤더 */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 'var(--r-xl)', padding: '16px 24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', padding: '16px 24px' }}>
           <div>
-            <div className="login-title" style={{ fontSize: '14px', textAlign: 'left', margin: 0, display: 'flex', alignItems: 'center' }}>
-              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '18px', height: '18px', marginRight: '6px', imageRendering: 'pixelated' }} />
+            <div className="login-title" style={{ fontSize: '20px', textAlign: 'left', margin: 0, display: 'flex', alignItems: 'center' }}>
+              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '24px', height: '24px', marginRight: '8px', imageRendering: 'pixelated', filter: 'grayscale(100%) opacity(0.8)' }} />
               BUBBLE QUIZ
             </div>
-            <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '2px' }}>{user?.email}</div>
+            <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>{user?.email}</div>
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '16px' }}>
             {isAdmin && (
               <button
                 onClick={() => navigate('/admin')}
-                style={{ padding: '8px 16px', background: 'rgba(167,139,250,0.15)', border: '1px solid rgba(167,139,250,0.4)', borderRadius: 'var(--r-md)', color: 'var(--purple)', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                style={{ padding: '8px 16px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
               >
-                <ShieldCheck size={14} /> 관리자
+                <ShieldCheck size={16} /> 관리자
               </button>
             )}
             <button
               onClick={handleLogout}
-              style={{ padding: '8px 16px', background: 'var(--raised)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--muted)', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
+              style={{ padding: '8px 16px', background: 'var(--canvas)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              <LogOut size={14} /> 로그아웃
+              <LogOut size={16} /> 로그아웃
             </button>
           </div>
         </div>
@@ -127,42 +127,42 @@ const QuizList = ({ user }) => {
 
         {/* 게임방 목록 */}
         {loading ? (
-          <div style={{ textAlign: 'center', color: 'var(--subdued)', padding: '40px' }}>로딩 중...</div>
+          <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '40px' }}>로딩 중...</div>
         ) : quizSets.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--subdued)', padding: '60px 0', background: 'var(--surface)', borderRadius: 'var(--r-xl)', border: '1px solid var(--border)' }}>
-            <div style={{ marginBottom: '12px' }}>
-              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '40px', height: '40px', imageRendering: 'pixelated' }} />
+          <div style={{ textAlign: 'center', color: 'var(--ink)', padding: '60px 0', background: 'var(--surface-1)', borderRadius: '0', border: '1px solid var(--hairline)' }}>
+            <div style={{ marginBottom: '16px' }}>
+              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '48px', height: '48px', imageRendering: 'pixelated', filter: 'grayscale(100%) opacity(0.5)' }} />
             </div>
             아직 만든 게임방이 없습니다.<br />
-            <span style={{ fontSize: '13px', color: 'var(--muted)' }}>문제 은행에서 문제를 선택해 게임방을 만들어 보세요!</span>
+            <span style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '8px', display: 'inline-block' }}>문제 은행에서 문제를 선택해 게임방을 만들어 보세요!</span>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {quizSets.map(quiz => (
-              <div key={quiz.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', gap: '12px' }}>
+              <div key={quiz.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', background: 'var(--canvas)', border: '1px solid var(--hairline)', borderRadius: '0', gap: '16px' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 'bold', color: 'var(--txt)', fontSize: '15px', marginBottom: '4px' }}>{quiz.title}</div>
+                  <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px' }}>{quiz.title}</div>
                   {quiz.question_banks && (
-                    <div style={{ fontSize: '12px', color: 'var(--teal)', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '2px' }}>
-                      <BookOpen size={11} />
+                    <div style={{ fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                      <BookOpen size={16} />
                       {quiz.question_banks.title}
-                      {quiz.question_banks.subject && <span style={{ color: 'var(--muted)' }}> · #{quiz.question_banks.subject}</span>}
+                      {quiz.question_banks.subject && <span style={{ color: 'var(--ink)' }}> · #{quiz.question_banks.subject}</span>}
                     </div>
                   )}
-                  <div style={{ fontSize: '11px', color: 'var(--muted)' }}>방 코드: {quiz.link_code}</div>
+                  <div style={{ fontSize: '14px', color: 'var(--ink-subtle)' }}>방 코드: {quiz.link_code}</div>
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                   <button onClick={() => copyLink(quiz.link_code)} title="학생 링크 복사"
-                    style={{ padding: '8px 12px', background: 'rgba(45,212,191,0.1)', border: '1px solid rgba(45,212,191,0.3)', borderRadius: 'var(--r-sm)', color: 'var(--teal)', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Copy size={14} /> 링크 복사
+                    style={{ padding: '12px 16px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Copy size={16} /> 링크 복사
                   </button>
                   <button onClick={() => navigate(`/dashboard/${quiz.id}/results`)} title="결과 보기"
-                    style={{ padding: '8px 12px', background: 'rgba(96,165,250,0.1)', border: '1px solid rgba(96,165,250,0.3)', borderRadius: 'var(--r-sm)', color: 'var(--blue)', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <BarChart2 size={14} /> 결과
+                    style={{ padding: '12px 16px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--primary)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <BarChart2 size={16} /> 결과
                   </button>
                   <button onClick={() => deleteQuizSet(quiz.id)} title="삭제"
-                    style={{ padding: '8px', background: 'var(--raised)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', color: 'var(--red)', cursor: 'pointer' }}>
-                    <Trash2 size={14} />
+                    style={{ padding: '12px', background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', color: 'var(--semantic-error)', cursor: 'pointer' }}>
+                    <Trash2 size={16} />
                   </button>
                 </div>
               </div>
@@ -175,15 +175,14 @@ const QuizList = ({ user }) => {
       {showCreateModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(6px)' }}
           onClick={e => e.target === e.currentTarget && setShowCreateModal(false)}>
-          <div style={{ background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 'var(--r-xl)', padding: '32px', width: '480px', maxWidth: '95vw' }}>
-            <div className="login-title" style={{ fontSize: '13px', textAlign: 'center', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '20px', height: '20px', marginRight: '6px', imageRendering: 'pixelated' }} />
+          <div style={{ background: 'var(--surface-1)', border: '1px solid var(--hairline)', borderRadius: '0', padding: '32px', width: '480px', maxWidth: '95vw' }}>
+            <div className="login-title" style={{ fontSize: '32px', textAlign: 'left', marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
               새 게임방 만들기
             </div>
-            <div className="login-sub" style={{ marginBottom: '24px' }}>문제 은행을 선택하고 게임방 이름을 정하세요.</div>
+            <div className="login-sub" style={{ marginBottom: '32px', textAlign: 'left' }}>문제 은행을 선택하고 게임방 이름을 정하세요.</div>
 
             <label className="f-label">게임방 이름</label>
-            <div className="f-wrap" style={{ marginBottom: '16px' }}>
+            <div className="f-wrap" style={{ marginBottom: '24px' }}>
               <input
                 type="text"
                 placeholder="예: 3반 사회 퀴즈"
@@ -195,14 +194,14 @@ const QuizList = ({ user }) => {
 
             <label className="f-label">문제 은행 선택</label>
             {banks.length === 0 ? (
-              <div style={{ padding: '16px', background: 'var(--surface)', borderRadius: 'var(--r-md)', color: 'var(--muted)', fontSize: '13px', textAlign: 'center', marginBottom: '16px' }}>
+              <div style={{ padding: '16px', background: 'var(--canvas)', border: '1px solid var(--hairline)', color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginBottom: '32px' }}>
                 등록된 문제 은행이 없습니다.<br />
-                <span style={{ color: 'var(--teal)', cursor: 'pointer' }} onClick={() => { setShowCreateModal(false); navigate('/admin'); }}>
+                <span style={{ color: 'var(--primary)', cursor: 'pointer', fontWeight: '600', marginTop: '8px', display: 'inline-block' }} onClick={() => { setShowCreateModal(false); navigate('/admin'); }}>
                   관리자 페이지에서 업로드하세요 →
                 </span>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px', maxHeight: '220px', overflowY: 'auto' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '32px', maxHeight: '220px', overflowY: 'auto' }}>
                 {banks.map(bank => (
                   <div key={bank.id}
                     onClick={() => {
@@ -210,16 +209,16 @@ const QuizList = ({ user }) => {
                       setNewRoomTitle(bank.title);
                     }}
                     style={{
-                      padding: '12px 16px',
-                      background: selectedBankId === bank.id ? 'rgba(45,212,191,0.12)' : 'var(--surface)',
-                      border: `1px solid ${selectedBankId === bank.id ? 'rgba(45,212,191,0.5)' : 'var(--border)'}`,
-                      borderRadius: 'var(--r-md)',
+                      padding: '16px',
+                      background: selectedBankId === bank.id ? 'var(--surface-2)' : 'var(--canvas)',
+                      border: `1px solid ${selectedBankId === bank.id ? 'var(--primary)' : 'var(--hairline)'}`,
+                      borderRadius: '0',
                       cursor: 'pointer',
                       transition: 'all 0.15s'
                     }}>
-                    <div style={{ fontWeight: 'bold', color: 'var(--txt)', fontSize: '14px' }}>{bank.title}</div>
-                    <div style={{ fontSize: '12px', color: 'var(--subdued)', marginTop: '2px' }}>
-                      {bank.subject && <span style={{ color: 'var(--blue)', marginRight: '8px' }}>#{bank.subject}</span>}
+                    <div style={{ fontWeight: '600', color: 'var(--ink)', fontSize: '16px' }}>{bank.title}</div>
+                    <div style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '4px' }}>
+                      {bank.subject && <span style={{ color: 'var(--ink)', marginRight: '8px' }}>#{bank.subject}</span>}
                       문제 {bank.question_count}개
                     </div>
                   </div>
@@ -227,9 +226,9 @@ const QuizList = ({ user }) => {
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '16px' }}>
               <button onClick={() => setShowCreateModal(false)}
-                style={{ flex: 1, padding: '12px', background: 'var(--raised)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--subdued)', cursor: 'pointer', fontSize: '14px' }}>
+                className="btn-clear sec" style={{ flex: 1, margin: 0, padding: '12px', fontSize: '14px' }}>
                 취소
               </button>
               <button onClick={createRoom} disabled={creating || !selectedBankId || !newRoomTitle.trim()}

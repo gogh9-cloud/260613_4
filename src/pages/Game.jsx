@@ -221,7 +221,7 @@ const Game = () => {
           <div className="login-title">BUBBLE BOBBLE<br />QUIZ ADVENTURE</div>
           <div className="login-sub">방 코드: {room} {quizSet ? `(${quizSet.title})` : ''}</div>
 
-          {errorMsg && <div style={{ color: 'var(--red)', fontSize: '13px', textAlign: 'center', marginBottom: '10px' }}>{errorMsg}</div>}
+          {errorMsg && <div style={{ color: 'var(--semantic-error)', fontSize: '14px', textAlign: 'center', marginBottom: '16px' }}>{errorMsg}</div>}
 
           <label className="f-label">반 · 번호 · 이름</label>
           <div style={{ display: 'flex', gap: '6px', marginBottom: '6px', alignItems: 'stretch' }}>
@@ -249,7 +249,7 @@ const Game = () => {
   }
 
   return (
-    <div key="game-view" className="screen" id="scr-game" style={{ background: '#000', justifyContent: 'center' }}>
+    <div key="game-view" className="screen" id="scr-game" style={{ background: 'var(--canvas)', justifyContent: 'center' }}>
       <div id="game-container" className="game-wrap" style={{ transform: `scale(${scale})`, transformOrigin: 'center center', width: '800px', height: '580px', flex: 'none' }}>
         {/* HUD */}
         <div id="hud" className="hud">
@@ -283,7 +283,7 @@ const Game = () => {
           <div id="qz-box" className="qz-card qz-body">
             <button id="qz-x" className="qz-xbtn">✕</button>
             <div id="qz-top">
-              <div><span className="qnum" style={{ fontFamily: 'var(--fp)', fontSize: '14px', color: 'var(--teal)' }}>Q</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '12px', color: 'var(--muted)' }}></span><span id="qz-pts" style={{ marginLeft: '10px', color: 'var(--gold)', fontWeight: 'bold' }}></span></div>
+              <div><span className="qnum" style={{ fontFamily: 'var(--fp)', fontSize: '16px', color: 'var(--primary)', fontWeight: '600' }}>Q</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span><span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span></div>
               <div id="qz-save" className="save-s"></div>
             </div>
             <div id="qz-q" className="qz-q"></div>
@@ -295,7 +295,7 @@ const Game = () => {
         </div>
 
         {/* 하단 설명 */}
-        <div style={{ color: 'var(--muted)', fontSize: '12px', textAlign: 'center', marginTop: '10px' }}>
+        <div style={{ color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginTop: '16px' }}>
           [조작키] 좌우 방향키: 이동 / 위 방향키: 점프 / 스페이스바: 비눗방울 발사
         </div>
       </div>
