@@ -179,6 +179,11 @@ const ADMIN_EMAILS = ['gogh9@susaek.sen.es.kr'];
     }
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
   if (loading) return <div className="screen"><div style={{color:'white'}}>Loading...</div></div>;
 
   return (
@@ -198,7 +203,7 @@ const ADMIN_EMAILS = ['gogh9@susaek.sen.es.kr'];
               대시보드로
             </button>
             <button
-              onClick={() => supabase.auth.signOut()}
+              onClick={handleLogout}
               style={{ padding: '8px 16px', background: 'var(--raised)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--red)', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               <LogOut size={14} /> 로그아웃

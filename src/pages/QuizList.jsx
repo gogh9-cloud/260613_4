@@ -79,6 +79,11 @@ const QuizList = ({ user }) => {
     if (!error) setQuizSets(prev => prev.filter(q => q.id !== id));
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
   const copyLink = (linkCode) => {
     const url = `${window.location.origin}/game?room=${linkCode}`;
     navigator.clipboard.writeText(url);
@@ -104,7 +109,7 @@ const QuizList = ({ user }) => {
               </button>
             )}
             <button
-              onClick={() => supabase.auth.signOut()}
+              onClick={handleLogout}
               style={{ padding: '8px 16px', background: 'var(--raised)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--muted)', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               <LogOut size={14} /> 로그아웃
