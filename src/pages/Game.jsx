@@ -193,10 +193,10 @@ const Game = () => {
       const availableWidth = window.innerWidth;
       const availableHeight = window.innerHeight;
 
-      // Base game dimensions: width 800px, height ~580px
+      // Base game dimensions: width 800px, height ~620px
       // Adding a small margin of 20px
       const scaleX = availableWidth / 820;
-      const scaleY = availableHeight / 600;
+      const scaleY = availableHeight / 640;
 
       const newScale = Math.min(scaleX, scaleY);
       setScale(newScale > 0 ? newScale : 1);
@@ -250,7 +250,7 @@ const Game = () => {
 
   return (
     <div key="game-view" className="screen" id="scr-game" style={{ background: 'var(--canvas)', justifyContent: 'center' }}>
-      <div id="game-container" className="game-wrap" style={{ transform: `scale(${scale})`, transformOrigin: 'center center', width: '800px', height: '580px', flex: 'none' }}>
+      <div id="game-container" className="game-wrap" style={{ transform: `scale(${scale})`, transformOrigin: 'center center', width: '800px', height: '620px', flex: 'none' }}>
         {/* HUD */}
         <div id="hud" className="hud">
           <div className="hud-item player"><span className="hud-icon">👨‍🎓</span> <span className="hud-main teal" id="hv-name">{playerInfo.name}</span></div>

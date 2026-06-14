@@ -136,7 +136,7 @@ html, body {
 .hud-main.teal { color:var(--primary); }
 .hud-main.blue { color:var(--primary); }
 
-.canvas-area { position:relative; border-radius: var(--r-md); box-shadow: rgba(0,0,0,0.5) 0px 8px 24px; border: none; background: #000; margin-top: 24px; overflow: hidden; }
+.canvas-area { position:relative; border-radius: var(--r-md); box-shadow: rgba(0,0,0,0.5) 0px 8px 24px; border: none; background: #000; margin-top: 24px; overflow: hidden; flex-shrink: 0; }
 #gc { display:block; outline:none; cursor:default; border-radius: var(--r-md); }
 .c-overlay { position:absolute; inset:0; background: rgba(0,0,0,0.85); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; border-radius: var(--r-md); transition:opacity .3s; z-index:5; }
 .c-overlay.hidden { opacity:0; pointer-events:none; }
