@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { BUB_IMG_SRC } from '../lib/assets';
-import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, ShieldCheck } from 'lucide-react';
+import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, ShieldCheck, Lock, Globe } from 'lucide-react';
 
 const ADMIN_EMAILS = ['gogh9@susaek.sen.es.kr'];
 
@@ -34,7 +34,7 @@ const QuizList = ({ user }) => {
   const fetchBanks = async () => {
     const { data } = await supabase
       .from('question_banks')
-      .select('id, title, subject, question_count')
+      .select('id, title, subject, question_count, is_public')
       .order('created_at', { ascending: false });
     setBanks(data || []);
   };
@@ -217,7 +217,18 @@ const QuizList = ({ user }) => {
                       cursor: 'pointer',
                       transition: 'all 0.15s'
                     }}>
-                    <div style={{ fontWeight: '600', color: 'var(--ink)', fontSize: '16px' }}>{bank.title}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ fontWeight: '600', color: 'var(--ink)', fontSize: '16px' }}>{bank.title}</div>
+                      {bank.is_public === false ? (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', background: 'rgba(255,255,255,0.1)', color: 'var(--ink-muted)', padding: '2px 6px', borderRadius: 'var(--r-pill)' }}>
+                          <Lock size={10} /> 비공개
+                        </span>
+                      ) : (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', background: 'rgba(30,215,96,0.1)', color: 'var(--primary)', padding: '2px 6px', borderRadius: 'var(--r-pill)' }}>
+                          <Globe size={10} /> 공유됨
+                        </span>
+                      )}
+                    </div>
                     <div style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '4px' }}>
                       {bank.subject && <span style={{ color: 'var(--ink)', marginRight: '8px' }}>#{bank.subject}</span>}
                       문제 {bank.question_count}개
