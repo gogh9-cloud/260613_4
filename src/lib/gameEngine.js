@@ -1194,7 +1194,7 @@ function spawnFloat(x,y,txt,color){
 function showClearScreen(){
   const prevBest=player.stageScores[player.sheet]||0;
   const isNew=player.stageScore>prevBest;
-  document.getElementById('clear-sub').textContent='몬스터 '+quizTotal+'마리 완료! 🫧';
+  document.getElementById('clear-sub').textContent='몬스터 '+quizTotal+'마리 처리 완료! 🫧';
   const sc=document.getElementById('clear-sc');
   if(isNew&&prevBest>0) sc.innerHTML=player.stageScore+'점 <span style="font-size:12px;color:var(--teal)">🏆 최고점 갱신!</span>';
   else if(!isNew&&prevBest>0) sc.innerHTML=player.stageScore+'점 <span style="font-size:11px;color:var(--muted)">최고: '+prevBest+'점</span>';
