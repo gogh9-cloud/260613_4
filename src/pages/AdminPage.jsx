@@ -143,6 +143,7 @@ const AdminPage = () => {
           subject: uploadData.subject,
           is_public: uploadData.isPublic,
           uploaded_by: user.id,
+          uploader_email: user.email,
           question_count: uploadData.validRows.length
         }])
         .select()

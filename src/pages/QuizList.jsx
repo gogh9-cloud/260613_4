@@ -72,7 +72,7 @@ const QuizList = ({ user }) => {
   const fetchBanks = async () => {
     const { data } = await supabase
       .from('question_banks')
-      .select('id, title, subject, question_count, is_public')
+      .select('id, title, subject, question_count, is_public, uploader_email')
       .order('created_at', { ascending: false });
     setBanks(data || []);
   };
@@ -178,6 +178,7 @@ const QuizList = ({ user }) => {
           subject: uploadData.subject,
           is_public: uploadData.isPublic,
           uploaded_by: user.id,
+          uploader_email: user.email,
           question_count: uploadData.validRows.length
         }])
         .select()
@@ -493,7 +494,7 @@ const QuizList = ({ user }) => {
               />
             </div>
 
-            <label className="f-label">문제 은행 선택</label>
+            <label className="f-label">문제 선택</label>
             {banks.length === 0 ? (
               <div style={{ padding: '16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-sm)', color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginBottom: '32px' }}>
                 등록된 문제 은행이 없습니다.<br />
@@ -527,6 +528,11 @@ const QuizList = ({ user }) => {
                       ) : (
                         <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', background: 'rgba(30,215,96,0.1)', color: 'var(--primary)', padding: '2px 6px', borderRadius: 'var(--r-pill)' }}>
                           <Globe size={10} /> 공유됨
+                        </span>
+                      )}
+                      {bank.uploader_email && (
+                        <span style={{ fontSize: '12px', color: 'var(--ink-subtle)', marginLeft: 'auto' }}>
+                          {bank.uploader_email}
                         </span>
                       )}
                     </div>
