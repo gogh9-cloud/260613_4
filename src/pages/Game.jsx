@@ -283,7 +283,7 @@ const Game = () => {
           <div id="qz-box" className="qz-card qz-body">
             <button id="qz-x" className="qz-xbtn">✕</button>
             <div id="qz-top">
-              <div><span className="qnum" style={{ fontFamily: 'var(--fp)', fontSize: '16px', color: 'var(--primary)', fontWeight: '600' }}>Q</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span><span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span></div>
+              <div style={{ display: 'flex', alignItems: 'center' }}><span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--primary)', fontWeight: 'bold' }}>Q.</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span><span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span></div>
               <div id="qz-save" className="save-s"></div>
             </div>
             <div id="qz-q" className="qz-q"></div>
