@@ -143,7 +143,7 @@ const Game = () => {
           return { score: newTotal, stageScores: newStageScores };
         },
         onSubmitAnswer: async ({ questionNum, answer, isCorrect }) => {
-          const qObj = questions.find(q => q.question_num === questionNum);
+          const qObj = questions.find(q => String(q.question_num) === String(questionNum));
           if (qObj) {
             await supabase.from('student_logs').insert([{
               student_id: player.id,
