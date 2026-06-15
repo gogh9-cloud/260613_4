@@ -429,8 +429,9 @@ const QuizList = ({ user }) => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-lg)', padding: '16px 24px' }}>
           <div>
             <div className="login-title" style={{ fontSize: '20px', textAlign: 'left', margin: 0, display: 'flex', alignItems: 'center' }}>
-              <img src={BUB_IMG_SRC} alt="icon" style={{ width: '32px', height: '32px', marginRight: '12px', imageRendering: 'pixelated' }} />
-              BUBBLE BOBBLE QUIZ ADVENTURE
+              <img src={BUB_IMG_SRC} alt="dino" style={{ width: '32px', height: '32px', marginRight: '12px', imageRendering: 'pixelated' }} />
+              RETRO GAME QUIZ ADVENTURE
+              <img src="/pacman-icon.png" alt="pacman" style={{ width: '28px', height: '28px', marginLeft: '12px', objectFit: 'contain' }} />
             </div>
             <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>{user?.email}</div>
           </div>

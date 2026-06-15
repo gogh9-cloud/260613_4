@@ -51,10 +51,15 @@ const Home = () => {
   return (
     <div className="screen login-screen">
       <div className="login-card">
-        <div className="login-icon">
-          <img src={BUB_IMG_SRC} alt="Player" style={{ width: '100%', height: '100%', objectFit: 'cover', imageRendering: 'pixelated' }} />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px', marginBottom: '16px' }}>
+          <div className="login-icon" style={{ margin: 0, width: '64px', height: '64px' }}>
+            <img src={BUB_IMG_SRC} alt="Bubble Bobble" style={{ width: '100%', height: '100%', objectFit: 'cover', imageRendering: 'pixelated' }} />
+          </div>
+          <div className="login-icon" style={{ margin: 0, width: '64px', height: '64px' }}>
+            <img src="/pacman-icon.png" alt="Pacman" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          </div>
         </div>
-        <div className="login-title">BUBBLE BOBBLE<br />QUIZ ADVENTURE</div>
+        <div className="login-title">RETRO GAME<br />QUIZ ADVENTURE</div>
         <div className="login-sub">교사용 대시보드 - 구글 계정으로 로그인하세요!</div>
         <button 
           className="btn-teal" 
