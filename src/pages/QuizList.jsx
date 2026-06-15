@@ -416,8 +416,8 @@ const QuizList = ({ user }) => {
   };
 
   // 과거 데이터(uploaded_by가 없는 데이터)는 관리자에게만 보이도록 처리하되, 이메일이 일치하면 보이도록 수정
-  const myBanks = banks.filter(b => b.uploaded_by === user.id || b.uploader_email === user?.email || (!b.uploaded_by && isAdmin));
-  const publicBanks = banks.filter(b => b.is_public === true && b.uploaded_by !== user.id && b.uploader_email !== user?.email);
+  const myBanks = banks.filter(b => b.uploaded_by === user.id || String(b.uploader_email).trim().toLowerCase() === String(user?.email).trim().toLowerCase() || (!b.uploaded_by && isAdmin));
+  const publicBanks = banks.filter(b => b.is_public === true && b.uploaded_by !== user.id && String(b.uploader_email).trim().toLowerCase() !== String(user?.email).trim().toLowerCase());
 
   return (
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
@@ -545,11 +545,6 @@ const QuizList = ({ user }) => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {myBanks.length === 0 ? (
               <div style={{ textAlign: 'center', color: 'var(--ink)', padding: '60px 0', background: 'var(--surface-1)', borderRadius: 'var(--r-lg)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px' }}>
-                {/* DEBUG INFO: Please remove later */}
-                <div style={{ color: 'red', fontSize: '10px', marginBottom: '10px' }}>
-                  DEBUG: banks={banks.length}, userEmail={user?.email}, 
-                  matchedBanks={banks.filter(b => b.uploaded_by === user.id || b.uploader_email === user?.email).length}
-                </div>
                 아직 업로드한 문제 은행이 없습니다.<br />
                 <span style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '8px', display: 'inline-block' }}>엑셀 템플릿을 다운로드하여 내 문제를 올려보세요!</span>
               </div>
