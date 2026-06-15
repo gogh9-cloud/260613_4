@@ -563,11 +563,11 @@ const QuizList = ({ user }) => {
                     </div>
                     <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                       <button onClick={(e) => { e.stopPropagation(); setSelectedBankId(bank.id); setNewRoomTitle(bank.title); setShowCreateModal(true); }} title="게임방 만들기"
-                        style={{ padding: '12px 16px', background: 'var(--primary)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--surface-1)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
+                        style={{ padding: '12px 16px', background: 'var(--primary)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--surface-1)', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         <Plus size={16} /> 방 만들기
                       </button>
                       <button onClick={(e) => { e.stopPropagation(); setEditBankData({ id: bank.id, title: bank.title, isPublic: bank.is_public }); setShowEditModal(true); }} title="수정"
-                        style={{ padding: '12px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        style={{ padding: '12px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         <Edit size={16} /> 수정
                       </button>
                       <button onClick={(e) => { e.stopPropagation(); deleteBank(bank.id); }} title="삭제"
@@ -668,11 +668,11 @@ const QuizList = ({ user }) => {
                     </div>
                     <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                       <button onClick={(e) => { e.stopPropagation(); setSelectedBankId(bank.id); setNewRoomTitle(bank.title); setShowCreateModal(true); }} title="게임방 만들기"
-                        style={{ padding: '12px 16px', background: 'var(--primary)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--surface-1)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
+                        style={{ padding: '12px 16px', background: 'var(--primary)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--surface-1)', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         <Plus size={16} /> 방 만들기
                       </button>
                       <button onClick={(e) => { e.stopPropagation(); copyBank(bank); }} title="내 문제로 가져오기"
-                        className="btn-teal" style={{ padding: '12px 16px', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        className="btn-teal" style={{ padding: '12px 16px', margin: 0, display: 'flex', alignItems: 'center', gap: '6px', fontSize: '15px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         <Download size={16} /> 가져오기
                       </button>
                     </div>
