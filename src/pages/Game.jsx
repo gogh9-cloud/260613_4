@@ -36,6 +36,7 @@ const Game = () => {
 
     if (error || !qSet) {
       setErrorMsg('유효하지 않은 링크입니다.');
+      setLoading(false);
       return;
     }
     setQuizSet(qSet);
@@ -57,6 +58,7 @@ const Game = () => {
         .order('created_at', { ascending: true });
       setQuestions(qData || []);
     }
+    setLoading(false);
   };
 
   const handleStart = async () => {
