@@ -511,8 +511,12 @@ const QuizList = ({ user }) => {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       {quiz.title}
-                      <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '4px', background: 'var(--surface-2)', color: 'var(--ink-muted)', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', height: 'fit-content' }}>
-                        {quiz.game_type === 'pacman' ? '👻 팩맨' : '🦕 버블버블'}
+                      <span style={{ padding: '4px 8px', borderRadius: '4px', background: 'var(--surface-2)', display: 'inline-flex', alignItems: 'center', height: 'fit-content' }}>
+                        {quiz.game_type === 'pacman' ? (
+                          <img src="/pacman-icon.png" alt="pacman" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+                        ) : (
+                          <img src={BUB_IMG_SRC} alt="bubble bobble" style={{ width: '24px', height: '24px', objectFit: 'cover', imageRendering: 'pixelated' }} />
+                        )}
                       </span>
                     </div>
                     {quiz.question_banks && (
