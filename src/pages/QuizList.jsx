@@ -442,57 +442,50 @@ const QuizList = ({ user }) => {
           </div>
         </div>
 
-        {/* 상단 액션 버튼들 */}
-        <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' }}>
-          <button
-            className="btn-teal"
-            onClick={() => setShowCreateModal(true)}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flex: 1, margin: 0 }}
-          >
-            <Plus size={18} /> 새 게임방 만들기
-          </button>
-          
-          <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" style={{ display: 'none' }} onChange={handleFileUpload} />
-          
-          <button
-            onClick={() => !uploading && fileRef.current.click()}
-            disabled={uploading}
-            style={{ padding: '12px 24px', background: 'var(--surface-2)', border: '1px solid var(--primary)', borderRadius: 'var(--r-pill)', color: 'var(--primary)', cursor: uploading ? 'not-allowed' : 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}
-          >
-            {uploading ? '⏳ 업로드 중...' : <><Upload size={18} /> 문제 업로드</>}
-          </button>
+        {/* 탭 메뉴 & 우측 액션 버튼 */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '2px solid var(--surface-2)', paddingBottom: '8px', flexWrap: 'wrap', gap: '16px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={() => setActiveTab('rooms')}
+              style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'rooms' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'rooms' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
+            >
+              내가 만든 게임방
+              {activeTab === 'rooms' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
+            </button>
+            <button
+              onClick={() => setActiveTab('banks')}
+              style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'banks' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'banks' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
+            >
+              내 문제 관리
+              {activeTab === 'banks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
+            </button>
+            <button
+              onClick={() => setActiveTab('publicBanks')}
+              style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'publicBanks' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'publicBanks' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
+            >
+              전체 문제 보기
+              {activeTab === 'publicBanks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
+            </button>
+          </div>
 
-          <button
-            onClick={downloadTemplate}
-            style={{ padding: '12px 24px', background: 'var(--surface-2)', border: '1px solid var(--ink-muted)', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}
-          >
-            <Download size={18} /> 템플릿 다운로드
-          </button>
-        </div>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" style={{ display: 'none' }} onChange={handleFileUpload} />
+            
+            <button
+              onClick={() => !uploading && fileRef.current.click()}
+              disabled={uploading}
+              style={{ padding: '10px 20px', background: 'var(--surface-2)', border: '1px solid var(--primary)', borderRadius: 'var(--r-pill)', color: 'var(--primary)', cursor: uploading ? 'not-allowed' : 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}
+            >
+              {uploading ? '⏳ 업로드 중...' : <><Upload size={16} /> 문제 업로드</>}
+            </button>
 
-        {/* 탭 메뉴 */}
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '2px solid var(--surface-2)', paddingBottom: '8px' }}>
-          <button
-            onClick={() => setActiveTab('rooms')}
-            style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'rooms' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'rooms' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
-          >
-            내가 만든 게임방
-            {activeTab === 'rooms' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
-          </button>
-          <button
-            onClick={() => setActiveTab('banks')}
-            style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'banks' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'banks' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
-          >
-            내 문제 관리
-            {activeTab === 'banks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
-          </button>
-          <button
-            onClick={() => setActiveTab('publicBanks')}
-            style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'publicBanks' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'publicBanks' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
-          >
-            전체 문제 보기
-            {activeTab === 'publicBanks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
-          </button>
+            <button
+              onClick={downloadTemplate}
+              style={{ padding: '10px 20px', background: 'var(--surface-2)', border: '1px solid var(--ink-muted)', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}
+            >
+              <Download size={16} /> 템플릿 다운로드
+            </button>
+          </div>
         </div>
 
         {/* 탭 내용 */}
@@ -569,6 +562,10 @@ const QuizList = ({ user }) => {
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                      <button onClick={(e) => { e.stopPropagation(); setSelectedBankId(bank.id); setNewRoomTitle(bank.title); setShowCreateModal(true); }} title="게임방 만들기"
+                        style={{ padding: '12px 16px', background: 'var(--primary)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--surface-1)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
+                        <Plus size={16} /> 방 만들기
+                      </button>
                       <button onClick={(e) => { e.stopPropagation(); setEditBankData({ id: bank.id, title: bank.title, isPublic: bank.is_public }); setShowEditModal(true); }} title="수정"
                         style={{ padding: '12px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Edit size={16} /> 수정
@@ -670,6 +667,10 @@ const QuizList = ({ user }) => {
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                      <button onClick={(e) => { e.stopPropagation(); setSelectedBankId(bank.id); setNewRoomTitle(bank.title); setShowCreateModal(true); }} title="게임방 만들기"
+                        style={{ padding: '12px 16px', background: 'var(--primary)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--surface-1)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
+                        <Plus size={16} /> 방 만들기
+                      </button>
                       <button onClick={(e) => { e.stopPropagation(); copyBank(bank); }} title="내 문제로 가져오기"
                         className="btn-teal" style={{ padding: '12px 16px', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Download size={16} /> 가져오기
