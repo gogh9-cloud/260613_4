@@ -227,7 +227,7 @@ const QuizList = ({ user }) => {
     if (!window.confirm('문제 은행을 삭제하시겠습니까?\n연결된 게임방이 있다면 해당 게임방에서는 문제가 보이지 않을 수 있습니다.')) return;
     const { data, error } = await supabase.from('question_banks').delete().eq('id', id).select();
     if (error || !data || data.length === 0) {
-      alert('삭제 실패: 권한이 없거나 이미 삭제된 항목입니다.');
+      alert(`삭제 실패: 권한이 없거나 삭제할 수 없는 상태입니다.\n(사유: ${error?.message || '알 수 없는 오류'})`);
     } else {
       setBanks(prev => prev.filter(b => b.id !== id));
       if (expandedBank === id) setExpandedBank(null);
