@@ -1498,12 +1498,10 @@ function drawPacman(ts) {
   const cy = player.y * TILE + TILE/2;
   ctx.save();
   ctx.translate(cx, cy);
-  if (pacDir === 0) ctx.scale(-1, 1); // Face right by default, but wait, the original image faces left.
-  // Actually, Pacman usually faces right in sprites. If our sprite faces right:
-  // if pacDir=0(R) -> scale(1), pacDir=1(L) -> scale(-1). We'll assume it faces left.
-  if (pacDir === 0) ctx.scale(-1, 1); 
-  if (pacDir === 2) { ctx.rotate(Math.PI/2); ctx.scale(-1, 1); }
-  if (pacDir === 3) { ctx.rotate(-Math.PI/2); ctx.scale(-1, 1); }
+  // 원본 이미지가 오른쪽을 보고 있다고 가정
+  if (pacDir === 1) ctx.scale(-1, 1); // Left (좌우 반전)
+  if (pacDir === 2) ctx.rotate(-Math.PI/2); // Up (반시계방향 90도)
+  if (pacDir === 3) ctx.rotate(Math.PI/2); // Down (시계방향 90도)
   
   if (pacImage.complete) {
     ctx.drawImage(pacImage, -TILE*0.5, -TILE*0.5, TILE, TILE);
