@@ -544,8 +544,8 @@ const QuizList = ({ user }) => {
             ) : (
               myBanks.map(bank => (
                 <div key={bank.id} style={{ background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-md)', overflow: 'hidden' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', cursor: 'pointer' }} onClick={() => toggleExpand(bank.id)}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', cursor: 'pointer', flexWrap: 'wrap', gap: '16px' }} onClick={() => toggleExpand(bank.id)}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: '200px' }}>
                       <div style={{ color: 'var(--primary)' }}>
                         {expandedBank === bank.id ? <ChevronDown size={24} /> : <ChevronRight size={24} />}
                       </div>
@@ -648,8 +648,8 @@ const QuizList = ({ user }) => {
             ) : (
               publicBanks.map(bank => (
                 <div key={bank.id} style={{ background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-md)', overflow: 'hidden' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', cursor: 'pointer' }} onClick={() => toggleExpand(bank.id)}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', cursor: 'pointer', flexWrap: 'wrap', gap: '16px' }} onClick={() => toggleExpand(bank.id)}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: '200px' }}>
                       <div style={{ color: 'var(--primary)' }}>
                         {expandedBank === bank.id ? <ChevronDown size={24} /> : <ChevronRight size={24} />}
                       </div>
