@@ -1498,17 +1498,6 @@ function drawPacman(ts) {
   ctx.restore();
 }
 
-// right(0): 위쪽  left(1): 위쪽  up(2): 왼쪽  down(3): 왼쪽위
-  const eyeOffsets = [
-    [ r*0.22, -r*0.42],  // 오른쪽: 중앙 위
-    [-r*0.22, -r*0.42],  // 왼쪽:   중앙 위
-    [-r*0.42, -r*0.22],  // 위쪽:   왼쪽 위
-    [-r*0.42,  r*0.22],  // 아래쪽: 왼쪽 아래→왼쪽 위로
-  ];
-  const [eoX, eoY] = eyeOffsets[pacDir] || eyeOffsets[0];
-  ctx.beginPath(); ctx.arc(cx + eoX, cy + eoY, r*0.13, 0, Math.PI*2);
-  ctx.fillStyle = '#000'; ctx.fill();
-}
 
 function drawObstacle(px, py, ts) {
   const cx = px + TILE/2, cy = py + TILE/2;
@@ -2421,7 +2410,7 @@ console.log(GAS_MODE ? '[GAS MODE]' : '[STANDALONE]');
       player.stageScores = player.stageScores || {};
       
       // Start game directly without login
-      initStage(0, true);
+      initStage(Math.floor(Math.random() * MAPS.length), true);
       showScr('scr-game');
       requestAnimationFrame(render);
       requestAnimationFrame(inputLoop);
