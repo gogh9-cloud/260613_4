@@ -9,13 +9,12 @@
 <style>
 /* ─ 디자인 시스템 ─ */
 :root {
-  --gold:#f5c842; --teal:#2dd4bf; --red:#f43f5e;
-  --green:#4ade80; --purple:#a78bfa; --blue:#60a5fa;
-  --panel:#111827; --surface:#1a2236; --raised:#212d42; --hover:#2a3a54;
-  --txt:#e8eef8; --muted:#4a6080; --subdued:#8fa3c0;
-  --border:rgba(255,255,255,.10);
-  --r-sm:4px; --r-md:8px; --r-lg:14px; --r-xl:20px;
-  --fp:'Press Start 2P',monospace; --fu:'Noto Sans KR',sans-serif;
+  --panel:#121212; --surface:#181818; --raised:#1f1f1f; --hover:#252525;
+  --txt:#ffffff; --muted:#b3b3b3; --subdued:#7c7c7c;
+  --border:#4d4d4d;
+  --gold:#1ed760; --teal:#1ed760; --blue:#539df5; --red:#f3727f;
+  --r-sm:4px; --r-md:6px; --r-lg:8px; --r-xl:20px;
+  --fp:'SpotifyMixUITitle','Press Start 2P',cursive; --fu:'SpotifyMixUI','Inter',sans-serif;
   --fs-base:15px; --fs-sm:13px; --fs-xs:11px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -93,7 +92,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:var
 @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-6px)}}
 .clear-sub{font-size:15px;font-family:var(--fu);font-weight:500;color:var(--teal);text-align:center;line-height:1.7}
 .clear-score{font-family:var(--fu);font-size:26px;font-weight:700;color:#fff;text-shadow:0 0 20px rgba(245,200,66,.8)}
-.btn-clear{padding:14px 26px;background:var(--gold);border:none;border-radius:var(--r-md);color:#0d0a00;font-family:var(--fu);font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(245,200,66,.4);transition:transform .15s}
+.btn-clear{padding:14px 32px;background:var(--gold);border:none;border-radius:9999px;color:#0d0a00;font-family:var(--fu);font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 24px rgba(245,200,66,.4);transition:transform .15s}
 .btn-clear:hover{transform:scale(1.05)}
 
 /* ─ 상태 바 ─ */

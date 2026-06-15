@@ -447,28 +447,25 @@ const QuizList = ({ user }) => {
         </div>
 
         {/* 탭 메뉴 & 우측 액션 버튼 */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '2px solid var(--surface-2)', paddingBottom: '8px', flexWrap: 'wrap', gap: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={() => setActiveTab('rooms')}
-              style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'rooms' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'rooms' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
+              style={{ padding: '8px 16px', background: activeTab === 'rooms' ? 'var(--surface-2)' : 'transparent', border: 'none', borderRadius: 'var(--r-full-pill)', color: activeTab === 'rooms' ? 'var(--ink)' : 'var(--ink-muted)', fontSize: '14px', fontWeight: activeTab === 'rooms' ? '700' : '400', cursor: 'pointer', transition: 'background 0.2s, color 0.2s' }}
             >
               내 게임방
-              {activeTab === 'rooms' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
             </button>
             <button
               onClick={() => setActiveTab('banks')}
-              style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'banks' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'banks' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
+              style={{ padding: '8px 16px', background: activeTab === 'banks' ? 'var(--surface-2)' : 'transparent', border: 'none', borderRadius: 'var(--r-full-pill)', color: activeTab === 'banks' ? 'var(--ink)' : 'var(--ink-muted)', fontSize: '14px', fontWeight: activeTab === 'banks' ? '700' : '400', cursor: 'pointer', transition: 'background 0.2s, color 0.2s' }}
             >
               내 문제 관리
-              {activeTab === 'banks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
             </button>
             <button
               onClick={() => setActiveTab('publicBanks')}
-              style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'publicBanks' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'publicBanks' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
+              style={{ padding: '8px 16px', background: activeTab === 'publicBanks' ? 'var(--surface-2)' : 'transparent', border: 'none', borderRadius: 'var(--r-full-pill)', color: activeTab === 'publicBanks' ? 'var(--ink)' : 'var(--ink-muted)', fontSize: '14px', fontWeight: activeTab === 'publicBanks' ? '700' : '400', cursor: 'pointer', transition: 'background 0.2s, color 0.2s' }}
             >
               문제 은행
-              {activeTab === 'publicBanks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
             </button>
           </div>
 

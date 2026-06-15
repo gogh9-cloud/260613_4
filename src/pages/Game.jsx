@@ -203,8 +203,8 @@ const Game = () => {
 
       // Base game dimensions: width 800px, height ~620px
       // Adding a small margin of 20px
-      const scaleX = availableWidth / 820;
-      const scaleY = availableHeight / 640;
+      const scaleX = availableWidth / 800;
+      const scaleY = availableHeight / 620;
 
       const newScale = Math.min(scaleX, scaleY);
       setScale(newScale > 0 ? newScale : 1);
@@ -354,14 +354,7 @@ const Game = () => {
                 <div id="qz-res"></div>
                 <div id="qz-cont"></div>
               </div>
-            </div>
-
-            {/* 하단 설명 */}
-            <div style={{ color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginTop: '16px' }}>
-              [조작키] 좌우 방향키: 이동 / 위 방향키: 점프 / 스페이스바: 비눗방울 발사
-            </div>
-          </div>
-
+            </div>          </div>
           {/* 셀렉트박스 (엔진 코드 호환을 위해 숨김) */}
           <select id="sel-sheet" style={{ display: 'none' }}>
             <option value={quizSet?.title}>{quizSet?.title}</option>
