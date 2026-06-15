@@ -2318,7 +2318,7 @@ console.log(GAS_MODE ? '[GAS MODE]' : '[STANDALONE]');
 
     if (data.type === 'INIT_GAME') {
       quizPool = data.quizPool;
-      player = data.player;
+      Object.assign(player, data.player);
       player.stageScores = player.stageScores || {};
       
       // Start game directly without login
