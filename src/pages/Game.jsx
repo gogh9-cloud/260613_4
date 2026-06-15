@@ -350,7 +350,7 @@ const Game = () => {
               <div className="qz-body" style={{ paddingTop: '14px' }}>
                 <button id="qz-x" className="qz-xbtn" style={{ position: 'absolute', top: '10px', right: '10px' }}>✕</button>
                 <div id="qz-top" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', minHeight: '16px', paddingRight: '36px' }}>
-                  <span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--gold)', fontWeight: 'bold' }}>Q.</span>
+                  <span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--primary)', fontWeight: 'bold' }}>Q.</span>
                   <span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span>
                   <span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span>
                 </div>
