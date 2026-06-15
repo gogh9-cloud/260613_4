@@ -40,6 +40,7 @@ const QuizList = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newRoomTitle, setNewRoomTitle] = useState('');
+  const [newRoomGameType, setNewRoomGameType] = useState('bubble');
   const [selectedBankId, setSelectedBankId] = useState('');
   const [creating, setCreating] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -92,7 +93,8 @@ const QuizList = ({ user }) => {
         title: newRoomTitle.trim(),
         teacher_id: user.id,
         link_code: linkCode,
-        bank_id: selectedBankId
+        bank_id: selectedBankId,
+        game_type: newRoomGameType
       }])
       .select('*, question_banks(title, subject)')
       .single();
@@ -104,6 +106,7 @@ const QuizList = ({ user }) => {
       setQuizSets(prev => [data, ...prev]);
       setShowCreateModal(false);
       setNewRoomTitle('');
+      setNewRoomGameType('bubble');
       setSelectedBankId('');
     }
     setCreating(false);
@@ -734,6 +737,28 @@ const QuizList = ({ user }) => {
                 onChange={e => setNewRoomTitle(e.target.value)}
                 autoFocus
               />
+            </div>
+
+            <label className="f-label">게임 종류</label>
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--ink)' }}>
+                <input
+                  type="radio"
+                  checked={newRoomGameType === 'bubble'}
+                  onChange={() => setNewRoomGameType('bubble')}
+                  style={{ accentColor: 'var(--primary)' }}
+                />
+                버블버블
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--ink)' }}>
+                <input
+                  type="radio"
+                  checked={newRoomGameType === 'pacman'}
+                  onChange={() => setNewRoomGameType('pacman')}
+                  style={{ accentColor: 'var(--primary)' }}
+                />
+                팩맨
+              </label>
             </div>
 
             <label className="f-label">문제 선택</label>

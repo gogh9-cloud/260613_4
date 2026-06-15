@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { initGameEngine } from '../lib/gameEngine';
 import { BUB_IMG_SRC } from '../lib/assets';
+import PacmanWrapper from './PacmanWrapper';
 
 const Game = () => {
   const [searchParams] = useSearchParams();
@@ -240,71 +241,111 @@ const Game = () => {
             {loading ? '접속 중...' : '게임 시작 ▶'}
           </button>
 
-          <div style={{ marginTop: '24px', fontSize: '10px', color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: '1.4', wordBreak: 'keep-all' }}>
-            본 앱에 사용된 캐릭터 이미지는 주식회사 타이토(TAITO Corporation)의 게임 '버블보블(Bubble Bobble)'의 자산이며, 교육적 목적으로만 사용되었습니다. 모든 권리는 원저작권자에게 있습니다. 교육적 목적 이외의 사용은 금지합니다.
-          </div>
-        </div>
-      </div>
-    );
-  }
+          <div style={{ m  return (
+    <>
+      {quizSet?.game_type === 'pacman' ? (
+        <PacmanWrapper 
+          quizPool={questions.map(q => ({
+            id: q.id,
+            questionNum: q.question_num,
+            question: q.question_text,
+            type: q.options && q.options.length > 0 && q.options.some(o => o !== '') ? 'choice' : 'short',
+            options: q.options,
+            answer: q.answers,
+            image: q.image_url
+          }))}
+          player={{
+            id: playerInfo.id,
+            ban: playerInfo.ban,
+            num: playerInfo.num,
+            name: playerInfo.name,
+            sheet: quizSet.title,
+            score: playerInfo.score,
+            stageScore: 0,
+            stageScores: playerInfo.stageScores,
+            x: 50, y: 50, w: 30, h: 44, vx: 0, vy: 0, facing: 1
+          }}
+          callbacks={{
+            onSaveStageScore: async ({ ban, num, name, stageName, stageScore, solved }) => {
+              const newStageScores = { ...playerInfo.stageScores, [stageName]: Math.max(stageScore, playerInfo.stageScores[stageName] || 0) };
+              const newTotal = Object.values(newStageScores).reduce((a, b) => a + b, 0);
+              await supabase.from('students').update({ total_score: newTotal, stage_scores: newStageScores }).eq('id', playerInfo.id);
+              setPlayerInfo(prev => ({ ...prev, score: newTotal, stageScores: newStageScores }));
+              return { score: newTotal, stageScores: newStageScores };
+            },
+            onSubmitAnswer: async ({ id, questionNum, answer, isCorrect }) => {
+              const qObj = questions.find(q => q.id === id);
+              if (qObj) {
+                await supabase.from('student_logs').insert([{
+                  student_id: playerInfo.id,
+                  question_id: qObj.id,
+                  is_correct: isCorrect,
+                  submitted_answer: String(answer).slice(0, 300)
+                }]);
+              }
+            }
+          }}
+          onExit={() => setGameState('login')}
+        />
+      ) : (
+        <div key="game-view" className="screen" id="scr-game" style={{ background: 'var(--canvas)', justifyContent: 'center' }}>
+          <div id="game-container" className="game-wrap" style={{ transform: `scale(${scale})`, transformOrigin: 'center center', width: '800px', height: '620px', flex: 'none' }}>
+            {/* HUD */}
+            <div id="hud" className="hud">
+              <div className="hud-item player"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Player</span> <span className="hud-main teal" id="hv-name">{playerInfo.name}</span></div>
+              <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Score</span> <span className="hud-main gold"><span id="hv-score">{playerInfo.score}</span>점</span></div>
+              <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Goal</span> <span className="hud-main" id="hv-quiz">0/0</span></div>
+              <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Title</span> <span className="hud-main" id="hv-sheet">{quizSet?.title}</span></div>
+              <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Stage</span> <span className="hud-main blue" id="hv-lv">Lv1</span></div>
+            </div>
 
-  return (
-    <div key="game-view" className="screen" id="scr-game" style={{ background: 'var(--canvas)', justifyContent: 'center' }}>
-      <div id="game-container" className="game-wrap" style={{ transform: `scale(${scale})`, transformOrigin: 'center center', width: '800px', height: '620px', flex: 'none' }}>
-        {/* HUD */}
-        <div id="hud" className="hud">
-          <div className="hud-item player"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Player</span> <span className="hud-main teal" id="hv-name">{playerInfo.name}</span></div>
-          <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Score</span> <span className="hud-main gold"><span id="hv-score">{playerInfo.score}</span>점</span></div>
-          <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Goal</span> <span className="hud-main" id="hv-quiz">0/0</span></div>
-          <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Title</span> <span className="hud-main" id="hv-sheet">{quizSet?.title}</span></div>
-          <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Stage</span> <span className="hud-main blue" id="hv-lv">Lv1</span></div>
-        </div>
+            {/* 캔버스 영역 */}
+            <div id="cw-wrap" className="canvas-area">
+              <canvas id="gc" width="800" height="480" tabIndex="0" ref={canvasRef}></canvas>
+              <div id="float-layer"></div>
+              <div id="c-ov" className="c-overlay"><span className="ot">READY!</span><br /><span className="oh">화면을 클릭하여 시작</span></div>
 
-        {/* 캔버스 영역 */}
-        <div id="cw-wrap" className="canvas-area">
-          <canvas id="gc" width="800" height="480" tabIndex="0" ref={canvasRef}></canvas>
-          <div id="float-layer"></div>
-          <div id="c-ov" className="c-overlay"><span className="ot">READY!</span><br /><span className="oh">화면을 클릭하여 시작</span></div>
+              {/* 게임 클리어 오버레이 */}
+              <div id="clear-ov" className="clear-overlay">
+                <div id="clear-title" className="clear-title">STAGE CLEAR!</div>
+                <div id="clear-sub" className="clear-sub"></div>
+                <div id="clear-sc" className="clear-score"></div>
+                <div style={{ marginTop: '20px' }}>
+                  <button id="btn-retry" className="btn-clear sec" style={{ margin: '5px' }}>다시 하기</button>
+                  <button id="btn-back" className="btn-clear sec" style={{ margin: '5px' }}>처음으로</button>
+                </div>
+              </div>
+            </div>
 
-          {/* 게임 클리어 오버레이 */}
-          <div id="clear-ov" className="clear-overlay">
-            <div id="clear-title" className="clear-title">STAGE CLEAR!</div>
-            <div id="clear-sub" className="clear-sub"></div>
-            <div id="clear-sc" className="clear-score"></div>
-            <div style={{ marginTop: '20px' }}>
-              <button id="btn-retry" className="btn-clear sec" style={{ margin: '5px' }}>다시 하기</button>
-              <button id="btn-back" className="btn-clear sec" style={{ margin: '5px' }}>처음으로</button>
+            {/* 퀴즈 오버레이 */}
+            <div id="qz-ov" className="qz-overlay">
+              <div id="qz-box" className="qz-card qz-body">
+                <button id="qz-x" className="qz-xbtn">✕</button>
+                <div id="qz-top">
+                  <div style={{ display: 'flex', alignItems: 'center' }}><span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--primary)', fontWeight: 'bold' }}>Q.</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span><span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span></div>
+                  <div id="qz-save" className="save-s"></div>
+                </div>
+                <div id="qz-q" className="qz-q"></div>
+                <div id="qz-img" className="qz-img-wrap"></div>
+                <div id="qz-area"></div>
+                <div id="qz-res"></div>
+                <div id="qz-cont"></div>
+              </div>
+            </div>
+
+            {/* 하단 설명 */}
+            <div style={{ color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginTop: '16px' }}>
+              [조작키] 좌우 방향키: 이동 / 위 방향키: 점프 / 스페이스바: 비눗방울 발사
             </div>
           </div>
-        </div>
 
-        {/* 퀴즈 오버레이 */}
-        <div id="qz-ov" className="qz-overlay">
-          <div id="qz-box" className="qz-card qz-body">
-            <button id="qz-x" className="qz-xbtn">✕</button>
-            <div id="qz-top">
-              <div style={{ display: 'flex', alignItems: 'center' }}><span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--primary)', fontWeight: 'bold' }}>Q.</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span><span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span></div>
-              <div id="qz-save" className="save-s"></div>
-            </div>
-            <div id="qz-q" className="qz-q"></div>
-            <div id="qz-img" className="qz-img-wrap"></div>
-            <div id="qz-area"></div>
-            <div id="qz-res"></div>
-            <div id="qz-cont"></div>
-          </div>
+          {/* 셀렉트박스 (엔진 코드 호환을 위해 숨김) */}
+          <select id="sel-sheet" style={{ display: 'none' }}>
+            <option value={quizSet?.title}>{quizSet?.title}</option>
+          </select>
         </div>
-
-        {/* 하단 설명 */}
-        <div style={{ color: 'var(--ink-muted)', fontSize: '14px', textAlign: 'center', marginTop: '16px' }}>
-          [조작키] 좌우 방향키: 이동 / 위 방향키: 점프 / 스페이스바: 비눗방울 발사
-        </div>
-      </div>
-
-      {/* 셀렉트박스 (엔진 코드 호환을 위해 숨김) */}
-      <select id="sel-sheet" style={{ display: 'none' }}>
-        <option value={quizSet?.title}>{quizSet?.title}</option>
-      </select>
-    </div>
+      )}
+    </>
   );
 };
 
