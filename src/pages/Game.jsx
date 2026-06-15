@@ -224,9 +224,12 @@ const Game = () => {
       <div key="login-view" className="screen login-screen" id="scr-login">
         <div className="login-card">
           {quizSet?.game_type === 'pacman' ? (
-            <div className="login-icon" style={{ width: '80px', height: '80px', marginBottom: '16px' }}>
-              <img src="/pacman-icon.png" alt="Pacman" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-            </div>
+            <>
+              <div className="login-icon" style={{ width: '80px', height: '80px', marginBottom: '16px' }}>
+                <img src="/pacman-icon.png" alt="Pacman" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              </div>
+              <div className="login-title">PACMAN<br />QUIZ ADVENTURE</div>
+            </>
           ) : (
             <>
               <div className="login-icon">
