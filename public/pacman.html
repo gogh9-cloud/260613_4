@@ -417,6 +417,16 @@ let pacDir = 0; // 0=right 1=left 2=up 3=down
 let ghosts = [];
 let invincibilityEndTime = 0;
 
+let lastGhostMove = 0;
+const GHOST_MOVE_MS = 250;
+const ghostImages = [];
+const ghostSrcs = ['/ghost1.png', '/ghost2.png', '/ghost3.png', '/ghost4.png'];
+ghostSrcs.forEach(src => {
+  const img = new Image();
+  img.src = src;
+  ghostImages.push(img);
+});
+
 // 퀴즈 팝업
 let curQuizKey  = null;
 let curQuizNode = null;
