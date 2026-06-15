@@ -361,9 +361,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:var
   <div class="qz-card">
     <div class="qz-body" style="padding-top:14px">
       <button class="qz-xbtn" id="qz-x" style="position:absolute;top:10px;right:10px">✕</button>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;min-height:16px;padding-right:36px">
-        <span id="qz-attempt" style="font-size:12px;font-family:var(--fu);color:var(--muted)"></span>
-        <span id="qz-pts" style="font-size:13px;font-family:var(--fu);font-weight:700;color:var(--gold)">+10~20점 랜덤</span>
+      <div id="qz-top" style="display: flex; align-items: center; margin-bottom: 10px; min-height: 16px; padding-right: 36px;">
+        <span class="qnum" style="font-family: var(--ft); font-size: 24px; color: var(--green); font-weight: bold;">Q.</span>
+        <span id="qz-attempt" style="margin-left: 8px; font-size: 14px; color: var(--muted);"></span>
+        <span id="qz-pts" style="margin-left: 16px; color: var(--gold); font-weight: 600;">+10~20점 랜덤</span>
       </div>
       <div class="qz-q" id="qz-q"></div>
       <div class="qz-img-wrap" id="qz-img" style="display:none"></div>

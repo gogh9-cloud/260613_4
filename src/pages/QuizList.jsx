@@ -433,7 +433,7 @@ const QuizList = ({ user }) => {
               RETRO GAME QUIZ ADVENTURE
               <img src="/pacman-icon.png" alt="pacman" style={{ width: '28px', height: '28px', marginLeft: '12px', objectFit: 'contain' }} />
             </div>
-            <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>{user?.email}</div>
+            <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>Built by sota / {user?.email}</div>
           </div>
           <div style={{ display: 'flex', gap: '16px' }}>
 
@@ -453,7 +453,7 @@ const QuizList = ({ user }) => {
               onClick={() => setActiveTab('rooms')}
               style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'rooms' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'rooms' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
             >
-              내가 만든 게임방
+              내 게임방
               {activeTab === 'rooms' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
             </button>
             <button
@@ -467,7 +467,7 @@ const QuizList = ({ user }) => {
               onClick={() => setActiveTab('publicBanks')}
               style={{ padding: '8px 16px', background: 'none', border: 'none', color: activeTab === 'publicBanks' ? 'var(--primary)' : 'var(--ink-muted)', fontSize: '18px', fontWeight: activeTab === 'publicBanks' ? 'bold' : 'normal', cursor: 'pointer', position: 'relative' }}
             >
-              전체 문제 보기
+              문제 은행
               {activeTab === 'publicBanks' && <div style={{ position: 'absolute', bottom: '-10px', left: 0, right: 0, height: '4px', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>}
             </button>
           </div>

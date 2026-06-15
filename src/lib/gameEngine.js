@@ -521,13 +521,13 @@ function resolveY(obj) {
         return;
       }
     }
-    // 위로 이동 중 — 천장에 머리 닿음
-    if (obj.vy < 0) {
-      if (top <= p.y + p.h && top >= p.y - Math.abs(obj.vy) - 2) {
-        obj.y = p.y + p.h;
-        obj.vy = 0;
-      }
-    }
+    // 위로 이동 중 — 천장에 머리 닿음 (제거하여 위로 통과 가능하게 함)
+    // if (obj.vy < 0) {
+    //   if (top <= p.y + p.h && top >= p.y - Math.abs(obj.vy) - 2) {
+    //     obj.y = p.y + p.h;
+    //     obj.vy = 0;
+    //   }
+    // }
   }
 }
 function clampX(obj) {
