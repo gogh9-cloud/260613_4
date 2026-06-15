@@ -508,7 +508,12 @@ const QuizList = ({ user }) => {
               {quizSets.map(quiz => (
                 <div key={quiz.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-md)', gap: '16px' }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px' }}>{quiz.title}</div>
+                    <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {quiz.title}
+                      <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '4px', background: 'var(--surface-2)', color: 'var(--ink-muted)', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', height: 'fit-content' }}>
+                        {quiz.game_type === 'pacman' ? '👻 팩맨' : '🦕 버블버블'}
+                      </span>
+                    </div>
                     {quiz.question_banks && (
                       <div style={{ fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                         <BookOpen size={16} />
