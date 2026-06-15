@@ -545,23 +545,23 @@ const QuizList = ({ user }) => {
               myBanks.map(bank => (
                 <div key={bank.id} style={{ background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-md)', overflow: 'hidden' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', cursor: 'pointer', flexWrap: 'wrap', gap: '16px' }} onClick={() => toggleExpand(bank.id)}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: '200px' }}>
-                      <div style={{ color: 'var(--primary)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: '1 1 200px', minWidth: 0 }}>
+                      <div style={{ color: 'var(--primary)', flexShrink: 0 }}>
                         {expandedBank === bank.id ? <ChevronDown size={24} /> : <ChevronRight size={24} />}
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          {bank.title}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <span style={{ wordBreak: 'break-word' }}>{bank.title}</span>
                           <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '12px', background: bank.is_public ? 'rgba(0, 255, 127, 0.1)' : 'rgba(255,255,255,0.1)', color: bank.is_public ? 'var(--primary)' : 'var(--ink-muted)', display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                             {bank.is_public ? <><Globe size={12}/> 공개</> : <><Lock size={12}/> 비공개</>}
                           </span>
                         </div>
-                        <div style={{ fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '16px' }}>
-                          <span><BookOpen size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />총 {bank.question_count}문항</span>
+                        <div style={{ fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                          <span style={{ whiteSpace: 'nowrap' }}><BookOpen size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />총 {bank.question_count}문항</span>
                         </div>
                       </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', gap: '8px', flexShrink: 0, flexWrap: 'wrap' }}>
                       <button onClick={(e) => { e.stopPropagation(); setSelectedBankId(bank.id); setNewRoomTitle(bank.title); setShowCreateModal(true); }} title="게임방 만들기"
                         style={{ padding: '12px 16px', background: 'var(--primary)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--surface-1)', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         <Plus size={16} /> 방 만들기
@@ -649,24 +649,24 @@ const QuizList = ({ user }) => {
               publicBanks.map(bank => (
                 <div key={bank.id} style={{ background: 'var(--surface-1)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px', borderRadius: 'var(--r-md)', overflow: 'hidden' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px', cursor: 'pointer', flexWrap: 'wrap', gap: '16px' }} onClick={() => toggleExpand(bank.id)}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: '200px' }}>
-                      <div style={{ color: 'var(--primary)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: '1 1 200px', minWidth: 0 }}>
+                      <div style={{ color: 'var(--primary)', flexShrink: 0 }}>
                         {expandedBank === bank.id ? <ChevronDown size={24} /> : <ChevronRight size={24} />}
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          {bank.title}
-                          <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '12px', background: 'rgba(30,215,96,0.1)', color: 'var(--primary)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <span style={{ wordBreak: 'break-word' }}>{bank.title}</span>
+                          <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '12px', background: 'rgba(30,215,96,0.1)', color: 'var(--primary)', display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                             <Globe size={12}/> 공유됨
                           </span>
                         </div>
-                        <div style={{ fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '16px' }}>
-                          <span><BookOpen size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />총 {bank.question_count}문항</span>
-                          <span>게시자: {bank.uploader_email || '관리자'}</span>
+                        <div style={{ fontSize: '14px', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                          <span style={{ whiteSpace: 'nowrap' }}><BookOpen size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />총 {bank.question_count}문항</span>
+                          <span style={{ whiteSpace: 'nowrap' }}>게시자: {bank.uploader_email || '관리자'}</span>
                         </div>
                       </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', gap: '8px', flexShrink: 0, flexWrap: 'wrap' }}>
                       <button onClick={(e) => { e.stopPropagation(); setSelectedBankId(bank.id); setNewRoomTitle(bank.title); setShowCreateModal(true); }} title="게임방 만들기"
                         style={{ padding: '12px 16px', background: 'var(--primary)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--surface-1)', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         <Plus size={16} /> 방 만들기
