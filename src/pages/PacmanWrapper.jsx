@@ -44,7 +44,7 @@ const PacmanWrapper = ({ quizPool, player, callbacks, onExit }) => {
     <div style={{ width: '100%', height: '100vh', background: '#000' }}>
       <iframe
         ref={iframeRef}
-        src="/pacman.html"
+        src={`/pacman.html?t=${Date.now()}`}
         style={{ width: '100%', height: '100%', border: 'none' }}
         title="Pacman Game"
       />
