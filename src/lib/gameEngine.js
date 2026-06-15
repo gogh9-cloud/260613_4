@@ -468,7 +468,7 @@ function initStage(idx, resetScore) {
     platforms.push({x:p.x,y:py,w:p.w,h:14,isFloor:false});
   });
 
-  // 몬스터 배치
+  // 몬스터 배치 - 모든 발판에 고르게 분배
   const count = quizPool.length;
   quizTotal = count;
   // 스테이지별 2종 몬스터 랜덤 선택
@@ -476,8 +476,31 @@ function initStage(idx, resetScore) {
   allMonIdx.sort(()=>Math.random()-.5);
   const stageMontypes = [allMonIdx[0], allMonIdx[1]];
   const shuffled=[...quizPool].sort(()=>Math.random()-.5);
+
+  // 모든 발판(바닥 제외)에서 스폰 위치를 동적으로 생성
+  const nonFloorPlats = stageDef.platforms.slice();
+  // 바닥도 스폰 가능하게 추가
+  const allSpawnPlats = [...nonFloorPlats, {fb:0, x:0, w:CW}];
+  // 각 발판에 몬스터를 라운드 로빈으로 균등 배분
+  const spawnSlots = [];
+  for (let i = 0; i < count; i++) {
+    const pIdx = i % allSpawnPlats.length;
+    const p = allSpawnPlats[pIdx];
+    // 같은 발판에 여러 몬스터가 갈 경우 위치를 분산
+    const sameCount = spawnSlots.filter(s => s.platIdx === pIdx).length;
+    const totalOnPlat = Math.ceil(count / allSpawnPlats.length);
+    const offset = totalOnPlat > 1 ? (p.w / (totalOnPlat + 1)) * (sameCount + 1) : p.w / 2;
+    spawnSlots.push({
+      platIdx: pIdx,
+      x: p.x + Math.min(offset, p.w - 40),
+      fb: p.fb
+    });
+  }
+  // 셔플하여 랜덤하게
+  spawnSlots.sort(() => Math.random() - .5);
+
   for (let i=0;i<count;i++){
-    const sp=stageDef.spawns[i%stageDef.spawns.length];
+    const sp = spawnSlots[i];
     const mtype=MONSTER_TYPES[stageMontypes[i%2]];
     const id=monsterIdCnt++;
     monsters.push({

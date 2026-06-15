@@ -356,7 +356,7 @@ const Game = () => {
               <div id="qz-img" className="qz-img-wrap"></div>
               <div id="qz-area"></div>
               <div id="qz-res"></div>
-              <div id="qz-cont"></div>
+              <div id="qz-cont" style={{ display: 'none' }}></div>
             </div>
           </div>
 
