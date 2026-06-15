@@ -253,11 +253,11 @@ const Game = () => {
       <div id="game-container" className="game-wrap" style={{ transform: `scale(${scale})`, transformOrigin: 'center center', width: '800px', height: '620px', flex: 'none' }}>
         {/* HUD */}
         <div id="hud" className="hud">
-          <div className="hud-item player"><span className="hud-icon">👨‍🎓</span> <span className="hud-main teal" id="hv-name">{playerInfo.name}</span></div>
-          <div className="hud-item"><span className="hud-icon">💯</span> <span className="hud-main gold"><span id="hv-score">{playerInfo.score}</span>점</span></div>
-          <div className="hud-item"><span className="hud-icon">🎯</span> <span className="hud-main" id="hv-quiz">0/0</span></div>
-          <div className="hud-item"><span className="hud-icon">📚</span> <span className="hud-main" id="hv-sheet">{quizSet?.title}</span></div>
-          <div className="hud-item"><span className="hud-icon">🗺️</span> <span className="hud-main blue" id="hv-lv">Lv1</span></div>
+          <div className="hud-item player"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Player</span> <span className="hud-main teal" id="hv-name">{playerInfo.name}</span></div>
+          <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Score</span> <span className="hud-main gold"><span id="hv-score">{playerInfo.score}</span>점</span></div>
+          <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Goal</span> <span className="hud-main" id="hv-quiz">0/0</span></div>
+          <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Title</span> <span className="hud-main" id="hv-sheet">{quizSet?.title}</span></div>
+          <div className="hud-item"><span className="hud-icon" style={{fontSize:'14px', fontWeight:'bold'}}>Stage</span> <span className="hud-main blue" id="hv-lv">Lv1</span></div>
         </div>
 
         {/* 캔버스 영역 */}

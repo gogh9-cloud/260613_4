@@ -469,7 +469,7 @@ function initStage(idx, resetScore) {
   });
 
   // 몬스터 배치
-  const count = Math.min(stageDef.spawns.length, Math.max(quizPool.length,3));
+  const count = quizPool.length;
   quizTotal = count;
   // 스테이지별 2종 몬스터 랜덤 선택
   const allMonIdx = Array.from({length:MONSTER_TYPES.length},(_,i)=>i);

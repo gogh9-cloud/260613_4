@@ -74,7 +74,7 @@ const QuizList = ({ user }) => {
   const fetchBanks = async () => {
     const { data } = await supabase
       .from('question_banks')
-      .select('id, title, subject, question_count, is_public, uploader_email')
+      .select('id, title, subject, question_count, is_public, uploader_email, uploaded_by')
       .order('created_at', { ascending: false });
     setBanks(data || []);
   };
@@ -225,12 +225,12 @@ const QuizList = ({ user }) => {
 
   const deleteBank = async (id) => {
     if (!window.confirm('문제 은행을 삭제하시겠습니까?\n연결된 게임방이 있다면 해당 게임방에서는 문제가 보이지 않을 수 있습니다.')) return;
-    const { error } = await supabase.from('question_banks').delete().eq('id', id);
-    if (!error) {
+    const { data, error } = await supabase.from('question_banks').delete().eq('id', id).select();
+    if (error || !data || data.length === 0) {
+      alert('삭제 실패: 권한이 없거나 이미 삭제된 항목입니다.');
+    } else {
       setBanks(prev => prev.filter(b => b.id !== id));
       if (expandedBank === id) setExpandedBank(null);
-    } else {
-      alert('삭제 실패: ' + error.message);
     }
   };
 
@@ -365,9 +365,9 @@ const QuizList = ({ user }) => {
 
   const deleteQuestion = async (qId, bankId) => {
     if (!window.confirm('이 문제를 삭제하시겠습니까?')) return;
-    const { error } = await supabase.from('bank_questions').delete().eq('id', qId);
-    if (error) {
-      alert('문제 삭제 실패: ' + error.message);
+    const { data, error } = await supabase.from('bank_questions').delete().eq('id', qId).select();
+    if (error || !data || data.length === 0) {
+      alert('문제 삭제 실패: 권한이 없거나 서버 오류입니다.');
       return;
     }
     setBankQuestions(prev => ({
@@ -415,9 +415,9 @@ const QuizList = ({ user }) => {
     });
   };
 
-  // 과거 데이터(uploaded_by가 없는 데이터)는 관리자에게만 보이도록 처리
-  const myBanks = banks.filter(b => b.uploaded_by === user.id || (!b.uploaded_by && isAdmin));
-  const publicBanks = banks.filter(b => b.is_public === true && b.uploaded_by !== user.id);
+  // 과거 데이터(uploaded_by가 없는 데이터)는 관리자에게만 보이도록 처리하되, 이메일이 일치하면 보이도록 수정
+  const myBanks = banks.filter(b => b.uploaded_by === user.id || b.uploader_email === user?.email || (!b.uploaded_by && isAdmin));
+  const publicBanks = banks.filter(b => b.is_public === true && b.uploaded_by !== user.id && b.uploader_email !== user?.email);
 
   return (
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
@@ -545,6 +545,11 @@ const QuizList = ({ user }) => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {myBanks.length === 0 ? (
               <div style={{ textAlign: 'center', color: 'var(--ink)', padding: '60px 0', background: 'var(--surface-1)', borderRadius: 'var(--r-lg)', border: 'none', boxShadow: 'rgba(0,0,0,0.3) 0px 8px 8px' }}>
+                {/* DEBUG INFO: Please remove later */}
+                <div style={{ color: 'red', fontSize: '10px', marginBottom: '10px' }}>
+                  DEBUG: banks={banks.length}, userEmail={user?.email}, 
+                  matchedBanks={banks.filter(b => b.uploaded_by === user.id || b.uploader_email === user?.email).length}
+                </div>
                 아직 업로드한 문제 은행이 없습니다.<br />
                 <span style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '8px', display: 'inline-block' }}>엑셀 템플릿을 다운로드하여 내 문제를 올려보세요!</span>
               </div>
@@ -559,7 +564,7 @@ const QuizList = ({ user }) => {
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: '400', color: 'var(--ink)', fontSize: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                           {bank.title}
-                          <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '12px', background: bank.is_public ? 'rgba(0, 255, 127, 0.1)' : 'rgba(255,255,255,0.1)', color: bank.is_public ? 'var(--primary)' : 'var(--ink-muted)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '12px', background: bank.is_public ? 'rgba(0, 255, 127, 0.1)' : 'rgba(255,255,255,0.1)', color: bank.is_public ? 'var(--primary)' : 'var(--ink-muted)', display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                             {bank.is_public ? <><Globe size={12}/> 공개</> : <><Lock size={12}/> 비공개</>}
                           </span>
                         </div>
@@ -763,11 +768,11 @@ const QuizList = ({ user }) => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <div style={{ fontWeight: '600', color: 'var(--ink)', fontSize: '16px' }}>{bank.title}</div>
                       {bank.is_public === false ? (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', background: 'rgba(255,255,255,0.1)', color: 'var(--ink-muted)', padding: '2px 6px', borderRadius: 'var(--r-pill)' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', background: 'rgba(255,255,255,0.1)', color: 'var(--ink-muted)', padding: '2px 6px', borderRadius: 'var(--r-pill)', whiteSpace: 'nowrap', flexShrink: 0 }}>
                           <Lock size={10} /> 비공개
                         </span>
                       ) : (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', background: 'rgba(30,215,96,0.1)', color: 'var(--primary)', padding: '2px 6px', borderRadius: 'var(--r-pill)' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', background: 'rgba(30,215,96,0.1)', color: 'var(--primary)', padding: '2px 6px', borderRadius: 'var(--r-pill)', whiteSpace: 'nowrap', flexShrink: 0 }}>
                           <Globe size={10} /> 공유됨
                         </span>
                       )}

@@ -49,7 +49,11 @@ const QuizEditor = ({ user }) => {
 
   const removeQuestion = async (id) => {
     if (!String(id).startsWith('temp_')) {
-      await supabase.from('questions').delete().eq('id', id);
+      const { data, error } = await supabase.from('questions').delete().eq('id', id).select();
+      if (error || !data || data.length === 0) {
+        alert('삭제 실패: 권한이 없거나 서버 오류입니다.');
+        return;
+      }
     }
     setQuestions(questions.filter(q => q.id !== id));
   };
