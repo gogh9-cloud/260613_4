@@ -417,7 +417,7 @@ const QuizList = ({ user }) => {
 
   // 과거 데이터(uploaded_by가 없는 데이터)는 관리자에게만 보이도록 처리하되, 이메일이 일치하면 보이도록 수정
   const myBanks = banks.filter(b => b.uploaded_by === user.id || String(b.uploader_email).trim().toLowerCase() === String(user?.email).trim().toLowerCase() || (!b.uploaded_by && isAdmin));
-  const publicBanks = banks.filter(b => b.is_public === true && b.uploaded_by !== user.id && String(b.uploader_email).trim().toLowerCase() !== String(user?.email).trim().toLowerCase());
+  const publicBanks = banks.filter(b => b.is_public === true);
 
   return (
     <div className="screen" style={{ alignItems: 'flex-start', padding: '20px', overflowY: 'auto' }}>
