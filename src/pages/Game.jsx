@@ -27,6 +27,7 @@ const Game = () => {
   }, [room]);
 
   const fetchQuizSet = async () => {
+    setLoading(true);
     const { data: qSet, error } = await supabase
       .from('quiz_sets')
       .select('*, question_banks(id, title)')
@@ -59,6 +60,10 @@ const Game = () => {
   };
 
   const handleStart = async () => {
+    if (questions.length === 0) {
+      setErrorMsg('��ϵ� ������ �����ϴ�. �����ڿ��� �����ϼ���.');
+      return;
+    }
     const { ban, num, name } = playerInfo;
     if (!ban || !num || !name) {
       setErrorMsg('모든 정보를 입력해주세요.');
