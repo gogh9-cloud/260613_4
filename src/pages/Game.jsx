@@ -346,17 +346,21 @@ const Game = () => {
 
           {/* 퀴즈 오버레이 - game-container 밖에 배치하여 scale 영향 제거 */}
           <div id="qz-ov" className="qz-overlay">
-            <div id="qz-box" className="qz-card qz-body">
-              <button id="qz-x" className="qz-xbtn">✕</button>
-              <div id="qz-top">
-                <div style={{ display: 'flex', alignItems: 'center' }}><span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--primary)', fontWeight: 'bold' }}>Q.</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span><span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span></div>
+            <div className="qz-card">
+              <div className="qz-body" style={{ paddingTop: '14px' }}>
+                <button id="qz-x" className="qz-xbtn" style={{ position: 'absolute', top: '10px', right: '10px' }}>✕</button>
+                <div id="qz-top" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', minHeight: '16px', paddingRight: '36px' }}>
+                  <span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--gold)', fontWeight: 'bold' }}>Q.</span>
+                  <span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span>
+                  <span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span>
+                </div>
+                <div id="qz-q" className="qz-q"></div>
+                <div id="qz-img" className="qz-img-wrap"></div>
+                <div id="qz-area"></div>
+                <div id="qz-res"></div>
                 <div id="qz-save" className="save-s"></div>
               </div>
-              <div id="qz-q" className="qz-q"></div>
-              <div id="qz-img" className="qz-img-wrap"></div>
-              <div id="qz-area"></div>
-              <div id="qz-res"></div>
-              <div id="qz-cont" style={{ display: 'none' }}></div>
+              <button id="qz-cont" style={{ display: 'none' }}></button>
             </div>
           </div>
 
