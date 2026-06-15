@@ -1499,10 +1499,11 @@ function drawPacman(ts) {
   const cy = player.y * TILE + TILE/2;
   ctx.save();
   ctx.translate(cx, cy);
-  // 원본 이미지가 오른쪽을 보고 있다고 가정
-  if (pacDir === 1) ctx.scale(-1, 1); // Left (좌우 반전)
-  if (pacDir === 2) ctx.rotate(-Math.PI/2); // Up (반시계방향 90도)
-  if (pacDir === 3) ctx.rotate(Math.PI/2); // Down (시계방향 90도)
+  // 원본 이미지가 왼쪽을 보고 있다고 가정하여 방향 반전
+  if (pacDir === 0) ctx.scale(-1, 1); // Right (좌우 반전)
+  // if (pacDir === 1) 아무것도 안 함 // Left
+  if (pacDir === 2) ctx.rotate(Math.PI/2); // Up (반대 회전)
+  if (pacDir === 3) ctx.rotate(-Math.PI/2); // Down (반대 회전)
   
   if (pacImage.complete) {
     ctx.drawImage(pacImage, -TILE*0.5, -TILE*0.5, TILE, TILE);
