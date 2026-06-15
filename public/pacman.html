@@ -657,10 +657,10 @@ function calcLayout(mapIdx) {
   ROWS      = m.grid.length;
   COLS      = m.grid[0].length;
   const availH = window.innerHeight - 48 - 30 - 10 - 16 - 10; // hud+status+gaps+padding
-  const availW = Math.min(window.innerWidth - 20, 1100);
+  const availW = window.innerWidth - 20;
   const tH  = Math.floor(availH / ROWS);
   const tW  = Math.floor(availW / COLS);
-  TILE      = Math.max(22, Math.min(tH, tW, 48));
+  TILE      = Math.max(16, Math.min(tH, tW));
   CW        = TILE * COLS;
   CH        = TILE * ROWS;
 }
@@ -679,6 +679,29 @@ function initStage(mapIdx, resetScore) {
   quizNodes  = []; quizSolved = 0; quizTotal = 0;
   bonusItems = [];
   clearShown = false;
+
+  ghosts = [];
+  let emptySpots = [];
+  for(let r=0; r<ROWS; r++){
+    for(let c=0; c<COLS; c++){
+      if(stageGrid[r][c] === 2 || stageGrid[r][c] === 0) {
+        if(Math.abs(c - player.x) + Math.abs(r - player.y) > 10) {
+          emptySpots.push({c, r});
+        }
+      }
+    }
+  }
+  emptySpots.sort(() => Math.random() - 0.5);
+  for(let i=0; i<4; i++){
+    if(emptySpots[i]){
+      ghosts.push({
+        x: emptySpots[i].c, y: emptySpots[i].r,
+        dir: Math.floor(Math.random()*4), // 0:R, 1:L, 2:U, 3:D
+        type: i
+      });
+    }
+  }
+  
 
   // ── 퀴즈 노드 랜덤 배치 ──────────────────────────────
   // 1단계: 맵의 모든 3을 2로 평탄화하고 작은 점 전체 수 집계
@@ -1345,6 +1368,7 @@ function render(ts) {
 
   // 플레이어(팩맨)
   drawPacman(ts);
+    drawGhosts();
 
   requestAnimationFrame(render);
 }
@@ -1422,32 +1446,59 @@ function drawDot(px, py, big, ts) {
   }
 }
 
+
+
+  function drawGhosts() {
+    ghosts.forEach(g => {
+      const cx = g.x * TILE + TILE/2;
+      const cy = g.y * TILE + TILE/2;
+      ctx.save();
+      ctx.translate(cx, cy);
+      const img = ghostImages[g.type];
+      if (img && img.complete) {
+        ctx.drawImage(img, -TILE*0.5, -TILE*0.5, TILE, TILE);
+      } else {
+        ctx.beginPath(); ctx.arc(0, 0, TILE*0.4, 0, Math.PI*2); ctx.fillStyle='red'; ctx.fill();
+      }
+      
+      // Draw eyes looking at direction (0:R, 1:L, 2:U, 3:D)
+      ctx.fillStyle = 'blue';
+      const pupilOffset = TILE * 0.1;
+      let px = 0, py = 0;
+      if (g.dir === 0) px = pupilOffset;
+      if (g.dir === 1) px = -pupilOffset;
+      if (g.dir === 2) py = -pupilOffset;
+      if (g.dir === 3) py = pupilOffset;
+      
+      ctx.fillRect(-TILE*0.2 + px, -TILE*0.1 + py, TILE*0.15, TILE*0.15);
+      ctx.fillRect(TILE*0.05 + px, -TILE*0.1 + py, TILE*0.15, TILE*0.15);
+      
+      ctx.restore();
+    });
+  }
+
 function drawPacman(ts) {
+  if (ts < invincibilityEndTime && Math.floor(ts / 100) % 2 === 0) return; // Blink
   const cx = player.x * TILE + TILE/2;
   const cy = player.y * TILE + TILE/2;
-  const r  = TILE * 0.38;
+  ctx.save();
+  ctx.translate(cx, cy);
+  if (pacDir === 0) ctx.scale(-1, 1); // Face right by default, but wait, the original image faces left.
+  // Actually, Pacman usually faces right in sprites. If our sprite faces right:
+  // if pacDir=0(R) -> scale(1), pacDir=1(L) -> scale(-1). We'll assume it faces left.
+  if (pacDir === 0) ctx.scale(-1, 1); 
+  if (pacDir === 2) { ctx.rotate(Math.PI/2); ctx.scale(-1, 1); }
+  if (pacDir === 3) { ctx.rotate(-Math.PI/2); ctx.scale(-1, 1); }
+  
+  if (pacImage.complete) {
+    ctx.drawImage(pacImage, -TILE*0.5, -TILE*0.5, TILE, TILE);
+  } else {
+    ctx.beginPath(); ctx.arc(0, 0, TILE*0.4, 0, Math.PI*2); ctx.fillStyle='yellow'; ctx.fill();
+  }
+  ctx.restore();
+}
 
-  // 입 애니메이션
-  const mouth = Math.abs(Math.sin(ts / 120)) * 0.35;
-
-  // 방향별 시작 각도
-  const baseAngle = [0, Math.PI, -Math.PI/2, Math.PI/2][pacDir] || 0;
-  const startA = baseAngle + mouth;
-  const endA   = baseAngle + Math.PI*2 - mouth;
-
-  ctx.beginPath();
-  ctx.moveTo(cx, cy);
-  ctx.arc(cx, cy, r, startA, endA);
-  ctx.closePath();
-  ctx.fillStyle = '#f5c842';
-  ctx.shadowColor = 'rgba(245,200,66,0.5)';
-  ctx.shadowBlur = 10;
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // 눈 — 진행 방향 기준 항상 왼쪽 위
-  // 각 방향별 눈 위치 (진행방향 왼쪽 + 약간 앞)
-  // right(0): 위쪽  left(1): 위쪽  up(2): 왼쪽  down(3): 왼쪽위
+// right(0): 위쪽  left(1): 위쪽  up(2): 왼쪽  down(3): 왼쪽위
   const eyeOffsets = [
     [ r*0.22, -r*0.42],  // 오른쪽: 중앙 위
     [-r*0.22, -r*0.42],  // 왼쪽:   중앙 위
@@ -2081,7 +2132,54 @@ function inputLoop(ts) {
       if (moved) lastMove = ts;
     }
   }
-  requestAnimationFrame(inputLoop);
+  
+  if (ts - lastGhostMove > GHOST_MOVE_MS) {
+    ghosts.forEach(g => {
+      // 0:R, 1:L, 2:U, 3:D
+      const dirs = [{dx:1,dy:0}, {dx:-1,dy:0}, {dx:0,dy:-1}, {dx:0,dy:1}];
+      let possibleDirs = [];
+      for(let i=0; i<4; i++){
+        // Don't reverse immediately unless necessary
+        if((g.dir===0 && i===1) || (g.dir===1 && i===0) || (g.dir===2 && i===3) || (g.dir===3 && i===2)) continue;
+        const nx = ((g.x + dirs[i].dx)%COLS + COLS)%COLS;
+        const ny = ((g.y + dirs[i].dy)%ROWS + ROWS)%ROWS;
+        if(walkable(nx, ny)) possibleDirs.push(i);
+      }
+      if(possibleDirs.length === 0) {
+        // Must reverse
+        g.dir = g.dir===0?1 : g.dir===1?0 : g.dir===2?3 : 2;
+      } else {
+        // Pick random valid direction
+        g.dir = possibleDirs[Math.floor(Math.random() * possibleDirs.length)];
+      }
+      g.x = ((g.x + dirs[g.dir].dx)%COLS + COLS)%COLS;
+      g.y = ((g.y + dirs[g.dir].dy)%ROWS + ROWS)%ROWS;
+    });
+    lastGhostMove = ts;
+  }
+  
+  // Collision
+  ghosts.forEach(g => {
+    if(g.x === player.x && g.y === player.y && ts > invincibilityEndTime) {
+      player.score = Math.max(0, player.score - 1);
+      invincibilityEndTime = ts + 1500; document.getElementById('hv-score').textContent = player.score;
+      
+      // Bounce (reverse directions)
+      g.dir = g.dir===0?1 : g.dir===1?0 : g.dir===2?3 : 2;
+      g.x = ((g.x + (g.dir===0?1 : g.dir===1?-1 : 0))%COLS + COLS)%COLS;
+      g.y = ((g.y + (g.dir===3?1 : g.dir===2?-1 : 0))%ROWS + ROWS)%ROWS;
+      
+      // Player bounce
+      const playerOppDir = pacDir===0?1 : pacDir===1?0 : pacDir===2?3 : 2;
+      const nx = ((player.x + (playerOppDir===0?1 : playerOppDir===1?-1 : 0))%COLS + COLS)%COLS;
+      const ny = ((player.y + (playerOppDir===3?1 : playerOppDir===2?-1 : 0))%ROWS + ROWS)%ROWS;
+      if(walkable(nx, ny)) {
+        player.x = nx; player.y = ny;
+      }
+    }
+  });
+
+    requestAnimationFrame(inputLoop);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2312,6 +2410,7 @@ console.log(GAS_MODE ? '[GAS MODE]' : '[STANDALONE]');
   // Hide login screen
   document.getElementById('scr-login').style.display = 'none';
 
+  window.addEventListener('resize', () => { if(typeof curMapIdx !== "undefined") { calcLayout(curMapIdx); resizeCanvas(); } });
   window.addEventListener('message', (event) => {
     const data = event.data;
     if (data.source !== 'react') return;

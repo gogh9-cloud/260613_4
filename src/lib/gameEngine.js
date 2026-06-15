@@ -1260,7 +1260,7 @@ function gameLoop(){update(); reqId = requestAnimationFrame(gameLoop);}
       if(typeof cOv !== 'undefined' && cOv) cOv.removeEventListener('click', startGame);
     },
     start: () => {
-      initStage(0, true);
+      initStage(Math.floor(Math.random() * STAGE_DEFS.length), true);
       requestAnimationFrame(render);
       gameLoop();
       canvas.focus();
