@@ -250,7 +250,7 @@ const Game = () => {
           </button>
 
           <div style={{ marginTop: '24px', fontSize: '10px', color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: '1.4', wordBreak: 'keep-all' }}>
-            본 앱에 사용된 캐릭터 이미지는 주식회사 타이토(TAITO Corporation)의 게임 '버블보블(Bubble Bobble)'의 자산이며, 교육적 목적으로만 사용되었습니다. 모든 권리는 원저작권자에게 있습니다. 교육적 목적 이외의 사용은 금지합니다.
+            본 앱에 사용된 캐릭터 이미지는 주식회사 타이토(TAITO Corporation)의 게임 '버블보블(Bubble Bobble)' 및 주식회사 반다이남코 엔터테인먼트(Bandai Namco Entertainment)의 게임 '팩맨(Pac-Man)'의 자산이며, 교육적 목적으로만 사용되었습니다. 모든 권리는 원저작권자에게 있습니다. 교육적 목적 이외의 사용은 금지합니다.
           </div>
         </div>
       </div>
