@@ -225,7 +225,7 @@ const Game = () => {
         <div className="login-card">
           {quizSet?.game_type === 'pacman' ? (
             <>
-              <div className="login-icon" style={{ width: '80px', height: '80px', marginBottom: '16px' }}>
+              <div className="login-icon">
                 <img src="/pacman-icon.png" alt="Pacman" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               </div>
               <div className="login-title">PACMAN<br />QUIZ ADVENTURE</div>
@@ -342,22 +342,24 @@ const Game = () => {
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* 퀴즈 오버레이 */}
-            <div id="qz-ov" className="qz-overlay">
-              <div id="qz-box" className="qz-card qz-body">
-                <button id="qz-x" className="qz-xbtn">✕</button>
-                <div id="qz-top">
-                  <div style={{ display: 'flex', alignItems: 'center' }}><span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--primary)', fontWeight: 'bold' }}>Q.</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span><span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span></div>
-                  <div id="qz-save" className="save-s"></div>
-                </div>
-                <div id="qz-q" className="qz-q"></div>
-                <div id="qz-img" className="qz-img-wrap"></div>
-                <div id="qz-area"></div>
-                <div id="qz-res"></div>
-                <div id="qz-cont"></div>
+          {/* 퀴즈 오버레이 - game-container 밖에 배치하여 scale 영향 제거 */}
+          <div id="qz-ov" className="qz-overlay">
+            <div id="qz-box" className="qz-card qz-body">
+              <button id="qz-x" className="qz-xbtn">✕</button>
+              <div id="qz-top">
+                <div style={{ display: 'flex', alignItems: 'center' }}><span className="qnum" style={{ fontFamily: 'var(--ft)', fontSize: '24px', color: 'var(--primary)', fontWeight: 'bold' }}>Q.</span><span id="qz-attempt" style={{ marginLeft: '8px', fontSize: '14px', color: 'var(--ink-muted)' }}></span><span id="qz-pts" style={{ marginLeft: '16px', color: 'var(--semantic-warning)', fontWeight: '600' }}></span></div>
+                <div id="qz-save" className="save-s"></div>
               </div>
-            </div>          </div>
+              <div id="qz-q" className="qz-q"></div>
+              <div id="qz-img" className="qz-img-wrap"></div>
+              <div id="qz-area"></div>
+              <div id="qz-res"></div>
+              <div id="qz-cont"></div>
+            </div>
+          </div>
+
           {/* 셀렉트박스 (엔진 코드 호환을 위해 숨김) */}
           <select id="sel-sheet" style={{ display: 'none' }}>
             <option value={quizSet?.title}>{quizSet?.title}</option>
