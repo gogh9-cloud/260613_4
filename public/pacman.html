@@ -1999,8 +1999,10 @@ document.getElementById('qz-cont').onclick = closeQuiz;
    스테이지 클리어
 ═══════════════════════════════════════════════════ */
 function checkStageClear() {
-  // 모든 퀴즈 풀었을 때 클리어
+  // 퀴즈를 모두 풀고 + 남은 작은 점까지 모두 먹어야 클리어
   if (quizSolved < quizTotal) return;
+  if (eatenDots < totalDots) return; // 보너스 과일은 제외, 기본 점은 다 먹을 때까지 대기
+  
   clearShown = true;
   gameActive = false;
   setTimeout(() => showClearScreen(), 600);
