@@ -1687,10 +1687,10 @@ function onStep() {
    4회 이상(attempts≥3): 1점 고정
 ═══════════════════════════════════════════════════ */
 function calcQuizPoints(attempts) {
-  if (attempts === 0) { const lo=10, hi=20; return lo + Math.floor(Math.random()*(hi-lo+1)); }
-  if (attempts === 1) { const lo=5,  hi=15; return lo + Math.floor(Math.random()*(hi-lo+1)); }
-  if (attempts === 2) { const lo=1,  hi=10; return lo + Math.floor(Math.random()*(hi-lo+1)); }
-  return 1; // 4회 이상
+  if (attempts === 0) { const lo=15, hi=20; return lo + Math.floor(Math.random()*(hi-lo+1)); }
+  if (attempts === 1) { const lo=10, hi=15; return lo + Math.floor(Math.random()*(hi-lo+1)); }
+  if (attempts === 2) { const lo=5,  hi=10; return lo + Math.floor(Math.random()*(hi-lo+1)); }
+  const lo=1, hi=5; return lo + Math.floor(Math.random()*(hi-lo+1));
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1709,9 +1709,10 @@ function openQuiz(key, node, qdata) {
   } else {
     pts = calcQuizPoints(node.attempts);
   }
-  node.lastPts = pts; // 이번 제시 점수 저장
-  // 배점 및 문제 세팅
-  document.getElementById('qz-pts').textContent = `+${pts}점 (10~20점 랜덤)`;
+  node.lastPts = pts; // 이번 퀴즈 점수
+  // 퀴즈 팝업 표시
+  const rangeStr = node.attempts === 0 ? '15~20' : node.attempts === 1 ? '10~15' : node.attempts === 2 ? '5~10' : '1~5';
+  document.getElementById('qz-pts').textContent = `+${pts}점 (${rangeStr}점 랜덤)`;
   document.getElementById('qz-q').textContent = qdata.question;
   document.getElementById('qz-res').innerHTML = '';
 
@@ -2192,7 +2193,7 @@ function inputLoop(ts) {
   // Collision
   ghosts.forEach(g => {
     if(g.x === player.x && g.y === player.y && ts > invincibilityEndTime) {
-      player.score = Math.max(0, player.score - 1);
+      player.score -= 1;
       invincibilityEndTime = ts + 1500; document.getElementById('hv-score').textContent = player.score;
       
       // Bounce (reverse directions)

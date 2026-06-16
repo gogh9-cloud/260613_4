@@ -739,6 +739,10 @@ function update() {
     shootBubble(); shootCooldown=18;
   }
 
+  if (player.invincible && Date.now() > player.invincibleEndTime) {
+    player.invincible = false;
+  }
+
   player.vy+=GRAVITY;
   player.x+=player.vx; player.y+=player.vy;
   resolveY(player); clampX(player);
@@ -786,16 +790,27 @@ function update() {
         b.monster.vx=(Math.random()<.5?1:-1)*b.monster.type.spd;
         bubbles.splice(i,1); continue;
       }
-      // 플레이어가 거품에 접촉 → 터뜨리기
       if (dist(player.x+player.w/2,player.y+player.h/2,b.x,b.y)<b.r+player.w/2+10){
         popBubble(b,i); break;
       }
+    } else if (b.state==='solving') {
+      // do nothing, float in place
     }
   }
 
   // ── 몬스터 ────────────────────────────────────────────
   for (const m of monsters) {
     if (m.state!=='free') continue;
+
+    // 플레이어 충돌 페널티
+    if (!player.invincible && dist(player.x+player.w/2, player.y+player.h/2, m.x+m.w/2, m.y+m.h/2) < player.w/2 + m.w/2 - 4) {
+      player.score -= 1;
+      player.stageScore -= 1;
+      player.invincible = true;
+      player.invincibleEndTime = Date.now() + 1000;
+      updateHUD();
+    }
+
     m.vy+=GRAVITY;
     m.x+=m.vx; m.y+=m.vy;
     resolveY(m); clampX(m);
@@ -834,14 +849,42 @@ function update() {
     it.ttl--;
     if(it.x<0)it.x=0; if(it.x+it.w>CW)it.x=CW-it.w;
     // 지면 착지
-    // 지면 착지
     if (it.y+it.h>=CH-FLOOR_H){it.y=CH-FLOOR_H-it.h;it.vy=0;it.vx*=0.6;it.landed=true;}
-    // 발판 착지
+    
+    // 발판 통과 물리
     if(!it.landed && it.vy>0){
+      let intersectingPlatform = null;
+      for(const p of platforms){
+        if(it.x < p.x+p.w && it.x+it.w > p.x && it.y < p.y+p.h && it.y+it.h > p.y){
+           intersectingPlatform = p;
+           break;
+        }
+      }
+      
+      if (intersectingPlatform) {
+         if (!it.passedFirstPlatform) {
+            it.passingPlatform = intersectingPlatform;
+         }
+      } else {
+         if (it.passingPlatform) {
+            it.passedFirstPlatform = true;
+            it.passingPlatform = null;
+         }
+      }
+
+      // 발판 착지
       for(const p of platforms){
         if(it.x+it.w>p.x+2&&it.x<p.x+p.w-2&&
-           it.y+it.h>=p.y&&it.y+it.h-it.vy<=p.y+3){
-          it.y=p.y-it.h; it.vy=0; it.vx*=0.6; it.landed=true; break;
+           it.y+it.h>=p.y&&it.y+it.h-it.vy<=p.y+4){
+          if (it.passedFirstPlatform) {
+            it.y=p.y-it.h; it.vy=0; it.vx*=0.6; it.landed=true; 
+            // 안착 시 방울 삭제
+            if (it.bubbleId) {
+               const bIdx = bubbles.findIndex(b => b.id === it.bubbleId);
+               if (bIdx >= 0) bubbles.splice(bIdx, 1);
+            }
+            break;
+          }
         }
       }
     }
@@ -888,7 +931,9 @@ function popBubble(b,idx){
   const m=b.monster;
   const popX=b.x, popY=b.y;  // 거품 터진 위치 저장
   spawnParticles(popX,popY,14,'#f5c842');
-  bubbles.splice(idx,1);
+  b.state = 'solving';
+  if (!b.id) b.id = Math.random().toString(36).substring(2);
+  
   // 퀴즈 출제 — 거품 위치 전달
   const qdata=quizDB[m.id];
   if (qdata) setTimeout(()=>openQuiz(m,qdata,popX,popY),100);
@@ -896,30 +941,31 @@ function popBubble(b,idx){
 
 function calcItemPts(attempts){
   // 시도 횟수에 따라 점수 범위 결정
-  if(attempts===0){ const lo=10,hi=20; return lo+Math.floor(Math.random()*(hi-lo+1)); }
-  if(attempts===1){ const lo=5, hi=15; return lo+Math.floor(Math.random()*(hi-lo+1)); }
-  if(attempts===2){ const lo=1, hi=10; return lo+Math.floor(Math.random()*(hi-lo+1)); }
-  return 1;
+  if(attempts===0){ const lo=15,hi=20; return lo+Math.floor(Math.random()*(hi-lo+1)); }
+  if(attempts===1){ const lo=10,hi=15; return lo+Math.floor(Math.random()*(hi-lo+1)); }
+  if(attempts===2){ const lo=5, hi=10; return lo+Math.floor(Math.random()*(hi-lo+1)); }
+  const lo=1, hi=5; return lo+Math.floor(Math.random()*(hi-lo+1));
 }
 
-function dropItem(x,y,monsterId,attempts){
-  const it  = ITEM_TYPES[Math.floor(Math.random()*ITEM_TYPES.length)];
+function dropItem(x,y,monsterId,attempts,isShort,bubbleId){
   const pts = calcItemPts(attempts||0);
-  // 1~2개 드롭, 위쪽으로 퍼지며 날아감
-  const count = pts >= 15 ? 2 : 1;
+  // 단답형이면 아이템 2개, 아니면 1개 드롭
+  const count = isShort ? 2 : 1;
   for(let k=0; k<count; k++){
     const spread = count===1 ? 0 : (k===0?-0.3:0.3)*Math.PI;
     const angle  = -Math.PI/2 + spread;
     const spd    = 5 + Math.random()*3;
-    const itk    = k===0 ? it : ITEM_TYPES[Math.floor(Math.random()*ITEM_TYPES.length)];
+    const it     = ITEM_TYPES[Math.floor(Math.random()*ITEM_TYPES.length)];
     items.push({
       x:x-14, y:y-14, w:28, h:28,
       vx: Math.cos(angle)*spd,
       vy: Math.sin(angle)*spd - 1,
       ttl:660, landed:false,
-      emoji:itk.emoji, label:itk.label,
+      emoji:it.emoji, label:it.label,
       pts: k===0 ? pts : Math.max(1, Math.floor(pts*0.5)),
       color:'#f5c842',
+      passedFirstPlatform: false,
+      bubbleId: bubbleId
     });
   }
 }
@@ -1292,9 +1338,9 @@ function finishQuiz(pts,ansStr){
   curQuizMonster.state='solved'; curQuizMonster.bubble=null;
   quizSolved++; player.score+=pts; player.stageScore+=pts;
   updateHUD();
-  spawnFloat(player.x+player.w/2,player.y-8,'+'+pts+'점','#f5c842');
+    spawnFloat(player.x+player.w/2,player.y-8,'+'+pts+'점','#f5c842');
   // 정답 → 아이템 드롭 (몬스터 위치에서)
-  dropItem(curPopX, curPopY, curQuizMonster.id, curQuizMonster.attempts);
+  dropItem(curPopX, curPopY, curQuizMonster.id, curQuizMonster.attempts, curQuizData.type === 'short', curQuizMonster.bubble?.id);
   logAnswer(true,ansStr);
   setTimeout(()=>{ closeQuiz(); }, 1000);
   // 모든 퀴즈 풀었어도 아이템이 남아있으면 대기
