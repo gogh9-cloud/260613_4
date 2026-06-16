@@ -790,7 +790,8 @@ function update() {
         b.monster.vx=(Math.random()<.5?1:-1)*b.monster.type.spd;
         bubbles.splice(i,1); continue;
       }
-      if (dist(player.x+player.w/2,player.y+player.h/2,b.x,b.y)<b.r+player.w/2+10){
+      // 플레이어가 거품에 접촉 → 터뜨리기 (시각적 크기에 맞춰 위쪽/헤딩 판정 완화)
+      if (dist(player.x+player.w/2, player.y+player.h/2 - 12, b.x, b.y) < b.r + player.w/2 + 16){
         popBubble(b,i); break;
       }
     } else if (b.state==='solving') {
@@ -878,15 +879,17 @@ function update() {
            it.y+it.h>=p.y&&it.y+it.h-it.vy<=p.y+4){
           if (it.passedFirstPlatform) {
             it.y=p.y-it.h; it.vy=0; it.vx*=0.6; it.landed=true; 
-            // 안착 시 방울 삭제
-            if (it.bubbleId) {
-               const bIdx = bubbles.findIndex(b => b.id === it.bubbleId);
-               if (bIdx >= 0) bubbles.splice(bIdx, 1);
-            }
             break;
           }
         }
       }
+    }
+
+    // 안착 시 방울 삭제 (지면이든 발판이든 공통 적용)
+    if (it.landed && it.bubbleId) {
+       const bIdx = bubbles.findIndex(b => b.id === it.bubbleId);
+       if (bIdx >= 0) bubbles.splice(bIdx, 1);
+       it.bubbleId = null; // 중복 방지
     }
     // 플레이어 획득
     const px=player.x,py=player.y,pw=player.w,ph=player.h;
