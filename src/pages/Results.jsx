@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, Edit2, Trash2, Check, X } from 'lucide-react';
 
 const Results = ({ user }) => {
   const { quizSetId } = useParams();
@@ -10,6 +10,8 @@ const Results = ({ user }) => {
   const [students, setStudents] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingStudentId, setEditingStudentId] = useState(null);
+  const [editForm, setEditForm] = useState({ ban: '', num: '', name: '', total_score: 0 });
 
   useEffect(() => {
     fetchResults();
@@ -55,6 +57,48 @@ const Results = ({ user }) => {
     URL.revokeObjectURL(url);
   };
 
+  const handleDelete = async (id, name) => {
+    if (window.confirm(`${name} 학생의 기록을 정말 삭제하시겠습니까?`)) {
+      const { error } = await supabase.from('students').delete().eq('id', id);
+      if (!error) {
+        setStudents(prev => prev.filter(s => s.id !== id));
+      } else {
+        alert('삭제 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  const handleEditClick = (student) => {
+    setEditingStudentId(student.id);
+    setEditForm({ ban: student.ban, num: student.num, name: student.name, total_score: student.total_score });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingStudentId(null);
+  };
+
+  const handleSaveEdit = async (id) => {
+    const { error } = await supabase.from('students').update({
+      ban: parseInt(editForm.ban) || 0,
+      num: parseInt(editForm.num) || 0,
+      name: editForm.name,
+      total_score: parseInt(editForm.total_score) || 0
+    }).eq('id', id);
+
+    if (!error) {
+      setStudents(prev => prev.map(s => s.id === id ? { 
+        ...s, 
+        ban: parseInt(editForm.ban) || 0, 
+        num: parseInt(editForm.num) || 0, 
+        name: editForm.name, 
+        total_score: parseInt(editForm.total_score) || 0 
+      } : s));
+      setEditingStudentId(null);
+    } else {
+      alert('수정 중 오류가 발생했습니다.');
+    }
+  };
+
   if (loading) return <div className="screen"><div style={{color:'white'}}>Loading...</div></div>;
 
   const rankColors = ['#f5c842', '#8fa3c0', '#cd7f32'];
@@ -85,6 +129,7 @@ const Results = ({ user }) => {
                   <th style={thStyle}>총점</th>
                   <th style={thStyle}>틀린 문제</th>
                   <th style={thStyle}>최종 접속</th>
+                  <th style={{ ...thStyle, textAlign: 'center' }}>관리</th>
                 </tr>
               </thead>
               <tbody>
@@ -95,14 +140,37 @@ const Results = ({ user }) => {
                     return q ? (q.question_num ? `${q.question_num}번` : q.question_text.substring(0, 10) + '...') : '알 수 없음';
                   }).join(', ');
 
+                  const isEditing = editingStudentId === s.id;
+
                   return (
                     <tr key={s.id} style={{ background: idx % 2 === 0 ? 'var(--surface-2)' : 'var(--surface-1)', borderBottom: 'none' }}>
-                      <td style={tdStyle}>{s.ban}</td>
-                      <td style={tdStyle}>{s.num}</td>
-                      <td style={{ ...tdStyle, fontWeight: '600', color: 'var(--ink)' }}>{s.name}</td>
-                      <td style={{ ...tdStyle, fontWeight: '600', color: 'var(--ink)', fontSize: '16px' }}>{s.total_score}점</td>
-                      <td style={{ ...tdStyle, fontSize: '14px', color: 'var(--semantic-error)' }}>{wrongQuestions || '-'}</td>
-                      <td style={{ ...tdStyle, fontSize: '14px', color: 'var(--ink-subtle)' }}>{new Date(s.last_accessed).toLocaleString('ko-KR')}</td>
+                      {isEditing ? (
+                        <>
+                          <td style={tdStyle}><input type="number" value={editForm.ban} onChange={e => setEditForm({...editForm, ban: e.target.value})} style={inputStyle} /></td>
+                          <td style={tdStyle}><input type="number" value={editForm.num} onChange={e => setEditForm({...editForm, num: e.target.value})} style={inputStyle} /></td>
+                          <td style={tdStyle}><input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} style={inputStyle} /></td>
+                          <td style={tdStyle}><input type="number" value={editForm.total_score} onChange={e => setEditForm({...editForm, total_score: e.target.value})} style={inputStyle} /></td>
+                          <td style={{ ...tdStyle, fontSize: '14px', color: 'var(--semantic-error)' }}>{wrongQuestions || '-'}</td>
+                          <td style={{ ...tdStyle, fontSize: '14px', color: 'var(--ink-subtle)' }}>{new Date(s.last_accessed).toLocaleString('ko-KR')}</td>
+                          <td style={{ ...tdStyle, textAlign: 'center' }}>
+                            <button onClick={() => handleSaveEdit(s.id)} style={actionBtnStyle} title="저장"><Check size={16} color="var(--primary)" /></button>
+                            <button onClick={handleCancelEdit} style={actionBtnStyle} title="취소"><X size={16} color="var(--ink-muted)" /></button>
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td style={tdStyle}>{s.ban}</td>
+                          <td style={tdStyle}>{s.num}</td>
+                          <td style={{ ...tdStyle, fontWeight: '600', color: 'var(--ink)' }}>{s.name}</td>
+                          <td style={{ ...tdStyle, fontWeight: '600', color: 'var(--ink)', fontSize: '16px' }}>{s.total_score}점</td>
+                          <td style={{ ...tdStyle, fontSize: '14px', color: 'var(--semantic-error)' }}>{wrongQuestions || '-'}</td>
+                          <td style={{ ...tdStyle, fontSize: '14px', color: 'var(--ink-subtle)' }}>{new Date(s.last_accessed).toLocaleString('ko-KR')}</td>
+                          <td style={{ ...tdStyle, textAlign: 'center' }}>
+                            <button onClick={() => handleEditClick(s)} style={actionBtnStyle} title="수정"><Edit2 size={16} color="var(--ink-muted)" /></button>
+                            <button onClick={() => handleDelete(s.id, s.name)} style={actionBtnStyle} title="삭제"><Trash2 size={16} color="var(--semantic-error)" /></button>
+                          </td>
+                        </>
+                      )}
                     </tr>
                   );
                 })}
@@ -131,6 +199,28 @@ const thStyle = {
 };
 const tdStyle = {
   padding: '12px 16px', textAlign: 'left', fontSize: '14px', color: 'var(--ink-muted)', whiteSpace: 'nowrap'
+};
+const inputStyle = {
+  width: '100%', minWidth: '50px', maxWidth: '80px',
+  padding: '6px 8px',
+  background: 'rgba(255, 255, 255, 0.05)',
+  border: '1px solid var(--hairline)',
+  borderRadius: '4px',
+  color: 'var(--ink)',
+  fontSize: '14px',
+  boxSizing: 'border-box'
+};
+const actionBtnStyle = {
+  background: 'transparent',
+  border: 'none',
+  cursor: 'pointer',
+  padding: '6px',
+  margin: '0 2px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '4px',
+  transition: 'background 0.2s'
 };
 
 export default Results;
