@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { BUB_IMG_SRC } from '../lib/assets';
 import * as XLSX from 'xlsx';
-import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, ShieldCheck, Lock, Globe, Upload, Download, Edit, ChevronDown, ChevronRight } from 'lucide-react';
+import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, ShieldCheck, Lock, Globe, Upload, Download, Edit, ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 
 function convertDriveUrl(url) {
   if (!url || !url.trim()) return '';
@@ -529,6 +529,10 @@ const QuizList = ({ user }) => {
                     <button onClick={() => copyLink(quiz.link_code)} title="학생 링크 복사"
                       style={{ padding: '12px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Copy size={16} /> 링크 복사
+                    </button>
+                    <button onClick={() => window.open(`/game?room=${quiz.link_code}`, '_blank')} title="학생 링크 열기"
+                      style={{ padding: '12px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <ExternalLink size={16} /> 링크 열기
                     </button>
                     <button onClick={() => navigate(`/dashboard/${quiz.id}/results`)} title="결과 보기"
                       style={{ padding: '12px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--primary)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
