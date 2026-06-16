@@ -329,6 +329,154 @@ const gc = canvas;
 // ctx already set by wrapper
 
 // ══════════════════════════════════════════════════════════════
+//  퀴즈 팝업 DOM — React stacking context를 우회하기 위해
+//  document.body에 직접 생성합니다.
+// ══════════════════════════════════════════════════════════════
+(function createQuizOverlay() {
+  // 이미 존재하면 제거 후 재생성
+  const existing = document.getElementById('qz-ov');
+  if (existing) existing.remove();
+
+  // 인라인 스타일로 완전히 제어 (CSS 파일 의존 X)
+  const overlay = document.createElement('div');
+  overlay.id = 'qz-ov';
+  overlay.style.cssText = [
+    'position:fixed','inset:0','background:rgba(0,0,0,.82)',
+    'display:flex','align-items:center','justify-content:center',
+    'z-index:2147483647','backdrop-filter:blur(6px)',
+    'opacity:0','pointer-events:none','transition:opacity .25s',
+  ].join(';');
+
+  const card = document.createElement('div');
+  card.style.cssText = [
+    'background:#121212','border:2px solid #ffffff',
+    'border-radius:20px','width:460px','max-height:88vh',
+    'overflow-y:auto','box-shadow:0 32px 80px rgba(0,0,0,.9)',
+    'transform:translateY(16px) scale(.97)',
+    'transition:transform .3s cubic-bezier(.22,1,.36,1)',
+    'position:relative','box-sizing:border-box',
+  ].join(';');
+
+  const body = document.createElement('div');
+  body.style.cssText = 'padding:20px 22px;box-sizing:border-box;';
+
+  // 닫기 버튼
+  const xbtn = document.createElement('button');
+  xbtn.id = 'qz-x';
+  xbtn.textContent = '✕';
+  xbtn.style.cssText = [
+    'position:absolute','top:10px','right:10px',
+    'width:28px','height:28px','background:#181818',
+    'border:1px solid #ffffff','border-radius:4px',
+    'color:#b3b3b3','font-size:15px','cursor:pointer',
+    'display:flex','align-items:center','justify-content:center',
+    'transition:all .15s','line-height:1','padding:0',
+    'box-sizing:border-box',
+  ].join(';');
+  xbtn.onmouseenter = () => { xbtn.style.background='#252525'; xbtn.style.color='#ffffff'; };
+  xbtn.onmouseleave = () => { xbtn.style.background='#181818'; xbtn.style.color='#b3b3b3'; };
+  card.appendChild(xbtn);
+
+  // 상단 (Q. + 시도 횟수)
+  const top = document.createElement('div');
+  top.id = 'qz-top';
+  top.style.cssText = 'display:flex;align-items:center;margin-bottom:10px;min-height:16px;padding-right:36px;';
+  const qnum = document.createElement('span');
+  qnum.textContent = 'Q.';
+  qnum.style.cssText = "font-family:'Press Start 2P',cursive;font-size:20px;color:#1ed760;font-weight:bold;";
+  const attempt = document.createElement('span');
+  attempt.id = 'qz-attempt';
+  attempt.style.cssText = 'margin-left:8px;font-size:14px;color:#b3b3b3;font-family:sans-serif;';
+  const pts = document.createElement('span');
+  pts.id = 'qz-pts';
+  pts.style.cssText = 'margin-left:16px;color:#ffa42b;font-weight:600;font-family:sans-serif;';
+  top.appendChild(qnum); top.appendChild(attempt); top.appendChild(pts);
+  body.appendChild(top);
+
+  // 문제 텍스트
+  const qq = document.createElement('div');
+  qq.id = 'qz-q';
+  qq.style.cssText = 'font-size:18px;font-weight:600;font-family:sans-serif;line-height:1.6;color:#ffffff;margin-bottom:20px;white-space:pre-line;';
+  body.appendChild(qq);
+
+  // 이미지
+  const img = document.createElement('div');
+  img.id = 'qz-img';
+  img.style.cssText = 'margin:0 0 16px;text-align:center;border-radius:6px;overflow:hidden;background:#181818;border:1px solid #272727;display:none;';
+  body.appendChild(img);
+
+  // 답안 영역
+  const area = document.createElement('div');
+  area.id = 'qz-area';
+  body.appendChild(area);
+
+  // 결과
+  const res = document.createElement('div');
+  res.id = 'qz-res';
+  body.appendChild(res);
+
+  // 저장 상태
+  const save = document.createElement('div');
+  save.id = 'qz-save';
+  save.style.cssText = 'font-size:10px;color:#b3b3b3;margin-top:6px;text-align:right;min-height:14px;font-family:sans-serif;';
+  body.appendChild(save);
+
+  card.appendChild(body);
+
+  // 계속하기 버튼
+  const cont = document.createElement('button');
+  cont.id = 'qz-cont';
+  cont.textContent = '계속하기';
+  cont.style.cssText = [
+    'display:none','width:calc(100% - 44px)','margin:0 22px 16px',
+    'padding:14px','background:transparent',
+    'border:1px solid #4d4d4d','border-radius:500px',
+    'color:#ffffff','font-family:sans-serif','font-size:13px',
+    'font-weight:700','text-transform:uppercase','letter-spacing:1.5px',
+    'cursor:pointer','text-align:center','transition:all .15s',
+    'box-sizing:border-box',
+  ].join(';');
+  cont.onmouseenter = () => { cont.style.background='#1f1f1f'; cont.style.borderColor='#b3b3b3'; cont.style.transform='scale(1.02)'; };
+  cont.onmouseleave = () => { cont.style.background='transparent'; cont.style.borderColor='#4d4d4d'; cont.style.transform='none'; };
+  card.appendChild(cont);
+
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  // open/close 핼퍼
+  overlay._open = () => {
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'all';
+    card.style.transform = 'none';
+  };
+  overlay._close = () => {
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none';
+    card.style.transform = 'translateY(16px) scale(.97)';
+  };
+
+  // 퀴즈 선택지/단답형 동적 스타일 헬퍼
+  window._qzStyleOpt = function(btn, state) {
+    const base = [
+      'display:flex','align-items:center','gap:11px','width:100%',
+      'padding:12px 14px','border-radius:6px','font-size:14px',
+      'font-family:sans-serif','cursor:pointer','text-align:left',
+      'transition:background .15s,border-color .15s,transform .1s',
+      'box-sizing:border-box','margin-bottom:7px',
+    ];
+    if (state === 'ok') {
+      btn.style.cssText = [...base,'background:rgba(74,222,128,.1)','border:1px solid rgba(74,222,128,.5)','color:#4ade80'].join(';');
+    } else if (state === 'ng') {
+      btn.style.cssText = [...base,'background:rgba(244,63,94,.08)','border:1px solid rgba(244,63,94,.4)','color:#f87171'].join(';');
+    } else {
+      btn.style.cssText = [...base,'background:#0d1220','border:1px solid rgba(255,255,255,.1)','color:#ffffff'].join(';');
+      btn.onmouseenter = () => { if(!btn.disabled){btn.style.background='#1a2440';btn.style.borderColor='rgba(255,255,255,.3)';btn.style.transform='translateX(3px)';} };
+      btn.onmouseleave = () => { btn.style.background='#0d1220';btn.style.borderColor='rgba(255,255,255,.1)';btn.style.transform='none'; };
+    }
+  };
+})();
+
+// ══════════════════════════════════════════════════════════════
 //  스테이지 정의
 // ══════════════════════════════════════════════════════════════
 // y값은 바닥에서의 높이(px)로 정의 → 실제 변환: p.y = CH - FLOOR_H - fromBottom - h
@@ -1049,14 +1197,14 @@ function openQuiz(monster,qdata,popX,popY){
   if(monster.lastPts!==null&&monster.lastPts!==undefined) pts=Math.max(1,monster.lastPts-1);
   else pts=calcQuizPoints(monster.attempts);
   monster.lastPts=pts;
-  // 점수 표시 없음 (아이템 획득 시 점수 제공)
   document.getElementById('qz-q').textContent=qdata.question;
   document.getElementById('qz-res').innerHTML='';
   document.getElementById('qz-save').textContent='';
   document.getElementById('qz-attempt').textContent=monster.attempts>0?'('+monster.attempts+'번 시도)':'';
   renderQuizImage(qdata);
   renderAnswerArea(qdata,pts);
-  document.getElementById('qz-ov').classList.add('open');
+  const ov=document.getElementById('qz-ov');
+  if(ov&&ov._open) ov._open(); else if(ov) { ov.style.opacity='1'; ov.style.pointerEvents='all'; }
 }
 function renderAnswerArea(qdata,pts){
   const area=document.getElementById('qz-area'); area.innerHTML='';
@@ -1064,19 +1212,27 @@ function renderAnswerArea(qdata,pts){
   else renderShort(area,qdata,pts);
 }
 function renderChoice(area,qdata,pts){
-  const grid=document.createElement('div'); grid.className='opts';
+  const grid=document.createElement('div');
+  grid.style.cssText='display:flex;flex-direction:column;gap:7px;';
   const rawOpts=(qdata.options||[]).map(o=>(o!==undefined&&o!==null&&String(o).trim()!=='')?String(o).trim():null).filter(o=>o!==null);
   const correctText=Array.isArray(qdata.answer)?qdata.answer.map(a=>a.replace(/\s/g,'')).join(','):String(qdata.answer).replace(/\s/g,'');
   const shuffled=[...rawOpts];
   for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
   shuffled.forEach((opt,i)=>{
-    const btn=document.createElement('button'); btn.className='opt';
-    btn.innerHTML='<span class="onum">'+String(i+1).padStart(2,'0')+'</span><span>'+opt+'</span>';
+    const btn=document.createElement('button');
+    if(window._qzStyleOpt) window._qzStyleOpt(btn,'default');
+    else btn.style.cssText='display:flex;align-items:center;gap:11px;width:100%;padding:12px 14px;background:#0d1220;border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#ffffff;font-size:14px;font-family:sans-serif;cursor:pointer;text-align:left;box-sizing:border-box;margin-bottom:7px;';
+    const onum=document.createElement('span');
+    onum.textContent=String(i+1).padStart(2,'0');
+    onum.style.cssText='width:26px;height:26px;border-radius:3px;background:#181818;border:1px solid #4d4d4d;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#b3b3b3;flex-shrink:0;';
+    const txt=document.createElement('span');
+    txt.textContent=opt;
+    btn.appendChild(onum); btn.appendChild(txt);
     btn.onclick=()=>{
-      grid.querySelectorAll('.opt').forEach(b=>{b.onclick=null;b.disabled=true;});
+      grid.querySelectorAll('button').forEach(b=>{b.onclick=null;b.disabled=true;b.style.cursor='default';});
       const optNorm=opt.replace(/\s/g,'');
       const ok=Array.isArray(qdata.answer)?qdata.answer.map(a=>a.replace(/\s/g,'')).includes(optNorm):(optNorm===correctText);
-      btn.classList.add(ok?'ok':'ng');
+      if(window._qzStyleOpt) window._qzStyleOpt(btn,ok?'ok':'ng');
       showResult(ok,ok?pts:0,opt);
       if(ok)finishQuiz(pts,opt); else{logAnswer(false,opt);startWrongTimer();}
     };
@@ -1085,12 +1241,23 @@ function renderChoice(area,qdata,pts){
   area.appendChild(grid);
 }
 function renderShort(area,qdata,pts){
-  const wrap=document.createElement('div'); wrap.className='si-wrap';
-  const inp=document.createElement('input'); inp.type='text'; inp.className='si-inp'; inp.maxLength=80; inp.setAttribute('autocomplete','off'); inp.setAttribute('autocorrect','off'); inp.setAttribute('autocapitalize','off');
-  const btn=document.createElement('button'); btn.className='btn-sub'; btn.textContent='제출';
+  const wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;gap:7px;';
+  const inp=document.createElement('input');
+  inp.type='text'; inp.maxLength=80;
+  inp.setAttribute('autocomplete','off'); inp.setAttribute('autocorrect','off'); inp.setAttribute('autocapitalize','off');
+  inp.style.cssText='flex:1;padding:11px 14px;background:#0d1220;border:1px solid #4d4d4d;border-radius:6px;color:#ffffff;font-size:16px;font-family:sans-serif;font-weight:500;outline:none;transition:border-color .2s,box-shadow .2s;box-sizing:border-box;';
+  inp.onfocus=()=>{inp.style.borderColor='rgba(45,212,191,.6)';inp.style.boxShadow='0 0 0 3px rgba(45,212,191,.15)';};
+  inp.onblur=()=>{inp.style.borderColor='#4d4d4d';inp.style.boxShadow='none';};
+  const btn=document.createElement('button');
+  btn.textContent='제출';
+  btn.style.cssText='padding:11px 18px;background:#2dd4bf;border:none;border-radius:6px;color:#030e0d;font-family:sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(45,212,191,.35);white-space:nowrap;flex-shrink:0;';
+  btn.onmouseenter=()=>{btn.style.background='#5eead4';btn.style.transform='translateY(-1px)';};
+  btn.onmouseleave=()=>{btn.style.background='#2dd4bf';btn.style.transform='none';};
   const submit=()=>{
     const v=inp.value.trim(); if(!v){inp.focus();return;}
     inp.disabled=true; btn.disabled=true;
+    btn.style.opacity='0.4'; btn.style.cursor='not-allowed';
     const rawAns=Array.isArray(qdata.answer)?qdata.answer:String(qdata.answer).split(',');
     const ans=rawAns.map(a=>norm(a)).filter(Boolean);
     const ok=ans.length>0&&ans.some(a=>a===norm(v));
@@ -1104,8 +1271,10 @@ function renderShort(area,qdata,pts){
 function norm(s){return s.trim().toLowerCase().replace(/\s+/g,'');}
 function showResult(ok,pts,ans){
   const el=document.getElementById('qz-res');
-  const type=ok?'ok':'ng';
-  el.innerHTML='<div class="res '+type+'-res"><span class="ri">'+(ok?'✅':'❌')+'</span><span class="rt"><strong>'+(ok?'정답!':'오답.')+'</strong></span>'+(pts>0?'<span class="rp">+'+pts+'점</span>':'')+'</div>';
+  const icon=ok?'✅':'❌';
+  const label=ok?'정답!':'오답.';
+  const ptsHtml=pts>0?'<span style="font-size:13px;font-weight:700;white-space:nowrap;font-family:sans-serif;">+'+pts+'점</span>':'';
+  el.innerHTML='<div style="display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:6px;margin-top:14px;font-size:13px;font-weight:500;font-family:sans-serif;'+(ok?'background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:#4ade80;':'background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25);color:#ff8099;')+'">'+'<span style="font-size:21px;">'+icon+'</span>'+'<span style="flex:1;line-height:1.5;"><strong>'+label+'</strong></span>'+ptsHtml+'</div>';
 }
 function releaseMonster(monster) {
   if (!monster) return;
@@ -1151,8 +1320,10 @@ function logAnswer(isOk,ans){
 function closeQuiz(){
   clearInterval(wrongTimerRef);
   quizOpen=false; curQuizMonster=null; curQuizData=null;
-  document.getElementById('qz-ov').classList.remove('open');
-  document.getElementById('qz-cont').style.display='none';
+  const ov=document.getElementById('qz-ov');
+  if(ov&&ov._close) ov._close(); else if(ov) { ov.style.opacity='0'; ov.style.pointerEvents='none'; }
+  const cont=document.getElementById('qz-cont');
+  if(cont) cont.style.display='none';
   gc.focus();
 }
 // ESC / ✕ 버튼으로 닫을 때: 몬스터를 거품에서 풀어줌
