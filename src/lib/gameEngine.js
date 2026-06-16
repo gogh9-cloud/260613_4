@@ -349,16 +349,17 @@ const gc = canvas;
 
   const card = document.createElement('div');
   card.style.cssText = [
-    'background:#121212','border:2px solid #ffffff',
+    'background:#121212','border:1px solid #ffffff',
     'border-radius:20px','width:460px','max-height:88vh',
-    'overflow-y:auto','box-shadow:0 32px 80px rgba(0,0,0,.9)',
+    'box-shadow:0 32px 80px rgba(0,0,0,.9)',
     'transform:translateY(16px) scale(.97)',
     'transition:transform .3s cubic-bezier(.22,1,.36,1)',
     'position:relative','box-sizing:border-box',
+    'display:flex','flex-direction:column','overflow:hidden',
   ].join(';');
 
   const body = document.createElement('div');
-  body.style.cssText = 'padding:20px 22px;box-sizing:border-box;';
+  body.style.cssText = 'padding:20px 22px;box-sizing:border-box;flex:1;overflow-y:auto;';
 
   // 닫기 버튼
   const xbtn = document.createElement('button');
