@@ -415,19 +415,28 @@ const MOVE_MS = 130;
 let pacDir = 0; // 0=right 1=left 2=up 3=down
 function makeBlackTransparent(imgSrc, targetImgObj) {
   const tempImg = new Image();
+  tempImg.crossOrigin = 'Anonymous';
   tempImg.onload = () => {
-    const c = document.createElement('canvas');
-    c.width = tempImg.width; c.height = tempImg.height;
-    const ctx = c.getContext('2d');
-    ctx.drawImage(tempImg, 0, 0);
-    const data = ctx.getImageData(0, 0, c.width, c.height);
-    for (let i = 0; i < data.data.length; i += 4) {
-      if (data.data[i] < 20 && data.data[i+1] < 20 && data.data[i+2] < 20) {
-        data.data[i+3] = 0;
+    try {
+      const c = document.createElement('canvas');
+      c.width = tempImg.width; c.height = tempImg.height;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(tempImg, 0, 0);
+      const data = ctx.getImageData(0, 0, c.width, c.height);
+      for (let i = 0; i < data.data.length; i += 4) {
+        if (data.data[i] < 20 && data.data[i+1] < 20 && data.data[i+2] < 20) {
+          data.data[i+3] = 0;
+        }
       }
+      ctx.putImageData(data, 0, 0);
+      targetImgObj.src = c.toDataURL();
+    } catch (e) {
+      console.warn('Canvas taint error, falling back to original image', e);
+      targetImgObj.src = imgSrc;
     }
-    ctx.putImageData(data, 0, 0);
-    targetImgObj.src = c.toDataURL();
+  };
+  tempImg.onerror = () => {
+    targetImgObj.src = imgSrc;
   };
   tempImg.src = imgSrc;
 }
