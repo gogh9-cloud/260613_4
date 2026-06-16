@@ -413,8 +413,27 @@ const MOVE_MS = 130;
 
 // 팩맨
 let pacDir = 0; // 0=right 1=left 2=up 3=down
+function makeBlackTransparent(imgSrc, targetImgObj) {
+  const tempImg = new Image();
+  tempImg.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = tempImg.width; c.height = tempImg.height;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(tempImg, 0, 0);
+    const data = ctx.getImageData(0, 0, c.width, c.height);
+    for (let i = 0; i < data.data.length; i += 4) {
+      if (data.data[i] < 20 && data.data[i+1] < 20 && data.data[i+2] < 20) {
+        data.data[i+3] = 0;
+      }
+    }
+    ctx.putImageData(data, 0, 0);
+    targetImgObj.src = c.toDataURL();
+  };
+  tempImg.src = imgSrc;
+}
+
 const pacImage = new Image();
-pacImage.src = '/pacman-icon.png';
+makeBlackTransparent('/pacman-icon.png', pacImage);
 
 let ghosts = [];
 let invincibilityEndTime = 0;
@@ -425,7 +444,7 @@ const ghostImages = [];
 const ghostSrcs = ['/ghost1.png', '/ghost2.png', '/ghost3.png', '/ghost4.png'];
 ghostSrcs.forEach(src => {
   const img = new Image();
-  img.src = src;
+  makeBlackTransparent(src, img);
   ghostImages.push(img);
 });
 
@@ -1470,10 +1489,8 @@ function drawDot(px, py, big, ts) {
       ctx.save();
       ctx.translate(cx, cy);
       const img = ghostImages[g.type];
-      if (img && img.complete) {
-        ctx.globalCompositeOperation = 'lighten';
+      if (img && img.complete && img.naturalWidth > 0) {
         ctx.drawImage(img, -TILE*0.5, -TILE*0.5, TILE, TILE);
-        ctx.globalCompositeOperation = 'source-over';
       } else {
         ctx.beginPath(); ctx.arc(0, 0, TILE*0.4, 0, Math.PI*2); ctx.fillStyle='red'; ctx.fill();
       }
@@ -1506,10 +1523,8 @@ function drawPacman(ts) {
   if (pacDir === 2) ctx.rotate(Math.PI/2); // Up (반대 회전)
   if (pacDir === 3) ctx.rotate(-Math.PI/2); // Down (반대 회전)
   
-  if (pacImage.complete) {
-    ctx.globalCompositeOperation = 'lighten';
+  if (pacImage.complete && pacImage.naturalWidth > 0) {
     ctx.drawImage(pacImage, -TILE*0.5, -TILE*0.5, TILE, TILE);
-    ctx.globalCompositeOperation = 'source-over';
   } else {
     ctx.beginPath(); ctx.arc(0, 0, TILE*0.4, 0, Math.PI*2); ctx.fillStyle='yellow'; ctx.fill();
   }
