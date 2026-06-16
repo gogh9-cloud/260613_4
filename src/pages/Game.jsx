@@ -220,6 +220,10 @@ const Game = () => {
     return <div className="screen"><div className="login-card"><div className="login-sub">방 코드가 없습니다.</div></div></div>;
   }
 
+  if (!quizSet) {
+    return <div className="screen"><div className="login-card"><div className="login-sub">게임 정보를 불러오는 중...</div></div></div>;
+  }
+
   if (gameState === 'login') {
     return (
       <div key="login-view" className="screen login-screen" id="scr-login">
