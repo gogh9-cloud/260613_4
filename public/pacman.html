@@ -1586,6 +1586,20 @@ document.addEventListener('keydown', e => {
     startGame(); return;
   }
   if (e.key === 'Escape') { if (quizOpen) closeQuiz(); }
+
+  // 퀴즈 선택형 숫자 단축키 지원
+  if (quizOpen) {
+    const num = parseInt(e.key);
+    if (!isNaN(num) && num >= 1 && num <= 9) {
+      const qzArea = document.getElementById('qz-area');
+      if (qzArea) {
+        const btns = qzArea.querySelectorAll('button.opt');
+        if (btns && btns.length > 0 && btns[num - 1] && !btns[num - 1].disabled) {
+          btns[num - 1].click();
+        }
+      }
+    }
+  }
 });
 document.addEventListener('keyup', e => keys.delete(e.key));
 document.getElementById('c-ov').addEventListener('click', startGame);

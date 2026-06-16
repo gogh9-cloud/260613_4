@@ -1457,12 +1457,26 @@ if(btnBack) btnBack.onclick=()=>{
 //  입력
 // ══════════════════════════════════════════════════════════════
 const onKeyDown = e=>{
-  // 퀴즈 입력 중일 때는 space preventDefault 하지 않음
+  // 방향키 입력 중일 때는 space preventDefault 처리 등
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
   if(e.key===' ' && !quizOpen) e.preventDefault();
   keys.add(e.key);
   if(!gameActive){startGame();return;}
   if(e.key==='Escape'&&quizOpen)closeQuizAndRelease();
+
+  // 퀴즈 선택형 숫자 단축키 지원
+  if(quizOpen && curQuizData && curQuizData.type === 'choice') {
+    const num = parseInt(e.key);
+    if(!isNaN(num) && num >= 1 && num <= 9) {
+      const qzArea = document.getElementById('qz-area');
+      if(qzArea) {
+        const btns = qzArea.querySelectorAll('button');
+        if(btns && btns[num-1] && !btns[num-1].disabled) {
+          btns[num-1].click();
+        }
+      }
+    }
+  }
 };
 const onKeyUp = e=>keys.delete(e.key);
 document.addEventListener('keydown', onKeyDown);
