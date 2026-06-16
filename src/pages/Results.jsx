@@ -75,7 +75,7 @@ const Results = ({ user }) => {
         {students.length === 0 ? (
           <div style={{ textAlign: 'center', color: 'var(--ink-muted)', padding: '64px 0', background: 'var(--surface-2)', borderRadius: 'var(--r-md)' }}>아직 참여한 학생이 없습니다.</div>
         ) : (
-          <div style={{ flex: 1, overflowY: 'auto', borderRadius: 'var(--r-md)', background: 'var(--surface-1)' }}>
+          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'auto', borderRadius: 'var(--r-md)', background: 'var(--surface-1)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: 'var(--surface-2)' }}>
@@ -127,10 +127,10 @@ const Results = ({ user }) => {
 
 const thStyle = {
   padding: '12px 16px', textAlign: 'left', fontSize: '14px', 
-  fontWeight: '600', color: 'var(--ink)', borderBottom: '1px solid var(--hairline)'
+  fontWeight: '600', color: 'var(--ink)', borderBottom: '1px solid var(--hairline)', whiteSpace: 'nowrap'
 };
 const tdStyle = {
-  padding: '12px 16px', textAlign: 'left', fontSize: '14px', color: 'var(--ink-muted)'
+  padding: '12px 16px', textAlign: 'left', fontSize: '14px', color: 'var(--ink-muted)', whiteSpace: 'nowrap'
 };
 
 export default Results;
