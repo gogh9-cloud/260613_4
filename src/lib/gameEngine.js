@@ -956,26 +956,17 @@ function render() {
     ctx.fillStyle='rgba(255,255,255,0.55)';
     [[50,25],[160,15],[290,45],[490,20],[620,55],[380,70]].forEach(([x,y])=>{ctx.beginPath();ctx.arc(x,y,1.2,0,Math.PI*2);ctx.fill();});
     // 좌우 순환 힌트
-    ctx.fillStyle='rgba(180,120,255,0.35)';
-    ctx.font='11px sans-serif'; ctx.textAlign='center';
-    ctx.fillText('◀ 순환',10+20,CH/2); ctx.fillText('순환 ▶',CW-20,CH/2);
   } else if(curStageIdx===2){
     // 숲: 안개 + 나뭇잎
-    ctx.fillStyle='rgba(40,100,20,0.08)'; ctx.fillRect(0,CH*0.72,CW,CH*0.28);
-    ctx.fillStyle='rgba(80,160,40,0.12)'; ctx.fillRect(0,CH*0.85,CW,CH*0.15);
   } else if(curStageIdx===3){
     // 화산: 용암 + 상하순환 힌트
     const fl=0.08+Math.sin(_t/280)*0.04;
     ctx.fillStyle=`rgba(255,70,0,${fl})`; ctx.fillRect(0,CH-FLOOR_H-18,CW,20);
     // 위아래 순환 힌트
-    ctx.fillStyle='rgba(255,100,0,0.4)'; ctx.font='11px sans-serif'; ctx.textAlign='center';
-    ctx.fillText('▼ 아래로 빠지면 위에서 재등장!',CW/2,CH-FLOOR_H-22);
   } else if(curStageIdx===4){
     // 하늘: 구름 + 나선 힌트
     ctx.fillStyle='rgba(160,210,255,0.08)';
     [[120,55,85,28],[350,38,105,32],[590,62,88,26]].forEach(([x,y,w,h])=>{ctx.beginPath();ctx.ellipse(x,y,w,h,0,0,Math.PI*2);ctx.fill();});
-    ctx.fillStyle='rgba(100,180,255,0.35)'; ctx.font='11px sans-serif'; ctx.textAlign='center';
-    ctx.fillText('↔↕ 상하좌우 모두 순환!',CW/2,20);
   }
 
   // 발판
