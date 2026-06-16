@@ -1338,12 +1338,13 @@ function startWrongTimer(){
 }
 function finishQuiz(pts,ansStr){
   if(!curQuizMonster)return;
+  const bubbleId = curQuizMonster.bubble?.id;
   curQuizMonster.state='solved'; curQuizMonster.bubble=null;
   quizSolved++; player.score+=pts; player.stageScore+=pts;
   updateHUD();
-    spawnFloat(player.x+player.w/2,player.y-8,'+'+pts+'점','#f5c842');
+  spawnFloat(player.x+player.w/2,player.y-8,'+'+pts+'점','#f5c842');
   // 정답 → 아이템 드롭 (몬스터 위치에서)
-  dropItem(curPopX, curPopY, curQuizMonster.id, curQuizMonster.attempts, curQuizData.type === 'short', curQuizMonster.bubble?.id);
+  dropItem(curPopX, curPopY, curQuizMonster.id, curQuizMonster.attempts, curQuizData.type === 'short', bubbleId);
   logAnswer(true,ansStr);
   setTimeout(()=>{ closeQuiz(); }, 1000);
   // 모든 퀴즈 풀었어도 아이템이 남아있으면 대기
