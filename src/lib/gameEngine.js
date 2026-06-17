@@ -1256,7 +1256,7 @@ function renderChoice(area,qdata,pts){
   const grid=document.createElement('div');
   grid.style.cssText='display:flex;flex-direction:column;gap:7px;';
   const rawOpts=(qdata.options||[]).map(o=>(o!==undefined&&o!==null&&String(o).trim()!=='')?String(o).trim():null).filter(o=>o!==null);
-  const correctText=Array.isArray(qdata.answer)?qdata.answer.map(a=>a.replace(/\s/g,'')).join(','):String(qdata.answer).replace(/\s/g,'');
+  const correctText=Array.isArray(qdata.answer)?qdata.answer.map(a=>String(a).replace(/\s/g,'')).join(','):String(qdata.answer).replace(/\s/g,'');
   const shuffled=[...rawOpts];
   for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
   shuffled.forEach((opt,i)=>{
@@ -1272,7 +1272,7 @@ function renderChoice(area,qdata,pts){
     btn.onclick=()=>{
       grid.querySelectorAll('button').forEach(b=>{b.onclick=null;b.disabled=true;b.style.cursor='default';});
       const optNorm=opt.replace(/\s/g,'');
-      const ok=Array.isArray(qdata.answer)?qdata.answer.map(a=>a.replace(/\s/g,'')).includes(optNorm):(optNorm===correctText);
+      const ok=Array.isArray(qdata.answer)?qdata.answer.map(a=>String(a).replace(/\s/g,'')).includes(optNorm):(optNorm===correctText);
       if(window._qzStyleOpt) window._qzStyleOpt(btn,ok?'ok':'ng');
       showResult(ok,ok?pts:0,opt);
       if(ok)finishQuiz(pts,opt); else{logAnswer(false,opt);startWrongTimer();}
@@ -1309,7 +1309,7 @@ function renderShort(area,qdata,pts){
   wrap.appendChild(inp); wrap.appendChild(btn); area.appendChild(wrap);
   setTimeout(()=>inp.focus(),100);
 }
-function norm(s){return s.trim().toLowerCase().replace(/\s+/g,'');}
+function norm(s){return String(s).trim().toLowerCase().replace(/\s+/g,'');}
 function showResult(ok,pts,ans){
   const el=document.getElementById('qz-res');
   const icon=ok?'✅':'❌';
