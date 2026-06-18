@@ -1175,8 +1175,6 @@ function render() {
 
   // 플레이어 Bub
   drawBub();
-
-  requestAnimationFrame(render);
 }
 
 function drawMonsterImg(m, x, y, alpha){
@@ -1521,10 +1519,27 @@ function startGame(){
 
 // ── 게임 루프 ─────────────────────────────────────────────
 let reqId;
-let updateIntervalId;
-function gameLoop() {
-  if (updateIntervalId) clearInterval(updateIntervalId);
-  updateIntervalId = setInterval(update, 1000/60);
+let lastTime = 0;
+let accumulator = 0;
+const TICK_RATE = 1000 / 60;
+
+function gameLoop(timestamp) {
+  if (!timestamp) timestamp = performance.now();
+  if (!lastTime) lastTime = timestamp;
+  let dt = timestamp - lastTime;
+  lastTime = timestamp;
+
+  if (dt > 250) dt = 250;
+
+  accumulator += dt;
+  while (accumulator >= TICK_RATE) {
+    update();
+    accumulator -= TICK_RATE;
+  }
+  
+  render();
+
+  reqId = requestAnimationFrame(gameLoop);
 }
 
   // --- End Original logic ---
@@ -1533,15 +1548,15 @@ function gameLoop() {
     cleanup: () => {
       gameActive = false;
       cancelAnimationFrame(reqId);
-      if (updateIntervalId) clearInterval(updateIntervalId);
       document.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('keyup', onKeyUp);
       if(typeof cOv !== 'undefined' && cOv) cOv.removeEventListener('click', startGame);
     },
     start: () => {
       initStage(Math.floor(Math.random() * STAGE_DEFS.length), true);
-      reqId = requestAnimationFrame(render);
-      gameLoop();
+      lastTime = 0;
+      accumulator = 0;
+      reqId = requestAnimationFrame(gameLoop);
       canvas.focus();
     },
     stop: () => {
