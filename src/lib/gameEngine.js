@@ -1081,18 +1081,17 @@ function render() {
     const cx=it.x+it.w/2, cy=it.y+it.h/2;
     const glow=0.2+Math.sin(Date.now()/250)*.15;
     // 광채 (이모지 뒤) - 착지 전까지만 방울처럼 표시
-    if (!it.landed) {
-      ctx.globalAlpha=glow;
-      ctx.beginPath();ctx.arc(cx,cy,18,0,Math.PI*2);
-      ctx.fillStyle='#f5c842';ctx.fill();
-    }
+    // 항상 광채를 표시하여 어두운 배경에 묻히지 않게 함
+    ctx.globalAlpha=glow;
+    ctx.beginPath();ctx.arc(Math.round(cx),Math.round(cy),18,0,Math.PI*2);
+    ctx.fillStyle='#f5c842';ctx.fill();
     ctx.globalAlpha=1;
     // 이모지
     ctx.save();
     if(!it.landed){
       // 날아가는 중 — 속도 방향으로 살짝 기울기
       const angle=Math.atan2(it.vy,it.vx);
-      ctx.translate(cx,cy);
+      ctx.translate(Math.round(cx), Math.round(cy));
       ctx.rotate(angle*0.3);
       ctx.font='22px serif';
       ctx.textAlign='center';ctx.textBaseline='middle';
@@ -1107,11 +1106,17 @@ function render() {
     ctx.restore();
     // 점수 힌트 (착지 후 표시)
     if(it.landed){
-      ctx.globalAlpha=0.8;
-      ctx.font='bold 10px sans-serif';
-      ctx.fillStyle='#ffe566';
+      ctx.globalAlpha=1.0;
+      ctx.font='bold 13px sans-serif';
       ctx.textAlign='center';
-      ctx.fillText('+'+it.pts, Math.round(cx), Math.round(cy-16));
+      
+      // 검은색 외곽선으로 또렷하게
+      ctx.strokeStyle='#000';
+      ctx.lineWidth=2;
+      ctx.strokeText('+'+it.pts, Math.round(cx), Math.round(cy-20));
+      
+      ctx.fillStyle='#ffe566';
+      ctx.fillText('+'+it.pts, Math.round(cx), Math.round(cy-20));
       ctx.globalAlpha=1;
     }
   }
