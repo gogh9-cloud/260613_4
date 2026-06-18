@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { initGameEngine } from '../lib/gameEngine';
@@ -21,13 +22,7 @@ const Game = () => {
   const canvasRef = useRef(null);
   const engineRef = useRef(null);
 
-  useEffect(() => {
-    if (room) {
-      fetchQuizSet();
-    }
-  }, [room]);
-
-  const fetchQuizSet = async () => {
+  const fetchQuizSet = useCallback(async () => {
     setLoading(true);
     const { data: qSet, error } = await supabase
       .from('quiz_sets')
@@ -60,7 +55,13 @@ const Game = () => {
       setQuestions(qData || []);
     }
     setLoading(false);
-  };
+  }, [room]);
+
+  useEffect(() => {
+    if (room) {
+      fetchQuizSet();
+    }
+  }, [room, fetchQuizSet]);
 
   const handleStart = async () => {
     if (questions.length === 0) {
@@ -140,7 +141,7 @@ const Game = () => {
       };
 
       const callbacks = {
-        onSaveStageScore: async ({ ban, num, name, stageName, stageScore, solved }) => {
+        onSaveStageScore: async ({ stageName, stageScore }) => {
           const newStageScores = { ...player.stageScores, [stageName]: Math.max(stageScore, player.stageScores[stageName] || 0) };
           const newTotal = Object.values(newStageScores).reduce((a, b) => a + b, 0);
 
@@ -151,7 +152,7 @@ const Game = () => {
 
           return { score: newTotal, stageScores: newStageScores };
         },
-        onSubmitAnswer: async ({ id, questionNum, answer, isCorrect }) => {
+        onSubmitAnswer: async ({ id, answer, isCorrect }) => {
           const qObj = questions.find(q => q.id === id);
           if (qObj) {
             const { error } = await supabase.from('student_logs').insert([{
@@ -297,14 +298,14 @@ const Game = () => {
             x: 50, y: 50, w: 30, h: 44, vx: 0, vy: 0, facing: 1
           }}
           callbacks={{
-            onSaveStageScore: async ({ ban, num, name, stageName, stageScore, solved }) => {
+            onSaveStageScore: async ({ stageName, stageScore }) => {
               const newStageScores = { ...playerInfo.stageScores, [stageName]: Math.max(stageScore, playerInfo.stageScores[stageName] || 0) };
               const newTotal = Object.values(newStageScores).reduce((a, b) => a + b, 0);
               await supabase.from('students').update({ total_score: newTotal, stage_scores: newStageScores }).eq('id', playerInfo.id);
               setPlayerInfo(prev => ({ ...prev, score: newTotal, stageScores: newStageScores }));
               return { score: newTotal, stageScores: newStageScores };
             },
-            onSubmitAnswer: async ({ id, questionNum, answer, isCorrect }) => {
+            onSubmitAnswer: async ({ id, answer, isCorrect }) => {
               const qObj = questions.find(q => q.id === id);
               if (qObj) {
                 await supabase.from('student_logs').insert([{

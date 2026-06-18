@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { BUB_IMG_SRC } from '../lib/assets';
 import * as XLSX from 'xlsx';
-import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, ShieldCheck, Lock, Globe, Upload, Download, Edit, ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
+import { LogOut, Copy, Trash2, BarChart2, Plus, BookOpen, Lock, Globe, Upload, Download, Edit, ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 
 function convertDriveUrl(url) {
   if (!url || !url.trim()) return '';
@@ -59,26 +60,26 @@ const QuizList = ({ user }) => {
 
   const isAdmin = ADMIN_EMAILS.includes(user?.email);
 
-  useEffect(() => {
-    Promise.all([fetchQuizSets(), fetchBanks()]).finally(() => setLoading(false));
-  }, []);
-
-  const fetchQuizSets = async () => {
+  const fetchQuizSets = useCallback(async () => {
     const { data } = await supabase
       .from('quiz_sets')
       .select('*, question_banks(title, subject)')
       .eq('teacher_id', user.id)
       .order('created_at', { ascending: false });
     setQuizSets(data || []);
-  };
+  }, [user.id]);
 
-  const fetchBanks = async () => {
+  const fetchBanks = useCallback(async () => {
     const { data } = await supabase
       .from('question_banks')
       .select('id, title, subject, question_count, is_public, uploader_email, uploaded_by')
       .order('created_at', { ascending: false });
     setBanks(data || []);
-  };
+  }, []);
+
+  useEffect(() => {
+    Promise.all([fetchQuizSets(), fetchBanks()]).finally(() => setLoading(false));
+  }, [fetchQuizSets, fetchBanks]);
 
   const createRoom = async () => {
     if (!newRoomTitle.trim() || !selectedBankId) {

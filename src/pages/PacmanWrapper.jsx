@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const PacmanWrapper = ({ quizPool, player, callbacks, onExit }) => {
   const iframeRef = useRef(null);
+  const [timestamp] = useState(() => Date.now());
 
   useEffect(() => {
     const handleMessage = async (event) => {
@@ -44,7 +45,7 @@ const PacmanWrapper = ({ quizPool, player, callbacks, onExit }) => {
     <div style={{ width: '100%', height: '100vh', background: '#000' }}>
       <iframe
         ref={iframeRef}
-        src={`/pacman.html?t=${Date.now()}`}
+        src={`/pacman.html?t=${timestamp}`}
         style={{ width: '100%', height: '100%', border: 'none' }}
         title="Pacman Game"
       />

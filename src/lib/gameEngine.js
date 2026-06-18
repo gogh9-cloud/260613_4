@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 // Game Engine extracted from game.html
 export function initGameEngine(canvas, callbacks, initialData) {

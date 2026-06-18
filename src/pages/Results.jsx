@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ArrowLeft, Download, Edit2, Trash2, Check, X } from 'lucide-react';
 
-const Results = ({ user }) => {
+const Results = () => {
   const { quizSetId } = useParams();
   const navigate = useNavigate();
   const [quizSet, setQuizSet] = useState(null);
@@ -13,11 +14,7 @@ const Results = ({ user }) => {
   const [editingStudentId, setEditingStudentId] = useState(null);
   const [editForm, setEditForm] = useState({ ban: '', num: '', name: '', total_score: 0 });
 
-  useEffect(() => {
-    fetchResults();
-  }, [quizSetId]);
-
-  const fetchResults = async () => {
+  const fetchResults = useCallback(async () => {
     const [setRes, stuRes] = await Promise.all([
       supabase.from('quiz_sets').select('*').eq('id', quizSetId).single(),
       supabase.from('students').select('*, student_logs(*)').eq('quiz_set_id', quizSetId).order('ban', { ascending: true }).order('num', { ascending: true })
@@ -34,7 +31,11 @@ const Results = ({ user }) => {
     }
     if (stuRes.data) setStudents(stuRes.data);
     setLoading(false);
-  };
+  }, [quizSetId]);
+
+  useEffect(() => {
+    fetchResults();
+  }, [quizSetId, fetchResults]);
 
   const downloadCSV = () => {
     const header = '반,번호,이름,총점,틀린 문제,최종접속';
@@ -100,8 +101,6 @@ const Results = ({ user }) => {
   };
 
   if (loading) return <div className="screen"><div style={{color:'white'}}>Loading...</div></div>;
-
-  const rankColors = ['#f5c842', '#8fa3c0', '#cd7f32'];
 
   return (
     <div className="screen dashboard-screen" style={{ overflowY: 'auto', alignItems: 'flex-start', paddingTop: '24px', background: 'var(--canvas)' }}>

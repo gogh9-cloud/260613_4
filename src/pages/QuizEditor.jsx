@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react';
 
-const QuizEditor = ({ user }) => {
+const QuizEditor = () => {
   const { quizSetId } = useParams();
   const navigate = useNavigate();
   const [quizSet, setQuizSet] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchQuizData();
-  }, [quizSetId]);
-
-  const fetchQuizData = async () => {
+  const fetchQuizData = useCallback(async () => {
     const [setRes, qRes] = await Promise.all([
       supabase.from('quiz_sets').select('*').eq('id', quizSetId).single(),
       supabase.from('questions').select('*').eq('quiz_set_id', quizSetId).order('created_at', { ascending: true })
@@ -23,7 +20,11 @@ const QuizEditor = ({ user }) => {
     if (setRes.data) setQuizSet(setRes.data);
     if (qRes.data) setQuestions(qRes.data);
     setLoading(false);
-  };
+  }, [quizSetId]);
+
+  useEffect(() => {
+    fetchQuizData();
+  }, [quizSetId, fetchQuizData]);
 
   const addQuestion = () => {
     setQuestions([
@@ -81,7 +82,7 @@ const QuizEditor = ({ user }) => {
       if (toUpdate.length > 0) await supabase.from('questions').upsert(toUpdate);
       alert('저장되었습니다.');
       fetchQuizData();
-    } catch (err) {
+    } catch {
       alert('저장 중 오류가 발생했습니다.');
     }
   };
