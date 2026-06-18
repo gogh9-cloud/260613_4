@@ -1099,10 +1099,10 @@ function render() {
       ctx.fillText(it.emoji,0,0);
     } else {
       // 착지 후 — 살짝 바운스
-      const bounce=Math.sin(Date.now()/180)*1.5;
+      const bounce=Math.round(Math.sin(Date.now()/180)*1.5);
       ctx.font='22px serif';
       ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText(it.emoji,cx,cy+bounce);
+      ctx.fillText(it.emoji, Math.round(cx), Math.round(cy+bounce));
     }
     ctx.restore();
     // 점수 힌트 (착지 후 표시)
@@ -1111,7 +1111,7 @@ function render() {
       ctx.font='bold 10px sans-serif';
       ctx.fillStyle='#ffe566';
       ctx.textAlign='center';
-      ctx.fillText('+'+it.pts, cx, cy-16);
+      ctx.fillText('+'+it.pts, Math.round(cx), Math.round(cy-16));
       ctx.globalAlpha=1;
     }
   }
@@ -1521,7 +1521,11 @@ function startGame(){
 
 // ── 게임 루프 ─────────────────────────────────────────────
 let reqId;
-function gameLoop(){update(); reqId = requestAnimationFrame(gameLoop);}
+let updateIntervalId;
+function gameLoop() {
+  if (updateIntervalId) clearInterval(updateIntervalId);
+  updateIntervalId = setInterval(update, 1000/60);
+}
 
   // --- End Original logic ---
 
@@ -1529,13 +1533,14 @@ function gameLoop(){update(); reqId = requestAnimationFrame(gameLoop);}
     cleanup: () => {
       gameActive = false;
       cancelAnimationFrame(reqId);
+      if (updateIntervalId) clearInterval(updateIntervalId);
       document.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('keyup', onKeyUp);
       if(typeof cOv !== 'undefined' && cOv) cOv.removeEventListener('click', startGame);
     },
     start: () => {
       initStage(Math.floor(Math.random() * STAGE_DEFS.length), true);
-      requestAnimationFrame(render);
+      reqId = requestAnimationFrame(render);
       gameLoop();
       canvas.focus();
     },
