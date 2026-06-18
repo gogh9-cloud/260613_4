@@ -852,32 +852,32 @@ function update() {
     // 지면 착지
     if (it.y+it.h>=CH-FLOOR_H){it.y=CH-FLOOR_H-it.h;it.vy=0;it.vx*=0.6;it.landed=true;}
     
-    // 발판 통과 물리
+    // 발판 통과 및 착지 물리
     if(!it.landed && it.vy>0){
-      let intersectingPlatform = null;
+      // 현재 교차 중인 발판 확인 (바닥 제외)
+      const currentIntersections = new Set();
       for(const p of platforms){
+        if(p.isFloor) continue;
         if(it.x < p.x+p.w && it.x+it.w > p.x && it.y < p.y+p.h && it.y+it.h > p.y){
-           intersectingPlatform = p;
-           break;
+           currentIntersections.add(p);
         }
       }
       
-      if (intersectingPlatform) {
-         if (!it.passedFirstPlatform) {
-            it.passingPlatform = intersectingPlatform;
-         }
-      } else {
-         if (it.passingPlatform) {
-            it.passedFirstPlatform = true;
-            it.passingPlatform = null;
+      // 이전에 교차하던 발판을 벗어나면 통과한 발판 수 증가
+      for(const p of it.intersectingPlatforms){
+         if(!currentIntersections.has(p)){
+            it.platformsPassed++;
          }
       }
+      it.intersectingPlatforms = currentIntersections;
 
-      // 발판 착지
+      // 발판 착지 (바닥 제외)
       for(const p of platforms){
-        if(it.x+it.w>p.x+2&&it.x<p.x+p.w-2&&
-           it.y+it.h>=p.y&&it.y+it.h-it.vy<=p.y+4){
-          if (it.passedFirstPlatform) {
+        if(p.isFloor) continue;
+        if(it.x+it.w>p.x+2 && it.x<p.x+p.w-2 &&
+           it.y+it.h>=p.y && it.y+it.h-it.vy<=p.y+4){
+          // 하나 이상의 발판을 완전히 통과한 후에만 착지
+          if (it.platformsPassed >= 1) {
             it.y=p.y-it.h; it.vy=0; it.vx*=0.6; it.landed=true; 
             break;
           }
@@ -889,7 +889,11 @@ function update() {
     const removeLinkedBubble = () => {
        if (it.bubbleId) {
          const bIdx = bubbles.findIndex(b => b.id === it.bubbleId);
-         if (bIdx >= 0) bubbles.splice(bIdx, 1);
+         if (bIdx >= 0) {
+           const bToPop = bubbles[bIdx];
+           spawnParticles(bToPop.x, bToPop.y, 14, '#f5c842');
+           bubbles.splice(bIdx, 1);
+         }
          it.bubbleId = null; // 중복 방지
        }
     };
@@ -945,8 +949,8 @@ function popBubble(b,idx){
   const popX=b.x, popY=b.y;  // 거품 터진 위치 저장
   spawnParticles(popX,popY,14,'#f5c842');
   
-  bubbles.splice(idx, 1);
-  if (m) m.bubble = null;
+  b.state = 'solving';
+  if (!b.id) b.id = Math.random().toString(36).substring(2);
   
   // 퀴즈 출제 — 거품 위치 전달
   const qdata=quizDB[m?.id];
@@ -978,7 +982,8 @@ function dropItem(x,y,monsterId,attempts,isShort,bubbleId){
       emoji:it.emoji, label:it.label,
       pts: k===0 ? pts : Math.max(1, Math.floor(pts*0.5)),
       color:'#f5c842',
-      passedFirstPlatform: false,
+      platformsPassed: 0,
+      intersectingPlatforms: new Set(),
       bubbleId: bubbleId
     });
   }
