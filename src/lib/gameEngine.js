@@ -850,7 +850,10 @@ function update() {
     it.ttl--;
     if(it.x<0)it.x=0; if(it.x+it.w>CW)it.x=CW-it.w;
     // 지면 착지
-    if (it.y+it.h>=CH-FLOOR_H){it.y=CH-FLOOR_H-it.h;it.vy=0;it.vx*=0.6;it.landed=true;}
+    if (it.y+it.h>=CH-FLOOR_H){
+      if (!it.landed) spawnParticles(it.x+it.w/2, CH-FLOOR_H, 14, '#f5c842'); // 방울 터짐 효과
+      it.y=CH-FLOOR_H-it.h;it.vy=0;it.vx*=0.6;it.landed=true;
+    }
     
     // 발판 통과 및 착지 물리
     if(!it.landed && it.vy>0){
@@ -879,19 +882,18 @@ function update() {
           // 하나 이상의 발판을 완전히 통과한 후에만 착지
           if (it.platformsPassed >= 1) {
             it.y=p.y-it.h; it.vy=0; it.vx*=0.6; it.landed=true; 
+            spawnParticles(it.x+it.w/2, it.y+it.h/2, 14, '#f5c842'); // 방울 터짐 효과
             break;
           }
         }
       }
     }
 
-    // 방울 삭제 함수
+    // 방울 삭제 함수 (원래 몬스터 방울 삭제 로직 유지)
     const removeLinkedBubble = () => {
        if (it.bubbleId) {
          const bIdx = bubbles.findIndex(b => b.id === it.bubbleId);
          if (bIdx >= 0) {
-           const bToPop = bubbles[bIdx];
-           spawnParticles(bToPop.x, bToPop.y, 14, '#f5c842');
            bubbles.splice(bIdx, 1);
          }
          it.bubbleId = null; // 중복 방지
@@ -1078,10 +1080,12 @@ function render() {
   for (const it of items){
     const cx=it.x+it.w/2, cy=it.y+it.h/2;
     const glow=0.2+Math.sin(Date.now()/250)*.15;
-    // 광채 (이모지 뒤)
-    ctx.globalAlpha=glow;
-    ctx.beginPath();ctx.arc(cx,cy,18,0,Math.PI*2);
-    ctx.fillStyle='#f5c842';ctx.fill();
+    // 광채 (이모지 뒤) - 착지 전까지만 방울처럼 표시
+    if (!it.landed) {
+      ctx.globalAlpha=glow;
+      ctx.beginPath();ctx.arc(cx,cy,18,0,Math.PI*2);
+      ctx.fillStyle='#f5c842';ctx.fill();
+    }
     ctx.globalAlpha=1;
     // 이모지
     ctx.save();
