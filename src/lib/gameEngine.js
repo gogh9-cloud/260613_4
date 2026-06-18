@@ -885,21 +885,31 @@ function update() {
       }
     }
 
+    // 방울 삭제 함수
+    const removeLinkedBubble = () => {
+       if (it.bubbleId) {
+         const bIdx = bubbles.findIndex(b => b.id === it.bubbleId);
+         if (bIdx >= 0) bubbles.splice(bIdx, 1);
+         it.bubbleId = null; // 중복 방지
+       }
+    };
+
     // 안착 시 방울 삭제 (지면이든 발판이든 공통 적용)
-    if (it.landed && it.bubbleId) {
-       const bIdx = bubbles.findIndex(b => b.id === it.bubbleId);
-       if (bIdx >= 0) bubbles.splice(bIdx, 1);
-       it.bubbleId = null; // 중복 방지
-    }
+    if (it.landed) removeLinkedBubble();
+
     // 플레이어 획득
     const px=player.x,py=player.y,pw=player.w,ph=player.h;
     if (px<it.x+it.w&&px+pw>it.x&&py<it.y+it.h&&py+ph>it.y){
       player.score+=it.pts; player.stageScore+=it.pts;
       spawnFloat(it.x,it.y-10,'+'+it.pts+'!','#f5c842');
       spawnParticles(it.x+it.w/2,it.y+it.h/2,8,it.color||'#f5c842');
+      removeLinkedBubble();
       updateHUD(); items.splice(i,1); continue;
     }
-    if (it.ttl<=0) items.splice(i,1);
+    if (it.ttl<=0) {
+      removeLinkedBubble();
+      items.splice(i,1);
+    }
   }
 
   // ── 파티클 ────────────────────────────────────────────
@@ -934,11 +944,12 @@ function popBubble(b,idx){
   const m=b.monster;
   const popX=b.x, popY=b.y;  // 거품 터진 위치 저장
   spawnParticles(popX,popY,14,'#f5c842');
-  b.state = 'solving';
-  if (!b.id) b.id = Math.random().toString(36).substring(2);
+  
+  bubbles.splice(idx, 1);
+  if (m) m.bubble = null;
   
   // 퀴즈 출제 — 거품 위치 전달
-  const qdata=quizDB[m.id];
+  const qdata=quizDB[m?.id];
   if (qdata) setTimeout(()=>openQuiz(m,qdata,popX,popY),100);
 }
 
