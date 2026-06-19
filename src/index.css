@@ -206,9 +206,7 @@ html, body {
 .es-ta{width:100%;padding:12px 14px;background:#0d1220;border:1px solid var(--border);border-radius:var(--r-md);color:var(--txt);font-size:16px;font-family:var(--fu);font-weight:500;line-height:1.6;outline:none;resize:vertical;min-height:90px;margin-bottom:8px;transition:border-color .2s}
 .es-ta:focus{border-color:rgba(167,139,250,.4);box-shadow:0 0 0 3px rgba(167,139,250,.1)}
 .es-ta:disabled{opacity:.5}
-.btn-sub{padding:10px 20px;background:var(--teal);border:none;border-radius:var(--r-md);color:#030e0d;font-family:var(--fu);font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(45,212,191,.3)}
-.btn-sub:hover{background:#5eead4;transform:translateY(-1px)}
-.btn-sub:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
 .res{display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:var(--r-md);margin-top:14px;font-size:13px;font-weight:500;font-family:var(--fu);animation:slideUp .3s cubic-bezier(.22,1,.36,1) both}
 @keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .res.ok-res{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:var(--green)}
