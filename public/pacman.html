@@ -1494,24 +1494,18 @@ function drawDot(px, py, big, ts) {
       const cy = g.y * TILE + TILE/2;
       ctx.save();
       ctx.translate(cx, cy);
+      
+      // 왼쪽 향할 때는 좌우 반전
+      if (g.dir === 1) {
+        ctx.scale(-1, 1);
+      }
+      
       const img = ghostImages[g.type];
       if (img && img.complete && img.naturalWidth > 0) {
         ctx.drawImage(img, -TILE*0.5, -TILE*0.5, TILE, TILE);
       } else {
         ctx.beginPath(); ctx.arc(0, 0, TILE*0.4, 0, Math.PI*2); ctx.fillStyle='red'; ctx.fill();
       }
-      
-      // Draw eyes looking at direction (0:R, 1:L, 2:U, 3:D)
-      ctx.fillStyle = 'blue';
-      const pupilOffset = TILE * 0.1;
-      let px = 0, py = 0;
-      if (g.dir === 0) px = pupilOffset;
-      if (g.dir === 1) px = -pupilOffset;
-      if (g.dir === 2) py = -pupilOffset;
-      if (g.dir === 3) py = pupilOffset;
-      
-      ctx.fillRect(-TILE*0.2 + px, -TILE*0.1 + py, TILE*0.15, TILE*0.15);
-      ctx.fillRect(TILE*0.05 + px, -TILE*0.1 + py, TILE*0.15, TILE*0.15);
       
       ctx.restore();
     });
@@ -1523,11 +1517,10 @@ function drawPacman(ts) {
   const cy = player.y * TILE + TILE/2;
   ctx.save();
   ctx.translate(cx, cy);
-  // 원본 이미지가 왼쪽을 보고 있다고 가정하여 방향 반전
-  if (pacDir === 0) ctx.scale(-1, 1); // Right (좌우 반전)
-  // if (pacDir === 1) 아무것도 안 함 // Left
-  if (pacDir === 2) ctx.rotate(Math.PI/2); // Up (반대 회전)
-  if (pacDir === 3) ctx.rotate(-Math.PI/2); // Down (반대 회전)
+  // 원본 이미지가 오른쪽을 보고 있다고 가정
+  if (pacDir === 1) ctx.scale(-1, 1); // Left (좌우 반전)
+  if (pacDir === 2) ctx.rotate(-Math.PI/2); // Up
+  if (pacDir === 3) ctx.rotate(Math.PI/2); // Down
   
   if (pacImage.complete && pacImage.naturalWidth > 0) {
     ctx.drawImage(pacImage, -TILE*0.5, -TILE*0.5, TILE, TILE);
