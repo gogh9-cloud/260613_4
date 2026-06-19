@@ -217,10 +217,8 @@ const QuizList = ({ user }) => {
   const downloadTemplate = () => {
     const ws = XLSX.utils.aoa_to_sheet([
       ['문항번호', '문항', '선택지', '이미지링크(선택)', '정답'],
-      [1, '다음 중 한국의 수도는 어디인가요?', '서울, 부산, 인천, 제주', '', '서울'],
-      [2, '태양계에서 가장 큰 행성은 무엇인가요?', '지구, 화성, 목성, 금성', '', '목성'],
-      [3, '단답형 예시: 1+1은 무엇인가요? (선택지를 비워두면 단답형이 됩니다)', '', '', '2'],
-      [4, '이 동물의 이름은 무엇인가요?', '고양이, 강아지, 사자, 호랑이', 'https://drive.google.com/uc?id=1exampleId_replace_this', '고양이']
+      [1, '1+1은 얼마입니까?', '1,2,3,4,5', '', '2'],
+      [2, '이 동물의 이름은 무엇입니까?', '', 'https://drive.google.com/uc?id=1exa', '고양이']
     ]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Template');
