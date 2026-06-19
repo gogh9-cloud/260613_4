@@ -155,6 +155,15 @@ const Game = () => {
         onSubmitAnswer: async ({ id, answer, isCorrect }) => {
           const qObj = questions.find(q => q.id === id);
           if (qObj) {
+            if (!isCorrect) {
+              const { data: existing } = await supabase.from('student_logs')
+                .select('id')
+                .eq('student_id', player.id)
+                .eq('question_id', qObj.id)
+                .eq('is_correct', false)
+                .limit(1);
+              if (existing && existing.length > 0) return;
+            }
             const { error } = await supabase.from('student_logs').insert([{
               student_id: player.id,
               question_id: qObj.id,
@@ -308,6 +317,15 @@ const Game = () => {
             onSubmitAnswer: async ({ id, answer, isCorrect }) => {
               const qObj = questions.find(q => q.id === id);
               if (qObj) {
+                if (!isCorrect) {
+                  const { data: existing } = await supabase.from('student_logs')
+                    .select('id')
+                    .eq('student_id', playerInfo.id)
+                    .eq('question_id', qObj.id)
+                    .eq('is_correct', false)
+                    .limit(1);
+                  if (existing && existing.length > 0) return;
+                }
                 await supabase.from('student_logs').insert([{
                   student_id: playerInfo.id,
                   question_id: qObj.id,
