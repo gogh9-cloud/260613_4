@@ -124,7 +124,7 @@ html, body {
   cursor: pointer; transition: background .15s, transform .1s; margin-top: 8px;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn-sub { width: auto; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); letter-spacing: 1.5px; }
+.btn-sub { width: auto; background: var(--surface-2); color: #ffffff; border: none; letter-spacing: 1.5px; }
 .btn-teal:hover { background: var(--blue-hover); transform: scale(1.02); }
 .btn-sub:hover { background: var(--surface-3); border-color: var(--ink-muted); transform: scale(1.02); }
 .btn-teal:active, .btn-sub:active { transform: scale(0.98); }
@@ -170,13 +170,13 @@ html, body {
 
 .qz-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .25s}
 .qz-overlay.open{opacity:1;pointer-events:all}
-.qz-card{background:var(--panel);border:1px solid #ffffff;border-radius:20px;width:460px;max-height:88vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.8);transform:translateY(16px) scale(.97);transition:transform .3s cubic-bezier(.22,1,.36,1);position:relative}
+.qz-card{background:var(--surface-1);border:none;border-radius:var(--r-lg);width:460px;max-height:88vh;overflow-y:auto;box-shadow:rgba(0,0,0,0.5) 0px 8px 24px;transform:translateY(16px) scale(.97);transition:transform .3s cubic-bezier(.22,1,.36,1);position:relative}
 .qz-overlay.open .qz-card{transform:none}
 .qz-tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700}
 .qz-tag.choice{background:rgba(96,165,250,.12);color:var(--blue);border:1px solid rgba(96,165,250,.2)}
 .qz-tag.short{background:rgba(74,222,128,.12);color:var(--green);border:1px solid rgba(74,222,128,.2)}
 .qz-tag.essay{background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
-.qz-xbtn{width:28px;height:28px;background:var(--surface-1);border:1px solid #ffffff;border-radius:var(--r-sm);color:var(--muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
+.qz-xbtn{width:32px;height:32px;background:transparent;border:none;border-radius:50%;color:var(--ink-muted);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
 .qz-xbtn:hover{background:var(--hover);color:var(--txt)}
 .qz-body{padding:20px 22px}
 .qz-pts{display:none}
