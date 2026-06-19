@@ -792,7 +792,7 @@ function update() {
         bubbles.splice(i,1); continue;
       }
       // 플레이어가 거품에 접촉 → 터뜨리기 (시각적 크기에 맞춰 위쪽/헤딩 판정 완화)
-      if (dist(player.x+player.w/2, player.y+player.h/2 - 12, b.x, b.y) < b.r + player.w/2 + 16){
+      if (dist(player.x+player.w/2, player.y+player.h/2 - 8, b.x, b.y) < b.r + player.w/2 - 4){
         popBubble(b,i); break;
       }
     } else if (b.state==='solving') {
@@ -1091,7 +1091,7 @@ function render() {
     ctx.fill();
     
     // 외곽에 빛나는 오라(Glow) 효과 추가
-    const glow = 0.4 + Math.sin(Date.now()/250)*0.3; // 0.1 ~ 0.7
+    const glow = 0.7 + Math.sin(Date.now()/300)*0.2; // 0.1 ~ 0.7
     ctx.globalAlpha = glow;
     ctx.beginPath();
     ctx.arc(Math.round(cx), Math.round(cy), 22, 0, Math.PI*2);
