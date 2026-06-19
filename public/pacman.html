@@ -2169,55 +2169,55 @@ function inputLoop(ts) {
       else if (keys.has('ArrowRight')||keys.has('d')||keys.has('D')) { tryMove(1, 0); moved=true; }
       if (moved) lastMove = ts;
     }
-  }
-  
-  if (ts - lastGhostMove > GHOST_MOVE_MS) {
-    ghosts.forEach(g => {
-      // 0:R, 1:L, 2:U, 3:D
-      const dirs = [{dx:1,dy:0}, {dx:-1,dy:0}, {dx:0,dy:-1}, {dx:0,dy:1}];
-      let possibleDirs = [];
-      for(let i=0; i<4; i++){
-        // Don't reverse immediately unless necessary
-        if((g.dir===0 && i===1) || (g.dir===1 && i===0) || (g.dir===2 && i===3) || (g.dir===3 && i===2)) continue;
-        const nx = ((g.x + dirs[i].dx)%COLS + COLS)%COLS;
-        const ny = ((g.y + dirs[i].dy)%ROWS + ROWS)%ROWS;
-        if(walkable(nx, ny)) possibleDirs.push(i);
-      }
-      if(possibleDirs.length === 0) {
-        // Must reverse
-        g.dir = g.dir===0?1 : g.dir===1?0 : g.dir===2?3 : 2;
-      } else {
-        // Pick random valid direction
-        g.dir = possibleDirs[Math.floor(Math.random() * possibleDirs.length)];
-      }
-      g.x = ((g.x + dirs[g.dir].dx)%COLS + COLS)%COLS;
-      g.y = ((g.y + dirs[g.dir].dy)%ROWS + ROWS)%ROWS;
-    });
-    lastGhostMove = ts;
-  }
-  
-  // Collision
-  ghosts.forEach(g => {
-    if(g.x === player.x && g.y === player.y && ts > invincibilityEndTime) {
-      player.score -= 1;
-      invincibilityEndTime = ts + 1500; document.getElementById('hv-score').textContent = player.score;
-      
-      // Bounce (reverse directions)
-      g.dir = g.dir===0?1 : g.dir===1?0 : g.dir===2?3 : 2;
-      g.x = ((g.x + (g.dir===0?1 : g.dir===1?-1 : 0))%COLS + COLS)%COLS;
-      g.y = ((g.y + (g.dir===3?1 : g.dir===2?-1 : 0))%ROWS + ROWS)%ROWS;
-      
-      // Player bounce
-      const playerOppDir = pacDir===0?1 : pacDir===1?0 : pacDir===2?3 : 2;
-      const nx = ((player.x + (playerOppDir===0?1 : playerOppDir===1?-1 : 0))%COLS + COLS)%COLS;
-      const ny = ((player.y + (playerOppDir===3?1 : playerOppDir===2?-1 : 0))%ROWS + ROWS)%ROWS;
-      if(walkable(nx, ny)) {
-        player.x = nx; player.y = ny;
-      }
+    
+    if (ts - lastGhostMove > GHOST_MOVE_MS) {
+      ghosts.forEach(g => {
+        // 0:R, 1:L, 2:U, 3:D
+        const dirs = [{dx:1,dy:0}, {dx:-1,dy:0}, {dx:0,dy:-1}, {dx:0,dy:1}];
+        let possibleDirs = [];
+        for(let i=0; i<4; i++){
+          // Don't reverse immediately unless necessary
+          if((g.dir===0 && i===1) || (g.dir===1 && i===0) || (g.dir===2 && i===3) || (g.dir===3 && i===2)) continue;
+          const nx = ((g.x + dirs[i].dx)%COLS + COLS)%COLS;
+          const ny = ((g.y + dirs[i].dy)%ROWS + ROWS)%ROWS;
+          if(walkable(nx, ny)) possibleDirs.push(i);
+        }
+        if(possibleDirs.length === 0) {
+          // Must reverse
+          g.dir = g.dir===0?1 : g.dir===1?0 : g.dir===2?3 : 2;
+        } else {
+          // Pick random valid direction
+          g.dir = possibleDirs[Math.floor(Math.random() * possibleDirs.length)];
+        }
+        g.x = ((g.x + dirs[g.dir].dx)%COLS + COLS)%COLS;
+        g.y = ((g.y + dirs[g.dir].dy)%ROWS + ROWS)%ROWS;
+      });
+      lastGhostMove = ts;
     }
-  });
+    
+    // Collision
+    ghosts.forEach(g => {
+      if(g.x === player.x && g.y === player.y && ts > invincibilityEndTime) {
+        player.score -= 1;
+        invincibilityEndTime = ts + 1500; document.getElementById('hv-score').textContent = player.score;
+        
+        // Bounce (reverse directions)
+        g.dir = g.dir===0?1 : g.dir===1?0 : g.dir===2?3 : 2;
+        g.x = ((g.x + (g.dir===0?1 : g.dir===1?-1 : 0))%COLS + COLS)%COLS;
+        g.y = ((g.y + (g.dir===3?1 : g.dir===2?-1 : 0))%ROWS + ROWS)%ROWS;
+        
+        // Player bounce
+        const playerOppDir = pacDir===0?1 : pacDir===1?0 : pacDir===2?3 : 2;
+        const nx = ((player.x + (playerOppDir===0?1 : playerOppDir===1?-1 : 0))%COLS + COLS)%COLS;
+        const ny = ((player.y + (playerOppDir===3?1 : playerOppDir===2?-1 : 0))%ROWS + ROWS)%ROWS;
+        if(walkable(nx, ny)) {
+          player.x = nx; player.y = ny;
+        }
+      }
+    });
+  }
 
-    requestAnimationFrame(inputLoop);
+  requestAnimationFrame(inputLoop);
 }
 
 /* ═══════════════════════════════════════════════════
