@@ -1089,12 +1089,14 @@ function render() {
       const angle=Math.atan2(it.vy,it.vx);
       ctx.translate(Math.round(cx), Math.round(cy));
       ctx.rotate(angle*0.3);
+      ctx.fillStyle='#ffffff';
       ctx.font='22px "Segoe UI Emoji", Arial, sans-serif';
       ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillText(it.emoji,0,0);
     } else {
       // 착지 후 — 살짝 바운스
       const bounce=Math.round(Math.sin(Date.now()/180)*1.5);
+      ctx.fillStyle='#ffffff';
       ctx.font='22px "Segoe UI Emoji", Arial, sans-serif';
       ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillText(it.emoji, Math.round(cx), Math.round(cy+bounce));
