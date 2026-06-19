@@ -902,7 +902,7 @@ function update() {
     };
 
     // 안착 시 방울 삭제 (지면이든 발판이든 공통 적용)
-    if (it.landed) removeLinkedBubble();
+    if (it.landed) {}
 
     // 플레이어 획득
     const px=player.x,py=player.y,pw=player.w,ph=player.h;
@@ -910,11 +910,11 @@ function update() {
       player.score+=it.pts; player.stageScore+=it.pts;
       spawnFloat(it.x,it.y-10,'+'+it.pts+'!','#f5c842');
       spawnParticles(it.x+it.w/2,it.y+it.h/2,8,it.color||'#f5c842');
-      removeLinkedBubble();
+      
       updateHUD(); items.splice(i,1); continue;
     }
     if (it.ttl<=0) {
-      removeLinkedBubble();
+      
       items.splice(i,1);
     }
   }
