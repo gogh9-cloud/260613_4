@@ -328,7 +328,6 @@ const Game = () => {
               <div className="hud-item"><span className="hud-icon">⭐</span> <span className="hud-main gold"><span id="hv-score">{playerInfo.score}</span></span></div>
               <div className="hud-item"><span className="hud-icon">🎯</span> <span className="hud-main teal" id="hv-quiz">0/0</span></div>
               <div className="hud-item"><span className="hud-icon">📋</span> <span className="hud-main blue" id="hv-sheet">{quizSet?.title}</span></div>
-              <div className="hud-item"><span className="hud-icon">🌱</span> <span className="hud-main" id="hv-lv">Lv1</span></div>
             </div>
 
             {/* 캔버스 영역 */}
