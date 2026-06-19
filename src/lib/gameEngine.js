@@ -1454,7 +1454,7 @@ function updateHUD(){
   document.getElementById('hv-score').textContent=player.stageScore;
   document.getElementById('hv-quiz').textContent=quizSolved+'/'+quizTotal;
   document.getElementById('hv-sheet').textContent=player.sheet||'—';
-  document.getElementById('hv-lv').textContent='Lv'+(curStageIdx+1);
+  
 }
 function spawnFloat(x,y,txt,color){
   const layer=document.getElementById('float-layer');if(!layer)return;
