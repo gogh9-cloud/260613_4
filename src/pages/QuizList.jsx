@@ -809,11 +809,7 @@ const QuizList = ({ user }) => {
                           <Globe size={10} /> 공유됨
                         </span>
                       )}
-                      {bank.uploader_email && (
-                        <span style={{ fontSize: '12px', color: 'var(--ink-subtle)', marginLeft: 'auto' }}>
-                          {bank.uploader_email}
-                        </span>
-                      )}
+
                     </div>
                     <div style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '4px' }}>
                       {bank.subject && <span style={{ color: 'var(--ink)', marginRight: '8px' }}>#{bank.subject}</span>}

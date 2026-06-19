@@ -124,7 +124,7 @@ html, body {
   cursor: pointer; transition: background .15s, transform .1s; margin-top: 8px;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn-sub { width: auto; background: var(--surface-2); color: var(--ink); border: 1px solid var(--hairline-strong); letter-spacing: 1px; }
+.btn-sub { width: auto; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); letter-spacing: 1.5px; }
 .btn-teal:hover { background: var(--blue-hover); transform: scale(1.02); }
 .btn-sub:hover { background: var(--surface-3); border-color: var(--ink-muted); transform: scale(1.02); }
 .btn-teal:active, .btn-sub:active { transform: scale(0.98); }
