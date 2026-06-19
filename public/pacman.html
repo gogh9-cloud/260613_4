@@ -1814,25 +1814,14 @@ function norm(s){return s.trim().toLowerCase().replace(/\s+/g,'');}
 
 // 구글 드라이브 공유 URL을 직접 이미지 URL로 변환
 function toDirectImageUrl(url) {
-  var base = 'https:' + '//drive.google.com/uc?export=view&id=';
-  var m1 = url.match(new RegExp('/d/([a-zA-Z0-9_-]+)'));
-  if (m1) return base + m1[1];
-  var m2 = url.match(new RegExp('[?&]id=([a-zA-Z0-9_-]+)'));
-  if (m2) return base + m2[1];
-  return url;
-}
-
-
-// 구글 드라이브 공유 URL을 직접 이미지 URL로 변환
-function toDirectImageUrl(url) {
-  const raw = String(url || '').trim();
-  if (!raw) return '';
-  const base = 'https:' + '//drive.google.com/uc?export=view&id=';
-  let m = raw.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (m) return base + m[1];
-  m = raw.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if (m) return base + m[1];
-  return raw;
+  const r = String(url || '').trim();
+  if (!r) return '';
+  if (r.includes('drive.google.com/thumbnail')) return r;
+  let m = r.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+  m = r.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+  return r;
 }
 
 function getDriveFileId(value) {
