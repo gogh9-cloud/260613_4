@@ -1365,11 +1365,15 @@ function finishQuiz(pts,ansStr){
     if (bIdx >= 0) bubbles.splice(bIdx, 1);
   }
   curQuizMonster.state='solved'; curQuizMonster.bubble=null;
-  quizSolved++; player.score+=pts; player.stageScore+=pts;
+  // 아이템을 드롭하지 않고 해당 점수를 즉시 추가
+  const isShort = curQuizData.type === 'short';
+  const itemPts = calcItemPts(curQuizMonster.attempts || 0);
+  const extraPts = isShort ? itemPts + Math.max(1, Math.floor(itemPts * 0.5)) : itemPts;
+  const totalPts = pts + extraPts;
+
+  quizSolved++; player.score+=totalPts; player.stageScore+=totalPts;
   updateHUD();
-  spawnFloat(player.x+player.w/2,player.y-8,'+'+pts+'!','#f5c842');
-  // 정답 아이템 드롭 (터진 위치에서)
-  dropItem(curPopX, curPopY, curQuizMonster.id, curQuizMonster.attempts, curQuizData.type === 'short', bubbleId);
+  spawnFloat(player.x+player.w/2,player.y-8,'+'+totalPts+'!','#f5c842');
   logAnswer(true,ansStr);
   setTimeout(()=>{ closeQuiz(); }, 1000);
   // 모든 퀴즈 풀었어도 아이템이 남아있으면 대기
