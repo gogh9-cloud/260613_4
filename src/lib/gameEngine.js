@@ -1083,22 +1083,6 @@ function render() {
     
     ctx.save();
     
-    // 이모지 뒤에 항상 밝고 선명한 원을 깔아주어 어두운 배경에 묻히지 않게 함
-    ctx.globalAlpha = 1.0;
-    ctx.beginPath();
-    ctx.arc(Math.round(cx), Math.round(cy), 18, 0, Math.PI*2);
-    ctx.fillStyle = '#ffffff'; // 완전한 흰색 배경
-    ctx.fill();
-    
-    // 외곽에 빛나는 오라(Glow) 효과 추가
-    const glow = 0.7 + Math.sin(Date.now()/300)*0.2; // 0.1 ~ 0.7
-    ctx.globalAlpha = glow;
-    ctx.beginPath();
-    ctx.arc(Math.round(cx), Math.round(cy), 22, 0, Math.PI*2);
-    ctx.fillStyle = '#f5c842';
-    ctx.fill();
-    
-    ctx.globalAlpha = 1.0;
     // 이모지 (Arial/sans-serif 사용하여 윈도우 컬러 이모지 강제 적용)
     if(!it.landed){
       // 날아가는 중 — 속도 방향으로 살짝 기울기
