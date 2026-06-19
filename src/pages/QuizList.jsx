@@ -760,7 +760,7 @@ const QuizList = ({ user }) => {
                   onChange={() => setNewRoomGameType('bubble')}
                   style={{ accentColor: 'var(--primary)' }}
                 />
-                버블버블
+                버블보블
               </label>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--ink)' }}>
                 <input
