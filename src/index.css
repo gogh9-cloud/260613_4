@@ -143,7 +143,7 @@ html, body {
 #scr-game { flex-direction:column; align-items:center; justify-content:flex-start; background: var(--canvas); }
 
 .game-wrap { display:flex; flex-direction:column; align-items:center; gap:0; padding:0; width:100%; height:100vh; background: var(--canvas); }
-.hud { height:64px; display:grid; grid-template-columns:22% 16% 16% 30% 16%; align-items:center; background: var(--canvas); width: 100%; border-bottom: 1px solid var(--hairline); }
+.hud { height:64px; display:grid; grid-template-columns:20% 15% 15% 50%; align-items:center; background: var(--canvas); width: 100%; border-bottom: 1px solid var(--hairline); }
 .hud-item { height:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:0 16px; min-width:0; }
 .hud-item.player { justify-content:flex-start; padding-left:24px; }
 .hud-icon { font-size:24px; line-height:1; flex-shrink:0; color: var(--ink-muted); }
