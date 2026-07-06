@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Game from './pages/Game';
+import { Analytics } from '@vercel/analytics/react';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/game" element={<Game />} />
 
       </Routes>
+      <Analytics />
     </Router>
   );
 }
