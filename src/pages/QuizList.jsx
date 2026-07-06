@@ -432,7 +432,7 @@ const QuizList = ({ user }) => {
               RETRO GAME QUIZ ADVENTURE
               <img src="/pacman-icon.png" alt="pacman" style={{ width: '28px', height: '28px', marginLeft: '12px', objectFit: 'contain' }} />
             </div>
-            <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>Built by sota / {user?.email}</div>
+            <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>powerd by sota / gogh999@gmail.com</div>
           </div>
           <div style={{ display: 'flex', gap: '16px' }}>
 
