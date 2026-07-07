@@ -230,3 +230,24 @@ html, body {
 ::-webkit-scrollbar-track { background:var(--canvas); }
 ::-webkit-scrollbar-thumb { background:var(--hairline-strong); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background:var(--ink-muted); }
+
+.footer-link-btn {
+  background: none;
+  border: none;
+  color: var(--ink-muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.footer-link-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.footer-divider {
+  color: var(--ink-subtle);
+}

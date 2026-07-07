@@ -136,24 +136,24 @@ const Home = () => {
         <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '16px', fontSize: '13px' }}>
           <button 
             type="button" 
+            className="footer-link-btn"
             onClick={() => setModalType('privacy')} 
-            style={{ background: 'none', border: 'none', color: 'var(--ink-muted)', cursor: 'pointer', textDecoration: 'underline', font: 'inherit' }}
           >
             개인정보처리방침
           </button>
-          <span style={{ color: 'var(--ink-subtle)' }}>|</span>
+          <span className="footer-divider">·</span>
           <button 
             type="button" 
+            className="footer-link-btn"
             onClick={() => setModalType('terms')} 
-            style={{ background: 'none', border: 'none', color: 'var(--ink-muted)', cursor: 'pointer', textDecoration: 'underline', font: 'inherit' }}
           >
             사용약관
           </button>
-          <span style={{ color: 'var(--ink-subtle)' }}>|</span>
+          <span className="footer-divider">·</span>
           <button 
             type="button" 
+            className="footer-link-btn"
             onClick={() => setModalType('guide')} 
-            style={{ background: 'none', border: 'none', color: 'var(--ink-muted)', cursor: 'pointer', textDecoration: 'underline', font: 'inherit' }}
           >
             사용법
           </button>
