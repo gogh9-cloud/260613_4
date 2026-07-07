@@ -434,8 +434,12 @@ const QuizList = ({ user }) => {
             </div>
             <div className="login-sub" style={{ textAlign: 'left', margin: 0, marginTop: '4px' }}>powerd by sota / gogh999@gmail.com</div>
           </div>
-          <div style={{ display: 'flex', gap: '16px' }}>
-
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            {user?.email && (
+              <span style={{ fontSize: '14px', color: 'var(--ink-muted)', fontWeight: '500' }}>
+                {user.email}
+              </span>
+            )}
             <button
               onClick={handleLogout}
               style={{ padding: '8px 16px', background: 'var(--surface-2)', border: 'none', borderRadius: 'var(--r-pill)', color: 'var(--ink-muted)', cursor: 'pointer', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}
