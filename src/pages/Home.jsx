@@ -111,6 +111,9 @@ const Home = () => {
         >
           {loading ? '로그인 중...' : 'Google 로그인'}
         </button>
+        <div style={{ marginTop: '12px', fontSize: '13px', color: 'var(--ink-muted)', textAlign: 'center' }}>
+          powerd by sota / gogh999@gmail.com
+        </div>
 
         {/* 개인정보처리방침 & 사용약관 링크 */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '16px', fontSize: '13px' }}>
