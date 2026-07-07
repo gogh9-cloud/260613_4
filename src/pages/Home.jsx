@@ -103,7 +103,7 @@ const Home = () => {
           </div>
         </div>
         <div className="login-title">RETRO GAME<br />QUIZ ADVENTURE</div>
-        <div className="login-sub" style={{ marginTop: '16px' }}>교사용 대시보드</div>
+        <div className="login-sub" style={{ marginTop: '20px', marginBottom: '20px' }}>교사용 대시보드</div>
         <button 
           className="btn-teal" 
           onClick={handleLogin} 
