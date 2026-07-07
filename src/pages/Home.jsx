@@ -132,12 +132,8 @@ const Home = () => {
           powerd by sota / gogh999@gmail.com
         </div>
 
-        <div style={{ marginTop: '24px', fontSize: '12px', color: 'var(--ink-subtle)', textAlign: 'center', lineHeight: '1.4', wordBreak: 'keep-all' }}>
-          본 앱에 사용된 캐릭터 이미지는 주식회사 타이토(TAITO Corporation)의 게임 '버블보블(Bubble Bobble)' 및 주식회사 반다이남코 엔터테인먼트(Bandai Namco Entertainment)의 게임 '팩맨(Pac-Man)'의 자산이며, 교육적 목적으로만 사용되었습니다. 모든 권리는 원저작권자에게 있습니다. 교육적 목적 이외의 사용은 금지합니다.
-        </div>
-
-        {/* 개인정보처리방침 & 사용약관 & 사용 안내 링크 */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '24px', fontSize: '13px' }}>
+        {/* 개인정보처리방침 & 사용약관 & 사용법 링크 */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '16px', fontSize: '13px' }}>
           <button 
             type="button" 
             onClick={() => setModalType('privacy')} 
@@ -161,6 +157,10 @@ const Home = () => {
           >
             사용법
           </button>
+        </div>
+
+        <div style={{ marginTop: '24px', fontSize: '12px', color: 'var(--ink-subtle)', textAlign: 'center', lineHeight: '1.4', wordBreak: 'keep-all' }}>
+          본 앱에 사용된 캐릭터 이미지는 주식회사 타이토(TAITO Corporation)의 게임 '버블보블(Bubble Bobble)' 및 주식회사 반다이남코 엔터테인먼트(Bandai Namco Entertainment)의 게임 '팩맨(Pac-Man)'의 자산이며, 교육적 목적으로만 사용되었습니다. 모든 권리는 원저작권자에게 있습니다. 교육적 목적 이외의 사용은 금지합니다.
         </div>
       </div>
 
