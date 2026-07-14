@@ -1408,7 +1408,7 @@
               <button
                 class="btn-clear sec"
                 id="btn-nextlevel"
-                style="margin: 5px"
+                style="margin: 5px; display: none;"
               >
                 다음 레벨로
               </button>
@@ -3716,6 +3716,7 @@
           // 오답: attempts 증가 후 서버에 오답만 기록
           if (curQuizNode) curQuizNode.attempts++;
           callServer("submitAnswer", {
+            id: curQuizData.id,
             ban: player.ban,
             num: player.num,
             name: player.name,

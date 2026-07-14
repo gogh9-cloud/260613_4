@@ -1350,7 +1350,7 @@ function releaseMonster(monster) {
   spawnParticles(monster.x+monster.w/2, monster.y+monster.h/2, 8, '#f43f5e');
 }
 function startWrongTimer(){
-  clearInterval(wrongTimerRef);
+  clearTimeout(wrongTimerRef);
   const _monster = curQuizMonster;
   wrongTimerRef=setTimeout(()=>{
     closeQuiz();
@@ -1389,7 +1389,7 @@ function logAnswer(isOk,ans){
     answer:String(ans).slice(0,300),isCorrect:false});
 }
 function closeQuiz(){
-  clearInterval(wrongTimerRef);
+  clearTimeout(wrongTimerRef);
   quizOpen=false; curQuizMonster=null; curQuizData=null;
   const ov=document.getElementById('qz-ov');
   if(ov&&ov._close) ov._close(); else if(ov) { ov.style.opacity='0'; ov.style.pointerEvents='none'; }
